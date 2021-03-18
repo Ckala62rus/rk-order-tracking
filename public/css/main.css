@@ -1,0 +1,16 @@
+h1  {
+    color: #0a53be;
+    text-align: center;
+    margin: 20px 0;
+}
+
+.header_menu {
+    background-color: #f5a501;
+    color: wheat;
+    padding-left: 5px;
+}
+
+.logo {
+    max-width: 5%;
+    height: auto;
+}
