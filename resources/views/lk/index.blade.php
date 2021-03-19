@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="">
-        <h1>Информация о заказе</h1>
+        <h1>Информация о заказе компании {{ $companyName }}</h1>
 
         <table class="table table-bordered table-checkable dataTable no-footer dtr-inline collapsed">
             <thead>

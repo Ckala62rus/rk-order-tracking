@@ -21,6 +21,7 @@ class OrderController extends Controller
 //        $user = Auth::user();
 
         $orders = [];
+        $companyName = '';
 
         $date = DB::connection('sqlsrv')
             ->select("SELECT * FROM CustomersOrders_Test_RK1 WHERE UserID ='RK\\nnazarov'");
@@ -30,10 +31,12 @@ class OrderController extends Controller
             $item->QTYORDERED = round($item->QTYORDERED, 2);
             $item->QTYSCHED = round($item->QTYSCHED, 2);
             $orders = $date;
+            $companyName = $item->SALESNAME;
         }
+
 //dd($orders);
 
-        return view('lk.index', compact('orders'));
+        return view('lk.index', compact('orders', 'companyName'));
     }
 
     public function store(Request $request)
