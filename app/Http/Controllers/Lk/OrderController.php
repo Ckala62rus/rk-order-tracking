@@ -19,10 +19,20 @@ class OrderController extends Controller
     public function index()
     {
 //        $user = Auth::user();
-//        dd($user);
-//        dd('order information');
-        $orders = DB::connection('sqlsrv')->select('SELECT * FROM CustomersOrders_Test_RK1');
-        //dd($models);
+
+        $orders = [];
+
+        $date = DB::connection('sqlsrv')
+            ->select("SELECT * FROM CustomersOrders_Test_RK1 WHERE UserID ='RK\\nnazarov'");
+
+        foreach($date as $item)
+        {
+            $item->QTYORDERED = round($item->QTYORDERED, 2);
+            $item->QTYSCHED = round($item->QTYSCHED, 2);
+            $orders = $date;
+        }
+//dd($orders);
+
         return view('lk.index', compact('orders'));
     }
 
