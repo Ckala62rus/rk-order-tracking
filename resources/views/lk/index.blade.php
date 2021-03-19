@@ -7,11 +7,11 @@
         <table class="table table-bordered table-checkable dataTable no-footer dtr-inline collapsed">
             <thead>
             <tr>
-                <th scope="col">ПРЖ</th>
-                <th scope="col">Максимальная дата поставки по ПРЖ</th>
-                <th scope="col"> Запрошенная дата поставки по ПРЖ</th>
-                <th scope="col">Количество заказанное клиентом по ПРЖ</th>
-                <th scope="col">Количество по ПРЖ</th>
+                <th scope="col">Номер заказа покупателя</th>
+                <th scope="col">Максимальная дата поставки по номеру заказа</th>
+                <th scope="col"> Запрошенная дата поставки по номеру заказа</th>
+                <th scope="col">Количество заказанное клиентом по номеру заказа (дм<sup>2</sup>)</th>
+                <th scope="col">Количество по заказу (дм<sup>2</sup>)</th>
                 <th scope="col">КПП/ИНН</th>
                 <th scope="col">Менеджер</th>
             </tr>
