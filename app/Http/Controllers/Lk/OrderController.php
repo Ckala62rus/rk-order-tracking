@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Lk;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Show client all detail for order
@@ -20,7 +21,9 @@ class OrderController extends Controller
 //        $user = Auth::user();
 //        dd($user);
 //        dd('order information');
-        return view('lk.index');
+        $orders = DB::connection('sqlsrv')->select('SELECT * FROM CustomersOrders_Test_RK1');
+        //dd($models);
+        return view('lk.index', compact('orders'));
     }
 
     public function store(Request $request)
