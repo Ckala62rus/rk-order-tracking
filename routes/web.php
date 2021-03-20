@@ -23,4 +23,5 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 Route::middleware(['auth'])->group(function () {
     Route::resource('order', \App\Http\Controllers\Lk\OrderController::class);
+    Route::get('tem', [\App\Http\Controllers\Lk\OrderController::class, 'template']);
 });

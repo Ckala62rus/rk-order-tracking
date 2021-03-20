@@ -39,6 +39,11 @@ class OrderController extends Controller
         return view('lk.index', compact('orders', 'companyName'));
     }
 
+    public function template()
+    {
+        return view('lk.test');
+    }
+
     public function store(Request $request)
     {
 //        dd('create order');
