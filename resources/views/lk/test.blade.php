@@ -123,7 +123,7 @@
             </div>
         </div>
 
-        <div class="card card-custom">
+        <div class="card card-custom col-xl-6">
             <div class="card-header">
                 <h3 class="card-title">
                     Base Controls

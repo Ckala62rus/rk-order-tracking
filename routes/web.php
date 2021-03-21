@@ -19,6 +19,7 @@ Route::get('/', function () {
 
 Auth::routes();
 
+//Route::get('/', [\App\Http\Controllers\Auth\LoginController::class, 'Sign'])->name('sign');
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::middleware(['auth'])->group(function () {
