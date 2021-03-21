@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Lk;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -39,6 +42,10 @@ class OrderController extends Controller
         return view('lk.index', compact('orders', 'companyName'));
     }
 
+    /**
+     * Client Dashboard
+     * @return Application|Factory|View
+     */
     public function template()
     {
         return view('lk.dashboard');

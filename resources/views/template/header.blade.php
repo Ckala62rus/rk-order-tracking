@@ -10,7 +10,7 @@
 
 
 {{--    <link rel="shortcut icon" href="http://metro/media/logos/favicon.ico"/>--}}
-    bootstrap-select.css.map
+
     <link rel="stylesheet" href="https:/d-flex flex-column flex-row-fluid wrapper/fonts.googleapis.com/css?family=Poppins:300,400,500,600,700">
 
     <link href="" rel="stylesheet" type="text/css"/>
