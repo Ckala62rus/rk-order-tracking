@@ -51,7 +51,7 @@
                             Выйти
                         </span>
 
-                        <form id="logout-form" action="http://rk.loc/logout" method="POST" class="d-none">
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                             <input type="hidden" name="_token" value="zOObHfvCLVIi9lU3r7rmiqEcnVQ1wNcFZbd3xx0x">
                         </form>
                     </div>
