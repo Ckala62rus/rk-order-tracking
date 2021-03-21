@@ -14,7 +14,7 @@
 
         <div class="d-flex align-items-center mt-5">
             <div class="symbol symbol-100 mr-5">
-                <div class="symbol-label" style="background-image:url('http://metro/media/users/300_21.jpg')"></div>
+                <div class="symbol-label" style="background-image:url({{ asset("template/media/users/300_21.jpg") }})"></div>
                 <i class="symbol-badge bg-success"></i>
             </div>
             <div class="d-flex flex-column">
@@ -42,6 +42,20 @@
                             <span class="navi-text text-muted text-hover-primary">jm@softplus.com</span>
                         </span>
                     </a>
+
+                    <div class="">
+                        <span
+                            class="label label-danger label-inline mr-2"
+                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                        >
+                            Выйти
+                        </span>
+
+                        <form id="logout-form" action="http://rk.loc/logout" method="POST" class="d-none">
+                            <input type="hidden" name="_token" value="zOObHfvCLVIi9lU3r7rmiqEcnVQ1wNcFZbd3xx0x">
+                        </form>
+                    </div>
+
                 </div>
             </div>
         </div>

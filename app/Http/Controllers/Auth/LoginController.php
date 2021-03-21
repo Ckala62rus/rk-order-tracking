@@ -42,8 +42,8 @@ class LoginController extends Controller
      * new login method
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
-//    public function Sign()
-//    {
-//        return view('auth.new_auth.login');
-//    }
+    public function Sign()
+    {
+        return view('auth.new_auth.login');
+    }
 }

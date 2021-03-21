@@ -4,10 +4,8 @@
 
 <div id="kt_header_mobile" class="header-mobile  header-mobile-fixed ">
     <div class="mobile-logo">
-        <a href="http://metro">
-
-
-            <img alt="Laravel" src="http://metro/media/logos/logo-light.png"/>
+        <a href="#">
+            <img alt="Laravel" src="#"/>
         </a>
     </div>
     <div class="d-flex align-items-center">
@@ -44,7 +42,7 @@
 
                         <div id="kt_header_menu" class="header-menu header-menu-mobile  header-menu-layout-default ">
                             <ul class="menu-nav ">
-                                <li class="menu-item  menu-item-active " aria-haspopup="true"><a href="http://metro"
+                                <li class="menu-item  menu-item-active " aria-haspopup="true"><a href="#"
                                                                                                  class="menu-link "><span
                                             class="menu-text">Dashboard</span></a></li>
                                 <li class="menu-item  menu-item-submenu menu-item-rel" data-menu-toggle="click"
@@ -70,62 +68,62 @@
                                                 <div class="menu-submenu menu-submenu-classic menu-submenu-right">
                                                     <ul class="menu-subnav">
                                                         <li class="menu-item " aria-haspopup="true"><a
-                                                                href="http://metro/features/bootstrap/utilities"
+                                                                href="#"
                                                                 class="menu-link "><i
                                                                     class="menu-bullet menu-bullet-dot"><span></span></i><span
                                                                     class="menu-text">Utilities</span></a></li>
                                                         <li class="menu-item " aria-haspopup="true"><a
-                                                                href="http://metro/features/bootstrap/typography"
+                                                                href="#"
                                                                 class="menu-link "><i
                                                                     class="menu-bullet menu-bullet-dot"><span></span></i><span
                                                                     class="menu-text">Typography</span></a></li>
                                                         <li class="menu-item " aria-haspopup="true"><a
-                                                                href="http://metro/features/bootstrap/buttons"
+                                                                href="#"
                                                                 class="menu-link "><i
                                                                     class="menu-bullet menu-bullet-dot"><span></span></i><span
                                                                     class="menu-text">Buttons</span></a></li>
                                                         <li class="menu-item " aria-haspopup="true"><a
-                                                                href="http://metro/features/bootstrap/button-group"
+                                                                href="#"
                                                                 class="menu-link "><i
                                                                     class="menu-bullet menu-bullet-dot"><span></span></i><span
                                                                     class="menu-text">Button Group</span></a></li>
                                                         <li class="menu-item " aria-haspopup="true"><a
-                                                                href="http://metro/features/bootstrap/dropdown"
+                                                                href="#"
                                                                 class="menu-link "><i
                                                                     class="menu-bullet menu-bullet-dot"><span></span></i><span
                                                                     class="menu-text">Dropdown</span></a></li>
                                                         <li class="menu-item " aria-haspopup="true"><a
-                                                                href="http://metro/features/bootstrap/navs"
+                                                                href="#"
                                                                 class="menu-link "><i
                                                                     class="menu-bullet menu-bullet-dot"><span></span></i><span
                                                                     class="menu-text">Navs</span></a></li>
                                                         <li class="menu-item " aria-haspopup="true"><a
-                                                                href="http://metro/features/bootstrap/tables"
+                                                                href="#"
                                                                 class="menu-link "><i
                                                                     class="menu-bullet menu-bullet-dot"><span></span></i><span
                                                                     class="menu-text">Tables</span></a></li>
                                                         <li class="menu-item " aria-haspopup="true"><a
-                                                                href="http://metro/features/bootstrap/progress"
+                                                                href="#"
                                                                 class="menu-link "><i
                                                                     class="menu-bullet menu-bullet-dot"><span></span></i><span
                                                                     class="menu-text">Progress</span></a></li>
                                                         <li class="menu-item " aria-haspopup="true"><a
-                                                                href="http://metro/features/bootstrap/modal"
+                                                                href="#"
                                                                 class="menu-link "><i
                                                                     class="menu-bullet menu-bullet-dot"><span></span></i><span
                                                                     class="menu-text">Modal</span></a></li>
                                                         <li class="menu-item " aria-haspopup="true"><a
-                                                                href="http://metro/features/bootstrap/alerts"
+                                                                href="#"
                                                                 class="menu-link "><i
                                                                     class="menu-bullet menu-bullet-dot"><span></span></i><span
                                                                     class="menu-text">Alerts</span></a></li>
                                                         <li class="menu-item " aria-haspopup="true"><a
-                                                                href="http://metro/features/bootstrap/popover"
+                                                                href="#"
                                                                 class="menu-link "><i
                                                                     class="menu-bullet menu-bullet-dot"><span></span></i><span
                                                                     class="menu-text">Popover</span></a></li>
                                                         <li class="menu-item " aria-haspopup="true"><a
-                                                                href="http://metro/features/bootstrap/tooltip"
+                                                                href="#"
                                                                 class="menu-link "><i
                                                                     class="menu-bullet menu-bullet-dot"><span></span></i><span
                                                                     class="menu-text">Tooltip</span></a></li>
@@ -1175,7 +1173,7 @@
                     <div class="d-flex align-items-center flex-wrap mb-5">
                         <div class="symbol symbol-50 symbol-light mr-5">
 							<span class="symbol-label">
-								<img src="http://metro/media/svg/misc/006-plurk.svg" class="h-50 align-self-center"
+								<img src="#" class="h-50 align-self-center"
                                      alt=""/>
 							</span>
                         </div>
@@ -1191,7 +1189,7 @@
                     <div class="d-flex align-items-center flex-wrap mb-5">
                         <div class="symbol symbol-50 symbol-light mr-5">
 							<span class="symbol-label">
-								<img src="http://metro/media/svg/misc/015-telegram.svg" class="h-50 align-self-center"
+								<img src="#" class="h-50 align-self-center"
                                      alt=""/>
 							</span>
                         </div>
@@ -1207,7 +1205,7 @@
                     <div class="d-flex align-items-center flex-wrap mb-5">
                         <div class="symbol symbol-50 symbol-light mr-5">
 							<span class="symbol-label">
-								<img src="http://metro/media/svg/misc/003-puzzle.svg" class="h-50 align-self-center"
+								<img src="#" class="h-50 align-self-center"
                                      alt=""/>
 							</span>
                         </div>
@@ -1223,7 +1221,7 @@
                     <div class="d-flex align-items-center flex-wrap mb-5">
                         <div class="symbol symbol-50 symbol-light mr-5">
 							<span class="symbol-label">
-								<img src="http://metro/media/svg/misc/005-bebo.svg" class="h-50 align-self-center"
+								<img src="#" class="h-50 align-self-center"
                                      alt=""/>
 							</span>
                         </div>
@@ -1239,7 +1237,7 @@
                     <div class="d-flex align-items-center flex-wrap">
                         <div class="symbol symbol-50 symbol-light mr-5">
 							<span class="symbol-label">
-								<img src="http://metro/media/svg/misc/014-kickstarter.svg"
+								<img src="#"
                                      class="h-50 align-self-center" alt=""/>
 							</span>
                         </div>
@@ -1815,7 +1813,7 @@
                             <div class="d-flex flex-column mb-5 align-items-start">
                                 <div class="d-flex align-items-center">
                                     <div class="symbol symbol-circle symbol-40 mr-3">
-                                        <img alt="Pic" src="http://metro/media/users/300_12.jpg"/>
+                                        <img alt="Pic" src="#"/>
                                     </div>
                                     <div>
                                         <a href="#"
@@ -1839,7 +1837,7 @@
                                            class="text-dark-75 text-hover-primary font-weight-bold font-size-h6">You</a>
                                     </div>
                                     <div class="symbol symbol-circle symbol-40 ml-3">
-                                        <img alt="Pic" src="http://metro/media/users/300_21.jpg"/>
+                                        <img alt="Pic" src="#"/>
                                     </div>
                                 </div>
                                 <div class="mt-2 rounded p-5 bg-light-primary text-dark-50 font-weight-bold text-right max-w-400px">

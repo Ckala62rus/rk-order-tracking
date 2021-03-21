@@ -13,16 +13,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('main');
+//Route::get('/', function () {
+//    return view('welcome');
+//})->name('main');
 
 Auth::routes();
 
-//Route::get('/', [\App\Http\Controllers\Auth\LoginController::class, 'Sign'])->name('sign');
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/', [\App\Http\Controllers\Auth\LoginController::class, 'sign'])->name('/');
+//Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::middleware(['auth'])->group(function () {
     Route::resource('order', \App\Http\Controllers\Lk\OrderController::class);
-    Route::get('tem', [\App\Http\Controllers\Lk\OrderController::class, 'template']);
+    Route::get('dashboard', [\App\Http\Controllers\Lk\OrderController::class, 'template']);
 });

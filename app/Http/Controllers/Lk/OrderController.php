@@ -41,7 +41,7 @@ class OrderController extends Controller
 
     public function template()
     {
-        return view('lk.test');
+        return view('lk.dashboard');
     }
 
     public function store(Request $request)
