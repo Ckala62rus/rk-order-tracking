@@ -3,7 +3,7 @@
 
         <div class="brand-logo">
             <a href="https://leather.ru/" target="_blank">
-                <img alt="Laravel" src="img/logo.png" style="max-width: 60px"/>
+                <img alt="Laravel" src="img/logo2.png" style="max-width: 60px"/>
             </a>
         </div>
 
