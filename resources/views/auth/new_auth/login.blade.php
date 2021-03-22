@@ -4,12 +4,12 @@
 <div class="d-flex flex-column flex-root">
     <!--begin::Login-->
     <div class="login login-3 login-signin-on d-flex flex-row-fluid" id="kt_login">
-        <div class="d-flex flex-center bgi-size-cover bgi-no-repeat flex-row-fluid" style="background-image: url(/template/media/bg/bg-1.jpg);">
+        <div class="d-flex flex-center bgi-size-cover bgi-no-repeat flex-row-fluid" style="background-image: url({{ asset("template/media/bg/bg-1.jpg") }});">
             <div class="login-form text-center text-white p-7 position-relative overflow-hidden">
                 <!--begin::Login Header-->
                 <div class="d-flex flex-center mb-15">
                     <a href="#">
-                        <img src="/template/media/logos/logo-letter-9.png" class="max-h-100px" alt="" />
+                        <img src="{{ asset("template/media/logos/logo-letter-9.png") }}" class="max-h-100px" alt="" />
                     </a>
                 </div>
                 <!--end::Login Header-->
