@@ -1,22 +1,28 @@
-@extends('layouts.main')
+@extends('template.main')
 
 @section('content')
-    <div class="">
-        <h1>Информация о заказе компании {{ $companyName }}</h1>
-
-        <table class="table table-bordered table-checkable dataTable no-footer dtr-inline collapsed">
-            <thead>
-            <tr>
-                <th scope="col">Номер заказа покупателя</th>
-                <th scope="col">Максимальная дата поставки</th>
-                <th scope="col"> Запрошенная дата поставки</th>
-                <th scope="col">Количество заказанное клиентом (дм<sup>2</sup>)</th>
-                <th scope="col">Фактически сделанное (дм<sup>2</sup>)</th>
-                <th scope="col">КПП/ИНН</th>
-                <th scope="col">Менеджер</th>
-            </tr>
-            </thead>
-            <tbody>
+    <div class="card card-custom gutter-b">
+        <div class="card-header">
+            <div class="card-title">
+                <h3 class="card-label">
+                    Информация о заказе компании {{ $companyName }}
+                </h3>
+            </div>
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered table-checkable dataTable no-footer dtr-inline collapsed">
+                <thead>
+                <tr>
+                    <th scope="col">Номер заказа покупателя</th>
+                    <th scope="col">Максимальная дата поставки</th>
+                    <th scope="col"> Запрошенная дата поставки</th>
+                    <th scope="col">Количество заказанное клиентом (дм<sup>2</sup>)</th>
+                    <th scope="col">Фактически сделанное (дм<sup>2</sup>)</th>
+                    <th scope="col">КПП/ИНН</th>
+                    <th scope="col">Менеджер</th>
+                </tr>
+                </thead>
+                <tbody>
                 @foreach($orders as $order)
                     <tr>
                         <th scope="row">{{ $order->PRJ }}</th>
@@ -28,7 +34,8 @@
                         <th scope="row">{{ $order->Manager }}</th>
                     </tr>
                 @endforeach
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        </div>
     </div>
 @endsection
