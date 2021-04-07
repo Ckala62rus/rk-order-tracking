@@ -9,6 +9,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Carbon;
 
 /**
  * Show client all detail for order
@@ -27,17 +28,24 @@ class OrderController extends Controller
         $companyName = '';
 
         $date = DB::connection('sqlsrv')
-            ->select("SELECT * FROM CustomersOrders_Test_RK1 WHERE UserID ='RK\\nnazarov'");
+            ->select("SELECT * FROM CustomersOrdersDetail ORDER BY ContractorName");
+
+	//dd($date);
 
         foreach($date as $item)
         {
-            $item->QTYORDERED = round($item->QTYORDERED, 2);
-            $item->QTYSCHED = round($item->QTYSCHED, 2);
+            $item->OrderQTY = round($item->OrderQTY, 2);
+            $item->OrderConfirmQTY = round($item->OrderConfirmQTY, 2);
+	    $item->ProdOrderQTY = round($item->ProdOrderQTY, 2);
+	    $item->OrderDate = Carbon::parse($item->OrderDate)->format('Y-m-d');
+	    $item->DeliveryDate = Carbon::parse($item->DeliveryDate)->format('Y-m-d');
+ 	    $item->EndDate = Carbon::parse($item->EndDate)->format('Y-m-d');
             $orders = $date;
-            $companyName = $item->SALESNAME;
+            //$companyName = $item->SALESNAME;
         }
 
-//dd($orders);
+        //return response()->json($orders);
+        //dd($orders);
 
         return view('lk.index', compact('orders', 'companyName'));
     }
