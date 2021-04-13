@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Lk;
 
 use App\Http\Controllers\Controller;
+use App\Models\Orders;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -26,15 +27,16 @@ class OrderController extends Controller
         $orders = [];
         $companyName = '';
 
-        $date = DB::connection('sqlsrv')
-            ->select("SELECT * FROM CustomersOrders_Test_RK1 WHERE UserID ='RK\\nnazarov'");
+        $date = Orders::where('ContractorNameActual', 'like', '%Егорьевск-обувь%')
+            ->get();
+
 
         foreach($date as $item)
         {
-            $item->QTYORDERED = round($item->QTYORDERED, 2);
-            $item->QTYSCHED = round($item->QTYSCHED, 2);
+            $item->OrderQTY = round($item->OrderQTY, 2);
+            $item->OrderConfirmQTY = round($item->OrderConfirmQTY, 2);
+            $item->ProdOrderQTY = round($item->ProdOrderQTY, 2);
             $orders = $date;
-            $companyName = $item->SALESNAME;
         }
 
 //dd($orders);
