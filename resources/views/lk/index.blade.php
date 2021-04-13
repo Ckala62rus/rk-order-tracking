@@ -17,20 +17,22 @@
                     <th scope="col">Производственный заказ</th>
                     <th scope="col">Заказанный обьем в ПРЖ</th>
                     <th scope="col">Дата размещения ПРЖ</th>
-                    <th scope="col">Подтвержденный заказ ПЗ</th>
+{{--                    <th scope="col">Подтвержденный заказ ПЗ</th>--}}
                     <th scope="col">Первоначальный заказчик в ПРЖ</th>
                     <th scope="col">Менеджер</th>
                     <th scope="col">Артикул</th>
                     <th scope="col">Статус производственного заказа</th>
                     <th scope="col">Объем производственного заказа</th>
-                    <th scope="col">Цвет</th>
-                    <th scope="col">Конфигурация</th>
-                    <th scope="col">Толщина</th>
+
+{{--                    <th scope="col">Цвет</th>--}}
+{{--                    <th scope="col">Конфигурация</th>--}}
+{{--                    <th scope="col">Толщина</th>--}}
+
                     <th scope="col">Дата поставки</th>
                     <th scope="col">Дата окончания</th>
                     <th scope="col">Дата поставки/Дата окончания</th>
-                    <th scope="col">ID Закачика</th>
-                    <th scope="col">Заказчик</th>
+{{--                    <th scope="col">ID Закачика</th>--}}
+{{--                    <th scope="col">Заказчик</th>--}}
                 </tr>
                 </thead>
                 <tbody>
@@ -41,20 +43,22 @@
                         <th scope="row">{{ $order->ProdOrderNumber }}</th>
                         <th scope="row">{{ $order->OrderQTY }}</th>
                         <th scope="row">{{ $order->OrderDate }}</th>
-                        <th scope="row">{{ $order->OrderConfirmQTY }}</th>
+{{--                        <th scope="row">{{ $order->OrderConfirmQTY }}</th>--}}
                         <th scope="row">{{ $order->ContractorName }}</th>
                         <th scope="row">{{ $order->ManagerName }}</th>
                         <th scope="row">{{ $order->Article }}</th>
                         <th scope="row">{{ $order->ProdOrderStatus }}</th>
                         <th scope="row">{{ $order->ProdOrderQTY }}</th>
-                        <th scope="row">{{ $order->Color }}</th>
-                        <th scope="row">{{ $order->Config }}</th>
-                        <th scope="row">{{ $order->Thickness }}</th>
+
+{{--                        <th scope="row">{{ $order->Color }}</th>--}}
+{{--                        <th scope="row">{{ $order->Config }}</th>--}}
+{{--                        <th scope="row">{{ $order->Thickness }}</th>--}}
+
                         <th scope="row">{{ $order->DeliveryDate }}</th>
                         <th scope="row">{{ $order->EndDate }}</th>
                         <th scope="row">{{ $order->LeadOrLagTime }}</th>
-                        <th scope="row">{{ $order->AccountNum }}</th>
-                        <th scope="row">{{ $order->ContractorNameActual }}</th>
+{{--                        <th scope="row">{{ $order->AccountNum }}</th>--}}
+{{--                        <th scope="row">{{ $order->ContractorNameActual }}</th>--}}
                     </tr>
                 @endforeach
 

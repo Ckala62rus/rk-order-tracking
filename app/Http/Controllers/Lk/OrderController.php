@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Lk;
 
 use App\Http\Controllers\Controller;
 use App\Models\Orders;
+use Carbon\Carbon;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -23,19 +24,23 @@ class OrderController extends Controller
     public function index()
     {
 //        $user = Auth::user();
-
+//dd($user);
         $orders = [];
-        $companyName = '';
+        $companyName = 'АО "Егорьевск-обувь"';
 
-        $date = Orders::where('ContractorNameActual', 'like', '%Егорьевск-обувь%')
+        $date = Orders::where('AccountNum', '3797')
+            ->limit(5)
             ->get();
 
-
+//dd($date);
         foreach($date as $item)
         {
             $item->OrderQTY = round($item->OrderQTY, 2);
             $item->OrderConfirmQTY = round($item->OrderConfirmQTY, 2);
             $item->ProdOrderQTY = round($item->ProdOrderQTY, 2);
+            $item->DeliveryDate = Carbon::parse($item->DeliveryDate)->format('Y-m-d');
+            $item->EndDate = Carbon::parse($item->EndDate)->format('Y-m-d');
+            $item->OrderDate = Carbon::parse($item->OrderDate)->format('Y-m-d');
             $orders = $date;
         }
 
