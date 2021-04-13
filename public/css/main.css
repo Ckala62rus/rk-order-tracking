@@ -14,3 +14,8 @@ h1  {
     max-width: 5%;
     height: auto;
 }
+
+.table thead th {
+    vertical-align: middle;
+    text-align: center;
+}
