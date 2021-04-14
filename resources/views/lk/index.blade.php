@@ -10,10 +10,10 @@
             </div>
         </div>
         <div class="card-body" style="overflow: auto">
-            <table class="table table-bordered table-checkable dataTable no-footer dtr-inline collapsed">
+            <table class="table table-bordered table-checkable dataTable no-footer dtr-inline collapsed orders__tracking__table">
                 <thead>
                 <tr class="">
-                    <th scope="col">Дата размещения ПРЖ</th>
+{{--                    <th scope="col">Дата размещения ПРЖ</th>--}}
                     <th scope="col">Номер заказа ПРЖ</th>
                     <th scope="col">Заказанный обьем в ПРЖ</th>
                     <th scope="col" class="order_table_header">Артикул</th>
@@ -21,9 +21,9 @@
                     <th scope="col">Статус производственного заказа</th>
                     <th scope="col">Объем производственного заказа</th>
 
-                    {{--                    <th scope="col">Цвет</th>--}}
-                    {{--                    <th scope="col">Конфигурация</th>--}}
-                    {{--                    <th scope="col">Толщина</th>--}}
+                    <th scope="col">Цвет</th>
+                    <th scope="col">Конфигурация</th>
+                    <th scope="col">Толщина</th>
 
                     <th scope="col">Дата поставки</th>
                     <th scope="col">Дата окончания</th>
@@ -35,7 +35,7 @@
 
                 @foreach($orders as $order)
                     <tr>
-                        <th scope="row">{{ $order->OrderDate }}</th>
+{{--                        <th scope="row">{{ $order->OrderDate }}</th>--}}
                         <th scope="row">{{ $order->OrderNumber }}</th>
                         <th scope="row">{{ $order->OrderQTY }}</th>
                         <th scope="row">{{ $order->Article }}</th>
@@ -43,9 +43,9 @@
                         <th scope="row">{{ $order->ProdOrderStatus }}</th>
                         <th scope="row">{{ $order->ProdOrderQTY }}</th>
 
-                        {{--                        <th scope="row">{{ $order->Color }}</th>--}}
-                        {{--                        <th scope="row">{{ $order->Config }}</th>--}}
-                        {{--                        <th scope="row">{{ $order->Thickness }}</th>--}}
+                        <th scope="row">{{ $order->Color }}</th>
+                        <th scope="row">{{ $order->Config }}</th>
+                        <th scope="row">{{ $order->Thickness }}</th>
 
                         <th scope="row">{{ $order->DeliveryDate }}</th>
                         <th scope="row">{{ $order->EndDate }}</th>

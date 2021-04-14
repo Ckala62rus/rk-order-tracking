@@ -29,7 +29,7 @@ class OrderController extends Controller
         $companyName = 'АО "Егорьевск-обувь"';
 
         $date = Orders::where('AccountNum', '3797')
-            ->limit(5)
+//            ->limit(5)
             ->get();
 
         foreach($date as $item)
