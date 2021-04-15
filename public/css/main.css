@@ -29,3 +29,11 @@ h1  {
 .orders__tracking__table {
     font-size: 12px;
 }
+
+.orders__tracking__table {
+    table-layout: fixed;
+}
+
+.order_table_header {
+    background-color: #e7d7fb;
+}

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Lk;
 
 use App\Http\Controllers\Controller;
 use App\Models\Orders;
+use App\Models\OrdersSeed;
 use Carbon\Carbon;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
@@ -31,6 +32,16 @@ class OrderController extends Controller
         $date = Orders::where('AccountNum', '3797')
 //            ->limit(5)
             ->get();
+//dd($date);
+
+//        $date = Orders::all();
+//
+//        foreach ($date->toArray() as $key => $value) {
+//            $a = OrdersSeed::create($value);
+////            dd($a);
+//        }
+//
+//        dd('END');
 
         foreach($date as $item)
         {
