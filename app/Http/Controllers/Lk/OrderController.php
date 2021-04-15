@@ -31,6 +31,7 @@ class OrderController extends Controller
 
         $date = Orders::where('AccountNum', '3797')
 //            ->limit(5)
+                ->orderByRaw('OrderDate DESC')
             ->get();
 //dd($date);
 
@@ -49,8 +50,8 @@ class OrderController extends Controller
             $item->OrderConfirmQTY = round($item->OrderConfirmQTY, 2);
             $item->ProdOrderQTY = round($item->ProdOrderQTY, 2);
             $item->DeliveryDate = Carbon::parse($item->DeliveryDate)->format('d-m-Y');
-            $item->EndDate = Carbon::parse($item->EndDate)->format('d-m-Y');
-            $item->OrderDate = Carbon::parse($item->OrderDate)->format('d-m-Y');
+            $item->EndDate = $item->EndDate ? Carbon::parse($item->EndDate)->format('d-m-Y') : "";
+            $item->OrderDate = $item->OrderDate ? Carbon::parse($item->OrderDate)->format('d-m-Y') : "";
             $item->OrderQTY = number_format($item->OrderQTY, 0, ',', ' ');
             $item->ProdOrderQTY = number_format($item->ProdOrderQTY, 0, ',', ' ');
             $orders = $date;

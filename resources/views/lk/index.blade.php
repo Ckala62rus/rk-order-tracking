@@ -10,28 +10,31 @@
                 </div>
             </div>
             <div class="card-body" style="overflow: auto">
-                <table class="table table-bordered table-checkable dataTable no-footer dtr-inline collapsed orders__tracking__table table-hover table-fixed-head table-fixed">
-                    <thead>
+                <table class="table table-bordered table-checkable dataTable no-footer dtr-inline collapsed orders__tracking__table table-hover">
+                    <thead class="row-sticky">
                     <col width="150" valign="top">
-                    <tr class="order_table_header">
-                        <th scope="col">Дата размещения заказа</th>
-                        <th scope="col">Номер заявки</th>
-                        <th scope="col">Заказанный обьем</th>
-                        <th scope="col">Артикул</th>
-                        <th scope="col">Номер заказа</th>
-                        <th scope="col">Статус заказа</th>
-                        <th scope="col">Объем заказа</th>
+                        <div class="row-sticky">
+                            <tr class="order_table_header">
+                                <th scope="col">Дата размещения заказа</th>
+                                <th scope="col">Номер заявки</th>
+                                <th scope="col">Заказанный обьем</th>
+                                <th scope="col">Артикул</th>
+                                <th scope="col">Номер заказа</th>
+                                <th scope="col">Статус заказа</th>
+                                <th scope="col">Объем заказа</th>
 
-                        <th scope="col">Цвет</th>
-                        <th scope="col">Конфигурация</th>
-                        <th scope="col">Толщина</th>
+                                <th scope="col">Цвет</th>
+                                <th scope="col">Конфигурация</th>
+                                <th scope="col">Толщина</th>
 
-                        <th scope="col">Дата поставки</th>
-                        <th scope="col">Дата окончания</th>
-                        <th scope="col">Дата поставки/окончания</th>
-                        <th scope="col">Менеджер</th>
-                    </tr>
+                                <th scope="col">Дата поставки</th>
+                                <th scope="col">Дата окончания</th>
+                                <th scope="col">Дата поставки/окончания</th>
+                                <th scope="col">Менеджер</th>
+                            </tr>
+                        </div>
                     </thead>
+
                     <tbody>
 
                     @foreach($orders as $order)
