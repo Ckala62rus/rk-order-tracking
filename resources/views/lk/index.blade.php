@@ -29,7 +29,7 @@
 
                                 <th scope="col">Дата поставки</th>
                                 <th scope="col">Дата окончания</th>
-                                <th scope="col">Дата поставки/окончания</th>
+                                <th scope="col">Отклонение от даты поставки</th>
                                 <th scope="col">Менеджер</th>
                             </tr>
                         </div>

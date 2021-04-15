@@ -1,6 +1,19 @@
 @include('template.header')
 
-<body id="kt_body" class="quick-panel-right demo-panel-right offcanvas-right header-fixed header-mobile-fixed subheader-enabled subheader-fixed aside-enabled aside-minimize-hoverable aside-fixed page-loading">
+<body id="kt_body" class="
+    quick-panel-right
+    demo-panel-right
+    offcanvas-right
+    header-fixed
+    header-mobile-fixed
+    subheader-enabled
+    subheader-fixed
+    aside-enabled
+    aside-minimize-hoverable
+    aside-fixed
+    page-loading
+    aside-minimize
+">
 
 <div id="kt_header_mobile" class="header-mobile  header-mobile-fixed ">
     <div class="mobile-logo">
