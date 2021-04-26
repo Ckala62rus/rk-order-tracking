@@ -1139,7 +1139,7 @@
             <div class="content  d-flex flex-column flex-column-fluid" id="kt_content">
                 <div class="d-flex flex-column-fluid">
 {{--                    <div class=" container ">--}}
-                    <div class="">
+                    <div class="" id="app">
                         @yield('content')
                     </div>
                 </div>
@@ -2060,5 +2060,5 @@
 <script src="{{ asset("template/plugins/custom/prismjs/prismjs.bundle.js") }}" type="text/javascript"></script>
 <script src="{{ asset("template/js/scripts.bundle.js") }}" type="text/javascript"></script>
 <script src="{{ asset("template/js/pages/widgets.js") }}" type="text/javascript"></script>
-
+<script src="{{ mix('js/app.js') }}"></script>
 </body>

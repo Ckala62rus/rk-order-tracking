@@ -4,14 +4,11 @@ namespace App\Http\Controllers\Lk;
 
 use App\Http\Controllers\Controller;
 use App\Models\Orders;
-use App\Models\OrdersSeed;
 use Carbon\Carbon;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 /**
  * Show client all detail for order
@@ -30,22 +27,10 @@ class OrderController extends Controller
         $companyName = 'АО "Егорьевск-обувь"';
 
         $date = Orders::where('AccountNum', '3797')
-//            ->limit(5)
                 ->orderByRaw('OrderDate DESC')
-            ->get();
-//dd($date);
+                ->get();
 
-//        $date = Orders::all();
-//
-//        foreach ($date->toArray() as $key => $value) {
-//            $a = OrdersSeed::create($value);
-////            dd($a);
-//        }
-//
-//        dd('END');
-
-        foreach($date as $item)
-        {
+        foreach ($date as $item) {
             $item->OrderQTY = round($item->OrderQTY, 2);
             $item->OrderConfirmQTY = round($item->OrderConfirmQTY, 2);
             $item->ProdOrderQTY = round($item->ProdOrderQTY, 2);
@@ -58,6 +43,14 @@ class OrderController extends Controller
         }
 
         return view('lk.index', compact('orders', 'companyName'));
+    }
+
+    /**
+     * Testing vue table 2
+     */
+    public function vueOrders()
+    {
+        return view('lk.vue-table');
     }
 
     /**

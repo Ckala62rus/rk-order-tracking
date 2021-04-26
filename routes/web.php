@@ -27,4 +27,5 @@ Route::middleware(['auth'])->group(function () {
     Route::get('dashboard', [\App\Http\Controllers\Lk\OrderController::class, 'template']);
     Route::get('orders', [\App\Http\Controllers\Lk\OrderApiController::class, 'getOrders']); // vue for axios
     Route::get('status', [\App\Http\Controllers\Lk\OrderApiController::class, 'getStatuses']);
+    Route::get('vue', [\App\Http\Controllers\Lk\OrderController::class, 'vueOrders']);
 });

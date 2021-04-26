@@ -6,11 +6,128 @@
                 <h3 class="card-label">
                     Информация о заказе компании
                 </h3>
+<!--                <div class="scroll-table">-->
+<!--                    <table>-->
+<!--                        <thead>-->
+<!--                        <tr>-->
+<!--                            <th>Название блюда</th>-->
+<!--                            <th>Белки</th>-->
+<!--                            <th>Жиры</th>-->
+<!--                            <th>Углеводы</th>-->
+<!--                            <th>Ккал</th>-->
+<!--                        </tr>-->
+<!--                        </thead>-->
+<!--                    </table>-->
+<!--                    <div class="scroll-table-body">-->
+<!--                        <table>-->
+<!--                            <tbody>-->
+<!--                            <tr>-->
+<!--                                <td>Азу</td>-->
+<!--                                <td>11,9</td>-->
+<!--                                <td>14,2</td>-->
+<!--                                <td>10,2</td>-->
+<!--                                <td>214</td>-->
+<!--                            </tr>-->
+<!--                            <tr>-->
+<!--                                <td>Азу</td>-->
+<!--                                <td>11,9</td>-->
+<!--                                <td>14,2</td>-->
+<!--                                <td>10,2</td>-->
+<!--                                <td>214</td>-->
+<!--                            </tr>-->
+<!--                            <tr>-->
+<!--                                <td>Азу</td>-->
+<!--                                <td>11,9</td>-->
+<!--                                <td>14,2</td>-->
+<!--                                <td>10,2</td>-->
+<!--                                <td>214</td>-->
+<!--                            </tr>-->
+<!--                            <tr>-->
+<!--                                <td>Азу</td>-->
+<!--                                <td>11,9</td>-->
+<!--                                <td>14,2</td>-->
+<!--                                <td>10,2</td>-->
+<!--                                <td>214</td>-->
+<!--                            </tr>-->
+<!--                            <tr>-->
+<!--                                <td>Азу</td>-->
+<!--                                <td>11,9</td>-->
+<!--                                <td>14,2</td>-->
+<!--                                <td>10,2</td>-->
+<!--                                <td>214</td>-->
+<!--                            </tr>-->
+<!--                            <tr>-->
+<!--                                <td>Азу</td>-->
+<!--                                <td>11,9</td>-->
+<!--                                <td>14,2</td>-->
+<!--                                <td>10,2</td>-->
+<!--                                <td>214</td>-->
+<!--                            </tr>-->
+<!--                            <tr>-->
+<!--                                <td>Азу</td>-->
+<!--                                <td>11,9</td>-->
+<!--                                <td>14,2</td>-->
+<!--                                <td>10,2</td>-->
+<!--                                <td>214</td>-->
+<!--                            </tr>-->
+<!--                            <tr>-->
+<!--                                <td>Азу</td>-->
+<!--                                <td>11,9</td>-->
+<!--                                <td>14,2</td>-->
+<!--                                <td>10,2</td>-->
+<!--                                <td>214</td>-->
+<!--                            </tr>-->
+<!--                            <tr>-->
+<!--                                <td>Азу</td>-->
+<!--                                <td>11,9</td>-->
+<!--                                <td>14,2</td>-->
+<!--                                <td>10,2</td>-->
+<!--                                <td>214</td>-->
+<!--                            </tr>-->
+<!--                            <tr>-->
+<!--                                <td>Азу</td>-->
+<!--                                <td>11,9</td>-->
+<!--                                <td>14,2</td>-->
+<!--                                <td>10,2</td>-->
+<!--                                <td>214</td>-->
+<!--                            </tr>-->
+<!--                            <tr>-->
+<!--                                <td>Азу</td>-->
+<!--                                <td>11,9</td>-->
+<!--                                <td>14,2</td>-->
+<!--                                <td>10,2</td>-->
+<!--                                <td>214</td>-->
+<!--                            </tr>-->
+<!--                            <tr>-->
+<!--                                <td>Азу</td>-->
+<!--                                <td>11,9</td>-->
+<!--                                <td>14,2</td>-->
+<!--                                <td>10,2</td>-->
+<!--                                <td>214</td>-->
+<!--                            </tr>-->
+<!--                            <tr>-->
+<!--                                <td>Азу</td>-->
+<!--                                <td>11,9</td>-->
+<!--                                <td>14,2</td>-->
+<!--                                <td>10,2</td>-->
+<!--                                <td>214</td>-->
+<!--                            </tr>-->
+<!--                            <tr>-->
+<!--                                <td>Азу</td>-->
+<!--                                <td>11,9</td>-->
+<!--                                <td>14,2</td>-->
+<!--                                <td>10,2</td>-->
+<!--                                <td>214</td>-->
+<!--                            </tr>-->
+<!--                            </tbody>-->
+<!--                        </table>-->
+<!--                    </div>-->
+<!--                </div>-->
             </div>
         </div>
 
         <div class="row">
-            <div class="col-lg-6 col-md-9 col-sm-12">
+            <div class="col-lg-6 col-md-9 col-sm-12 p-10">
 
                 <h3>Фильтры поиска</h3>
 
@@ -49,22 +166,9 @@
                 :columns="columns"
                 :options="options"
                 ref="task-table"
+                class="table table-bordered table-checkable dataTable no-footer dtr-inline collapsed orders__tracking__table table-hover"
             />
         </div>
-
-<!--        <v-client-table :data="data.orders" :columns="columnss" :options="options"/>-->
-
-<!--        <div class="card-body" style="overflow: auto">-->
-<!--        <div class="m-portlet__body">-->
-<!--            <v-server-table-->
-<!--                :url="url"-->
-<!--                :columns="columns"-->
-<!--                :options="options"-->
-<!--                class="faq-table "-->
-<!--                ref="task-table"-->
-<!--            >-->
-<!--            </v-server-table>-->
-<!--        </div>-->
 
     </div>
 </template>
@@ -127,7 +231,7 @@ export default {
                 },
                 filterable: false,
                 perPageValues: [], // [5, 10, 100, 500]
-                skin: 'table table-bordered table-checkable dataTable no-footer dtr-inline collapsed',
+                // skin: 'table table-bordered table-checkable dataTable no-footer dtr-inline collapsed orders__tracking__table table-hover',
             },
             filter: {
                 status: null,
@@ -194,7 +298,6 @@ export default {
         this.$refs['task-table'].setLimit(500);
         this.interval = setInterval(() => {
             this.getData();
-            // this.$refs['task-table'].refresh();
         }, 5000);
     },
 
@@ -207,4 +310,48 @@ export default {
 </script>
 
 <style scoped>
+.scroll-table-body {
+    height: 300px;
+    overflow-x: auto;
+    margin-top: 0px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #eee;
+}
+.scroll-table table {
+    width:100%;
+    table-layout: fixed;
+    border: none;
+}
+.scroll-table thead th {
+    font-weight: bold;
+    text-align: left;
+    border: none;
+    padding: 10px 15px;
+    background: #d8d8d8;
+    font-size: 14px;
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+}
+.scroll-table tbody td {
+    text-align: left;
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    padding: 10px 15px;
+    font-size: 14px;
+    vertical-align: top;
+}
+.scroll-table tbody tr:nth-child(even){
+    background: #f3f3f3;
+}
+
+/* Стили для скролла */
+::-webkit-scrollbar {
+    width: 6px;
+}
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+}
+::-webkit-scrollbar-thumb {
+    box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+}
 </style>
