@@ -295,7 +295,7 @@ export default {
     },
 
     mounted() {
-        this.$refs['task-table'].setLimit(500);
+        this.$refs['task-table'].setLimit(10);
         this.interval = setInterval(() => {
             this.getData();
         }, 5000);
