@@ -17,7 +17,13 @@
                 <div class="login-signin">
                     <div class="mb-20">
                         <h3>Sign In To Admin</h3>
-                        <p class="opacity-60 font-weight-bold">Enter your details to login to your account:</p>
+
+                        @if(count($errors->all()) > 0)
+                            <p class="error__auth">invalid login or password input</p>
+                        @else
+                            <p class="opacity-60 font-weight-bold">Enter your details to login to your account:</p>
+                        @endif
+
                     </div>
 
                     <form class="form" id="kt_login_signin_form" method="POST" action="{{ route('login') }}">

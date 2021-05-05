@@ -37,3 +37,7 @@ h1  {
 .order_table_header {
     background-color: #e7d7fb;
 }
+
+.error__auth {
+    color: #f55252;
+}
