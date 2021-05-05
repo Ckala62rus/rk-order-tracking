@@ -96,6 +96,6 @@ class OrderRepository extends Repository
     {
         return $query
             ->where('DeliveryDate', '>=', $date_from)
-            ->where('DeliveryDate', '<=', $date_to . '00:00:00');
+            ->where('DeliveryDate', '<=', $date_to . ' ' . '00:00:00');
     }
 }

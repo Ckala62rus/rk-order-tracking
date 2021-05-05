@@ -9,8 +9,8 @@ class Orders extends Model
 {
     use HasFactory;
 
-//    protected $connection = "sqlsrv";
-//    protected $table = "CustomersOrdersDetail";
+    protected $connection = "sqlsrv";
+    protected $table = "CustomersOrdersDetail";
 
 //    protected $perPage = 2;
 
