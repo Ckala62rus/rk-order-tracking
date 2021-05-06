@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Lk;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Order\OrderResource;
+use App\Http\Resources\OrderStatus\StatusResource;
 use App\Services\OrderService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -59,7 +60,7 @@ class OrderApiController extends Controller
             ->getAllStatuses();
 
         return response()->json([
-            'data' => $statuses
+            'data' => StatusResource::collection($statuses)
         ]);
     }
 }

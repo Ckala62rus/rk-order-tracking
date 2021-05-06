@@ -82,7 +82,7 @@ class OrderRepository extends Repository
     public function whereStatus(Builder $query, string $status): Builder
     {
         return $query
-            ->where('ProdOrderStatus', 'LIKE', $status . '%');
+            ->where('IDProdOrderStatus', $status);
     }
 
     /**
@@ -96,6 +96,6 @@ class OrderRepository extends Repository
     {
         return $query
             ->where('DeliveryDate', '>=', $date_from)
-            ->where('DeliveryDate', '<=', $date_to . ' ' . '00:00:00');
+            ->where('DeliveryDate', '<=', $date_to . ' ' . '23:59:00');
     }
 }

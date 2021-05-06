@@ -2,8 +2,8 @@
 
 namespace App\Services;
 
-use App\Models\Orders;
 use App\Repositories\OrderRepository;
+use App\Repositories\OrderStatusRepository;
 use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
@@ -17,13 +17,21 @@ class OrderService
     public OrderRepository $orderRepository;
 
     /**
+     * @var OrderStatusRepository
+     */
+    public OrderStatusRepository $orderStatusRepository;
+
+    /**
      * OrderService constructor.
      * @param OrderRepository $orderRepository
+     * @param OrderStatusRepository $orderStatusRepository
      */
     public function __construct(
-        OrderRepository $orderRepository
+        OrderRepository $orderRepository,
+        OrderStatusRepository $orderStatusRepository
     ) {
         $this->orderRepository = $orderRepository;
+        $this->orderStatusRepository = $orderStatusRepository;
     }
 
     /**
@@ -100,13 +108,13 @@ class OrderService
 
     /**
      * Get all statuses from orders table
-     * @return string[]
+     * @return Collection
      */
-    public function getAllStatuses(): array
+    public function getAllStatuses(): Collection
     {
         return $this
-            ->orderRepository
-            ->statuses();
+            ->orderStatusRepository
+            ->all();
     }
 
     /**
@@ -117,14 +125,9 @@ class OrderService
      */
     public function filterByStatus(string $status, Builder $query): Builder
     {
-        foreach (Orders::status() as $item) {
-            if ($item['id'] == $status) {
-                return $this
-                    ->orderRepository
-                    ->whereStatus($query, $item['status']);
-            }
-        }
-        return $query;
+        return $this
+            ->orderRepository
+            ->whereStatus($query, $status);
     }
 
 }

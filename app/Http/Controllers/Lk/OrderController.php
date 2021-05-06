@@ -8,7 +8,9 @@ use Carbon\Carbon;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Show client all detail for order
@@ -50,6 +52,9 @@ class OrderController extends Controller
      */
     public function vueOrders()
     {
+        if (Auth::user()->is_admin == false) {
+            return response(['Access is denied'], JsonResponse::HTTP_FORBIDDEN);
+        }
         return view('lk.vue-table');
     }
 
