@@ -17,6 +17,25 @@ import DatePicker from 'vue2-datepicker';
 import 'vue2-datepicker/index.css';
 Vue.use(DatePicker)
 
+import VModal from 'vue-js-modal'
+Vue.use(VModal, {
+    dynamic:true,
+    dynamicDefaults: {
+        height: 'auto',
+        adaptive: true
+    }
+})
+
+import Notifications from 'vue-notification';
+Vue.use(Notifications);
+
+import Vue from 'vue';
+import VueSweetalert2 from 'vue-sweetalert2';
+
+// If you don't need the styles, do not connect
+// import 'sweetalert2/dist/sweetalert2.min.css'; // с включенными стилями, уезжал footer
+Vue.use(VueSweetalert2);
+
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -30,6 +49,7 @@ Vue.use(DatePicker)
 
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('orders-table', require('./components/Order/OrderTable').default);
+Vue.component('users-table', require('./components/User/UserIndex').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

@@ -17,7 +17,7 @@ class AddColumnAccountIdInUsersTable extends Migration
             $table
                 ->string("account_id")
                 ->after("is_manager")
-                ->default(null);
+                ->nullable();
         });
     }
 

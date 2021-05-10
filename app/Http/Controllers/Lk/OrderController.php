@@ -23,7 +23,7 @@ class OrderController extends Controller
      */
     public function index()
     {
-//        $user = Auth::user();
+        $user = Auth::user();
 
         $orders = [];
         $companyName = 'АО "Егорьевск-обувь"';

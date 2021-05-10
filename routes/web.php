@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Lk\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -28,4 +29,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('orders', [\App\Http\Controllers\Lk\OrderApiController::class, 'getOrders']); // vue for axios
     Route::get('status', [\App\Http\Controllers\Lk\OrderApiController::class, 'getStatuses']);
     Route::get('vue', [\App\Http\Controllers\Lk\OrderController::class, 'vueOrders']);
+    Route::get('users', [UserController::class, 'users']);
+    Route::resource('admin/users', UserController::class)->middleware('admin');
 });
+
