@@ -16,10 +16,10 @@ class UserCreateRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'email' => 'required|email|string|max:255|unique:users',
-            'password' => 'required|integer|confirmed',
-            'is_admin' => 'sometimes|integer',
-            'is_manager' => 'sometimes|integer',
-            'account_id' => 'sometimes|integer',
+            'password' => 'required|confirmed',
+            'is_admin' => 'nullable|integer',
+            'is_manager' => 'nullable|integer',
+            'account_id' => 'nullable|integer',
         ];
     }
 }

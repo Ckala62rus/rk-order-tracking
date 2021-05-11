@@ -16,10 +16,10 @@ class UserUpdateRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'email' => 'required|email|string|max:255',
-            'password' => 'sometimes|integer|confirmed',
-            'is_admin' => 'sometimes|integer',
-            'is_manager' => 'sometimes|integer',
-            'account_id' => 'sometimes|integer',
+            'password' => 'sometimes|confirmed',
+            'is_admin' => 'nullable|integer',
+            'is_manager' => 'nullable|integer',
+            'account_id' => 'nullable|integer',
         ];
     }
 }
