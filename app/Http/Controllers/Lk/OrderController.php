@@ -28,8 +28,9 @@ class OrderController extends Controller
         $orders = [];
         $companyName = 'АО "Егорьевск-обувь"';
 
-        $date = Orders::where('AccountNum', '3797')
-                ->orderByRaw('OrderDate DESC')
+//        $date = Orders::where('AccountNum', '3797')
+        $date = Orders::where('AccountNum', $user->account_id)
+//                ->orderByRaw('OrderDate DESC')
                 ->get();
 
         foreach ($date as $item) {
@@ -52,7 +53,7 @@ class OrderController extends Controller
      */
     public function vueOrders()
     {
-        if (Auth::user()->is_admin == false) {
+        if (Auth::user()->is_manager != false) {
             return response(['Access is denied'], JsonResponse::HTTP_FORBIDDEN);
         }
         return view('lk.vue-table');

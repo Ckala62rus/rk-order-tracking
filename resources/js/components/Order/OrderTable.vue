@@ -136,7 +136,7 @@
                     <div class="form-group">
 
                         <label for="project">Статус заказа</label>
-                        <select class="form-control" id="project" v-model="filter.status">
+                        <select class="form-control status_select" id="project" v-model="filter.status">
                             <option :value="null">Нет проекта</option>
                             <option :key="item.id" :value="item.id" v-for="item in status">{{item.status}}</option>
                         </select>
@@ -353,5 +353,9 @@ export default {
 }
 ::-webkit-scrollbar-thumb {
     box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+}
+
+.status_select {
+    width: 60%;
 }
 </style>
