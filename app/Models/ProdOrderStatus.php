@@ -9,5 +9,6 @@ class ProdOrderStatus extends Model
 {
     use HasFactory;
 
+    protected $connection = 'sqlsrv';
     protected $table = 'prodorderstatus';
 }
