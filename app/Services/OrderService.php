@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Auth;
 
 class OrderService
 {
@@ -60,7 +61,7 @@ class OrderService
      */
     public function getOrdersPaginate(array $data): LengthAwarePaginator
     {
-        $limit = isset($data['limit']) ? $data['limit'] : 500;
+        $limit = $data['limit'] ?? 500;
 
         $query = $this
             ->orderRepository
@@ -77,9 +78,12 @@ class OrderService
                 ->filterByDate($query, $data['date_from'], $data['date_to']);
         }
 
+        $user = Auth::user();
+
         $query = $this
             ->orderRepository
-            ->whereUser($query, '3797');
+//            ->whereUser($query, '3797');
+            ->whereUser($query, $user->account_id);
 
         return $query
             ->paginate($limit);

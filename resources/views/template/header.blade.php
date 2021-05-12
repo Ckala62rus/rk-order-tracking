@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8"/>
 
-    <title>Laravel | Dashboard</title>
+    <title>Tracking order</title>
 
     <meta name="description" content="Some description for the page"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddColumnIsAdminInUsersTable extends Migration
+class AddColumnAccountIdInUsersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -15,8 +15,8 @@ class AddColumnIsAdminInUsersTable extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table
-                ->boolean('is_admin')
-                ->after('password')
+                ->string("account_id")
+                ->after("is_manager")
                 ->nullable();
         });
     }
@@ -29,7 +29,7 @@ class AddColumnIsAdminInUsersTable extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('is_admin');
+            $table->dropColumn("account_id");
         });
     }
 }
