@@ -68,23 +68,4 @@ class OrderController extends Controller
         return view('lk.dashboard');
     }
 
-    public function store(Request $request)
-    {
-//        dd('create order');
-    }
-
-    public function show($id)
-    {
-//        dd('show order by id = ' . $id);
-    }
-
-    public function update(Request $request, $id)
-    {
-//        dd('update order by id');
-    }
-
-    public function destroy($id)
-    {
-        //
-    }
 }
