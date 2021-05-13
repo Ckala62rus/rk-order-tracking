@@ -92,8 +92,8 @@
                             <input
                                 type="email"
                                 class="form-control"
-                                placeholder="Enter email"
-                                v-model="form.user.email"
+                                :placeholder="form.user.email"
+                                disabled
                             />
                         </div>
                         <div class="form-group">
@@ -121,7 +121,7 @@
                             <input
                                 type="text"
                                 class="form-control"
-                                placeholder="Enter name"
+                                placeholder="Account id"
                                 v-model="form.user.account_id"
                             />
                         </div>
@@ -210,7 +210,7 @@
                             <input
                                 type="text"
                                 class="form-control"
-                                placeholder="Enter name"
+                                placeholder="Account id"
                                 v-model="new_user.account_id"
                             />
                         </div>
@@ -265,12 +265,11 @@ export default {
             url: 'admin/users',
             columns: [
                 'id',
-                'account_id',
                 'email',
+                'name',
                 'is_admin',
                 'is_manager',
                 'account_id',
-                'name',
                 'actions',
             ],
             options: {
@@ -312,6 +311,11 @@ export default {
                             title: 'даление пользователя',
                             text: 'Пользователь успешно удален'
                         });
+                        Swal.fire(
+                            'Удалено!',
+                            'Пользователь удален',
+                            'success'
+                        )
                         this.$refs['user-table'].refresh();
                     });
                 }
