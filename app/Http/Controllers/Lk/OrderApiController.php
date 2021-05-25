@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Lk;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Order\OrderResource;
 use App\Http\Resources\OrderStatus\StatusResource;
+use App\Http\Resources\RealisationStatus\RealisationStatusResource;
 use App\Services\OrderService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -61,6 +62,21 @@ class OrderApiController extends Controller
 
         return response()->json([
             'data' => StatusResource::collection($statuses)
-        ]);
+        ], JsonResponse::HTTP_OK);
+    }
+
+    /**
+     * Get all realisation statuses
+     * @return JsonResponse
+     */
+    public function getRealisationStatuses(): JsonResponse
+    {
+        $realisationStatuses = $this
+            ->orderService
+            ->getAllRealisationStatus();
+
+        return response()->json([
+            'data' => RealisationStatusResource::collection($realisationStatuses)
+        ], JsonResponse::HTTP_OK);
     }
 }

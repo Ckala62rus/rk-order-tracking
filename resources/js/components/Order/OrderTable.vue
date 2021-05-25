@@ -137,8 +137,14 @@
 
                         <label for="project">Статус заказа</label>
                         <select class="form-control status_select" id="project" v-model="filter.status">
-                            <option :value="null">Нет проекта</option>
+                            <option :value="null">Нет статуса</option>
                             <option :key="item.id" :value="item.id" v-for="item in status">{{item.status}}</option>
+                        </select>
+
+                        <label for="project">Статус реализации</label>
+                        <select class="form-control status_select" id="project2" v-model="filter.realisation_status">
+                            <option :value="null">Нет статуса</option>
+                            <option :key="item.realisation_status" :value="item.realisation_status" v-for="item in realisationStatus">{{item.decription}}</option>
                         </select>
 
                         <div class="p-0 mt-6">
@@ -183,6 +189,7 @@ export default {
     data() {
         return {
             status: {},
+            realisationStatus: {},
             data: {
                 orders: [],
             },
@@ -201,11 +208,7 @@ export default {
                 'EndDate',
                 'LeadOrLagTime',
                 'ManagerName',
-                // 'AccountNum',
                 'ContractorName',
-                // 'ContractorNameActual',
-                // 'OrderConfirmQTY',
-                // 'Prodstatus',
             ],
             options: {
                 headings: {
@@ -223,11 +226,7 @@ export default {
                     EndDate: 'Дата окончания',
                     LeadOrLagTime: 'Отклонения от даты поставки',
                     ManagerName: 'Менеджер',
-                    // AccountNum: 'AccountNum',
-                    ContractorName: 'ContractorName',
-                    // ContractorNameActual: 'ContractorNameActual',
-                    // OrderConfirmQTY: 'OrderConfirmQTY',
-                    // Prodstatus: 'Prodstatus',
+                    ContractorName: 'Кампания',
                 },
                 filterable: false,
                 perPageValues: [], // [5, 10, 100, 500]
@@ -235,6 +234,7 @@ export default {
             },
             filter: {
                 status: null,
+                realisation_status: null,
                 date_from: null,
                 date_to: null,
             },
@@ -250,7 +250,6 @@ export default {
         getData() {
             axios.get(this.url ).then((response) => {
                 this.data.orders = response.data.data;
-                console.log(response);
             })
         },
 
@@ -260,14 +259,20 @@ export default {
             })
         },
 
+        getRealisationStatuses() {
+            axios.get('/realisation-status' ).then((response) => {
+                this.realisationStatus = response.data.data;
+            })
+        },
+
         resetFilter() {
             this.filter.status =
                 this.filter.date_from =
-                    this.filter.date_to = null;
+                    this.filter.realisation_status =
+                        this.filter.date_to = null;
         },
 
         setFilter() {
-            console.log('Go filter');
             this.query = this.urlBase;
 
             if (this.filter.status != null) {
@@ -282,8 +287,11 @@ export default {
                 this.query += '&date_to=' + this.filter.date_to;
             }
 
+            if (this.filter.realisation_status != null) {
+                this.query += '&realisation_status=' + this.filter.realisation_status;
+            }
+
             this.url = this.query;
-            // this.$refs['task-table'].refresh();
             this.getData();
         },
 
@@ -291,6 +299,7 @@ export default {
 
     created() {
         this.getStatuses();
+        this.getRealisationStatuses();
         this.getData();
     },
 
@@ -298,7 +307,7 @@ export default {
         this.$refs['task-table'].setLimit(10);
         this.interval = setInterval(() => {
             this.getData();
-        }, 5000);
+        }, 25000);
     },
 
     destroyed() {
@@ -309,53 +318,53 @@ export default {
 
 </script>
 
-<style scoped>
-.scroll-table-body {
-    height: 300px;
-    overflow-x: auto;
-    margin-top: 0px;
-    margin-bottom: 20px;
-    border-bottom: 1px solid #eee;
-}
-.scroll-table table {
-    width:100%;
-    table-layout: fixed;
-    border: none;
-}
-.scroll-table thead th {
-    font-weight: bold;
-    text-align: left;
-    border: none;
-    padding: 10px 15px;
-    background: #d8d8d8;
-    font-size: 14px;
-    border-left: 1px solid #ddd;
-    border-right: 1px solid #ddd;
-}
-.scroll-table tbody td {
-    text-align: left;
-    border-left: 1px solid #ddd;
-    border-right: 1px solid #ddd;
-    padding: 10px 15px;
-    font-size: 14px;
-    vertical-align: top;
-}
-.scroll-table tbody tr:nth-child(even){
-    background: #f3f3f3;
-}
+<!--<style scoped>-->
+<!--.scroll-table-body {-->
+<!--    height: 300px;-->
+<!--    overflow-x: auto;-->
+<!--    margin-top: 0px;-->
+<!--    margin-bottom: 20px;-->
+<!--    border-bottom: 1px solid #eee;-->
+<!--}-->
+<!--.scroll-table table {-->
+<!--    width:100%;-->
+<!--    table-layout: fixed;-->
+<!--    border: none;-->
+<!--}-->
+<!--.scroll-table thead th {-->
+<!--    font-weight: bold;-->
+<!--    text-align: left;-->
+<!--    border: none;-->
+<!--    padding: 10px 15px;-->
+<!--    background: #d8d8d8;-->
+<!--    font-size: 14px;-->
+<!--    border-left: 1px solid #ddd;-->
+<!--    border-right: 1px solid #ddd;-->
+<!--}-->
+<!--.scroll-table tbody td {-->
+<!--    text-align: left;-->
+<!--    border-left: 1px solid #ddd;-->
+<!--    border-right: 1px solid #ddd;-->
+<!--    padding: 10px 15px;-->
+<!--    font-size: 14px;-->
+<!--    vertical-align: top;-->
+<!--}-->
+<!--.scroll-table tbody tr:nth-child(even){-->
+<!--    background: #f3f3f3;-->
+<!--}-->
 
-/* Стили для скролла */
-::-webkit-scrollbar {
-    width: 6px;
-}
-::-webkit-scrollbar-track {
-    box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
-}
-::-webkit-scrollbar-thumb {
-    box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
-}
+<!--/* Стили для скролла */-->
+<!--::-webkit-scrollbar {-->
+<!--    width: 6px;-->
+<!--}-->
+<!--::-webkit-scrollbar-track {-->
+<!--    box-shadow: inset 0 0 6px rgba(0,0,0,0.3);-->
+<!--}-->
+<!--::-webkit-scrollbar-thumb {-->
+<!--    box-shadow: inset 0 0 6px rgba(0,0,0,0.3);-->
+<!--}-->
 
-.status_select {
-    width: 60%;
-}
-</style>
+<!--.status_select {-->
+<!--    width: 60%;-->
+<!--}-->
+<!--</style>-->

@@ -98,4 +98,15 @@ class OrderRepository extends Repository
             ->where('DeliveryDate', '>=', $date_from)
             ->where('DeliveryDate', '<=', $date_to . ' ' . '23:59:00');
     }
+
+    /**
+     * Filter by RealizationStatus field
+     * @param Builder $query
+     * @param string $status
+     * @return Builder
+     */
+    public function whereRealisationStatus(Builder $query, string $status): Builder
+    {
+        return $query->where('RealizationStatus', $status);
+    }
 }

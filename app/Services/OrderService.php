@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Repositories\OrderRepository;
 use App\Repositories\OrderStatusRepository;
+use App\Repositories\RealisationStatusRepository;
 use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
@@ -23,16 +24,24 @@ class OrderService
     public OrderStatusRepository $orderStatusRepository;
 
     /**
+     * @var RealisationStatusRepository
+     */
+    public RealisationStatusRepository $realisationStatusRepository;
+
+    /**
      * OrderService constructor.
      * @param OrderRepository $orderRepository
      * @param OrderStatusRepository $orderStatusRepository
+     * @param RealisationStatusRepository $realisationStatusRepository
      */
     public function __construct(
         OrderRepository $orderRepository,
-        OrderStatusRepository $orderStatusRepository
+        OrderStatusRepository $orderStatusRepository,
+        RealisationStatusRepository $realisationStatusRepository
     ) {
         $this->orderRepository = $orderRepository;
         $this->orderStatusRepository = $orderStatusRepository;
+        $this->realisationStatusRepository = $realisationStatusRepository;
     }
 
     /**
@@ -78,11 +87,16 @@ class OrderService
                 ->filterByDate($query, $data['date_from'], $data['date_to']);
         }
 
+        if (isset($data['realisation_status'])) {
+            $query = $this
+                ->orderRepository
+                ->whereRealisationStatus($query, $data['realisation_status']);
+        }
+
         $user = Auth::user();
 
         $query = $this
             ->orderRepository
-//            ->whereUser($query, '3797');
             ->whereUser($query, $user->account_id);
 
         return $query
@@ -132,6 +146,17 @@ class OrderService
         return $this
             ->orderRepository
             ->whereStatus($query, $status);
+    }
+
+    /**
+     * Get all realisation statuses
+     * @return Collection
+     */
+    public function getAllRealisationStatus(): Collection
+    {
+        return $this
+            ->realisationStatusRepository
+            ->all();
     }
 
 }

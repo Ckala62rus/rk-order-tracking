@@ -28,8 +28,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('dashboard', [\App\Http\Controllers\Lk\OrderController::class, 'template']);
     Route::get('orders', [\App\Http\Controllers\Lk\OrderApiController::class, 'getOrders']); // vue for axios
     Route::get('status', [\App\Http\Controllers\Lk\OrderApiController::class, 'getStatuses']);
+    Route::get('realisation-status', [\App\Http\Controllers\Lk\OrderApiController::class, 'getRealisationStatuses']);
     Route::get('vue', [\App\Http\Controllers\Lk\OrderController::class, 'vueOrders']);
     Route::get('users', [UserController::class, 'users']);
     Route::resource('admin/users', UserController::class)->middleware('admin');
 });
 
+//Route::get('realisation-status', [\App\Http\Controllers\Lk\OrderApiController::class, 'getRealisationStatuses']);
