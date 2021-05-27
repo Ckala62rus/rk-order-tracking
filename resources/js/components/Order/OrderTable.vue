@@ -137,13 +137,15 @@
 
                         <label for="project">Статус заказа</label>
                         <select class="form-control status_select" id="project" v-model="filter.status">
-                            <option :value="null">Нет статуса</option>
+                            <option :value="null">Статус не выбран</option>
                             <option :key="item.id" :value="item.id" v-for="item in status">{{item.status}}</option>
                         </select>
 
+                        </br>
+
                         <label for="project">Статус реализации</label>
                         <select class="form-control status_select" id="project2" v-model="filter.realisation_status">
-                            <option :value="null">Нет статуса</option>
+                            <option :value="null">Статус не выбран</option>
                             <option :key="item.realisation_status" :value="item.realisation_status" v-for="item in realisationStatus">{{item.decription}}</option>
                         </select>
 
