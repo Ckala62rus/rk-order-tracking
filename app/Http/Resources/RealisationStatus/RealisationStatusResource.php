@@ -21,7 +21,7 @@ class RealisationStatusResource extends JsonResource
     {
         return [
             'realisation_status' => $this->RealizationStatus,
-            'decription' => $this->Decription,
+            'decription' => $this->Decryption,
         ];
     }
 }

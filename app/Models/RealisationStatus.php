@@ -9,6 +9,6 @@ class RealisationStatus extends Model
 {
     use HasFactory;
 
-//    protected $connection = 'sqlsrv';
-    protected $table = 'realization_status';
+    protected $connection = 'sqlsrv';
+    protected $table = 'RealizationStatus';
 }
