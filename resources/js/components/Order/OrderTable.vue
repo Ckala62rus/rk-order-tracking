@@ -1,182 +1,170 @@
 <template>
-    <div class="card card-custom">
 
-        <div class="card-header">
-            <div class="card-title">
-                <h3 class="card-label">
-                    Информация о заказе компании
-                </h3>
-<!--                <div class="scroll-table">-->
-<!--                    <table>-->
-<!--                        <thead>-->
-<!--                        <tr>-->
-<!--                            <th>Название блюда</th>-->
-<!--                            <th>Белки</th>-->
-<!--                            <th>Жиры</th>-->
-<!--                            <th>Углеводы</th>-->
-<!--                            <th>Ккал</th>-->
-<!--                        </tr>-->
-<!--                        </thead>-->
-<!--                    </table>-->
-<!--                    <div class="scroll-table-body">-->
-<!--                        <table>-->
-<!--                            <tbody>-->
-<!--                            <tr>-->
-<!--                                <td>Азу</td>-->
-<!--                                <td>11,9</td>-->
-<!--                                <td>14,2</td>-->
-<!--                                <td>10,2</td>-->
-<!--                                <td>214</td>-->
-<!--                            </tr>-->
-<!--                            <tr>-->
-<!--                                <td>Азу</td>-->
-<!--                                <td>11,9</td>-->
-<!--                                <td>14,2</td>-->
-<!--                                <td>10,2</td>-->
-<!--                                <td>214</td>-->
-<!--                            </tr>-->
-<!--                            <tr>-->
-<!--                                <td>Азу</td>-->
-<!--                                <td>11,9</td>-->
-<!--                                <td>14,2</td>-->
-<!--                                <td>10,2</td>-->
-<!--                                <td>214</td>-->
-<!--                            </tr>-->
-<!--                            <tr>-->
-<!--                                <td>Азу</td>-->
-<!--                                <td>11,9</td>-->
-<!--                                <td>14,2</td>-->
-<!--                                <td>10,2</td>-->
-<!--                                <td>214</td>-->
-<!--                            </tr>-->
-<!--                            <tr>-->
-<!--                                <td>Азу</td>-->
-<!--                                <td>11,9</td>-->
-<!--                                <td>14,2</td>-->
-<!--                                <td>10,2</td>-->
-<!--                                <td>214</td>-->
-<!--                            </tr>-->
-<!--                            <tr>-->
-<!--                                <td>Азу</td>-->
-<!--                                <td>11,9</td>-->
-<!--                                <td>14,2</td>-->
-<!--                                <td>10,2</td>-->
-<!--                                <td>214</td>-->
-<!--                            </tr>-->
-<!--                            <tr>-->
-<!--                                <td>Азу</td>-->
-<!--                                <td>11,9</td>-->
-<!--                                <td>14,2</td>-->
-<!--                                <td>10,2</td>-->
-<!--                                <td>214</td>-->
-<!--                            </tr>-->
-<!--                            <tr>-->
-<!--                                <td>Азу</td>-->
-<!--                                <td>11,9</td>-->
-<!--                                <td>14,2</td>-->
-<!--                                <td>10,2</td>-->
-<!--                                <td>214</td>-->
-<!--                            </tr>-->
-<!--                            <tr>-->
-<!--                                <td>Азу</td>-->
-<!--                                <td>11,9</td>-->
-<!--                                <td>14,2</td>-->
-<!--                                <td>10,2</td>-->
-<!--                                <td>214</td>-->
-<!--                            </tr>-->
-<!--                            <tr>-->
-<!--                                <td>Азу</td>-->
-<!--                                <td>11,9</td>-->
-<!--                                <td>14,2</td>-->
-<!--                                <td>10,2</td>-->
-<!--                                <td>214</td>-->
-<!--                            </tr>-->
-<!--                            <tr>-->
-<!--                                <td>Азу</td>-->
-<!--                                <td>11,9</td>-->
-<!--                                <td>14,2</td>-->
-<!--                                <td>10,2</td>-->
-<!--                                <td>214</td>-->
-<!--                            </tr>-->
-<!--                            <tr>-->
-<!--                                <td>Азу</td>-->
-<!--                                <td>11,9</td>-->
-<!--                                <td>14,2</td>-->
-<!--                                <td>10,2</td>-->
-<!--                                <td>214</td>-->
-<!--                            </tr>-->
-<!--                            <tr>-->
-<!--                                <td>Азу</td>-->
-<!--                                <td>11,9</td>-->
-<!--                                <td>14,2</td>-->
-<!--                                <td>10,2</td>-->
-<!--                                <td>214</td>-->
-<!--                            </tr>-->
-<!--                            <tr>-->
-<!--                                <td>Азу</td>-->
-<!--                                <td>11,9</td>-->
-<!--                                <td>14,2</td>-->
-<!--                                <td>10,2</td>-->
-<!--                                <td>214</td>-->
-<!--                            </tr>-->
-<!--                            </tbody>-->
-<!--                        </table>-->
-<!--                    </div>-->
-<!--                </div>-->
-            </div>
-        </div>
-
+    <div class="container-fluid">
         <div class="row">
-            <div class="col-lg-6 col-md-9 col-sm-12 p-10">
+            <div class="card card-custom">
 
-                <h3>Фильтры поиска</h3>
-
-                <form class="form" @submit.prevent="setFilter()">
-
-                    <div class="form-group">
-
-                        <label for="project">Статус заказа</label>
-                        <select class="form-control status_select" id="project" v-model="filter.status">
-                            <option :value="null">Нет статуса</option>
-                            <option :key="item.id" :value="item.id" v-for="item in status">{{item.status}}</option>
-                        </select>
-
-                        <label for="project">Статус реализации</label>
-                        <select class="form-control status_select" id="project2" v-model="filter.realisation_status">
-                            <option :value="null">Нет статуса</option>
-                            <option :key="item.realisation_status" :value="item.realisation_status" v-for="item in realisationStatus">{{item.decription}}</option>
-                        </select>
-
-                        <div class="p-0 mt-6">
-                            <date-picker v-model="filter.date_from" valueType="format"></date-picker> Начальная дата
-                        </div>
-
-                        <div class="p-0 mt-6">
-                            <date-picker v-model="filter.date_to" valueType="format"></date-picker> Конечная дата
-                        </div>
-
-                        <div class=" p-0 mt-3">
-                            <button type="submit" class="btn btn-primary" id="Date">Найти</button>
-                            <button class="btn btn-bg-danger ml-5" @click="resetFilter">Сброс</button>
-                        </div>
-
+                <div class="card-header">
+                    <div class="card-title">
+                        <h3 class="card-label">
+                            Информация о заказе компании
+                        </h3>
                     </div>
+                </div>
 
-                </form>
+                <div class="row order__table">
+                    <div class="col-lg-6 col-md-9 col-sm-12 p-10">
+
+                        <h3>Фильтры поиска</h3>
+
+                        <form class="form" @submit.prevent="setFilter()">
+
+                            <div class="form-group">
+
+                                <label for="project">Статус заказа</label>
+                                <select class="form-control status_select" id="project" v-model="filter.status">
+                                    <option :value="null">Нет статуса</option>
+                                    <option :key="item.id" :value="item.id" v-for="item in status">{{item.status}}</option>
+                                </select>
+
+                                <label for="project">Статус реализации</label>
+                                <select class="form-control status_select" id="project2" v-model="filter.realisation_status">
+                                    <option :value="null">Нет статуса</option>
+                                    <option :key="item.realisation_status" :value="item.realisation_status" v-for="item in realisationStatus">{{item.decription}}</option>
+                                </select>
+
+                                <div class="p-0 mt-6">
+                                    <date-picker v-model="filter.date_from" valueType="format"></date-picker> Начальная дата
+                                </div>
+
+                                <div class="p-0 mt-6">
+                                    <date-picker v-model="filter.date_to" valueType="format"></date-picker> Конечная дата
+                                </div>
+
+                                <div class=" p-0 mt-3">
+                                    <button type="submit" class="btn btn-primary" id="Date">Найти</button>
+                                    <button class="btn btn-bg-danger ml-5" @click="resetFilter">Сброс</button>
+                                </div>
+
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+
+                <div class="m-portlet__body">
+                    <div class="col md 12">
+                        <el-table
+                            :data="data.orders"
+                            height="550"
+                            size="mini"
+                            class="table table-bordered table-checkable dataTable no-footer dtr-inline collapsed orders__tracking__table table-hover"
+                        >
+                            <el-table-column
+                                prop="OrderDate"
+                                label="Дата размещения заказа"
+                                width="auto"
+                            >
+                            </el-table-column>
+                            <el-table-column
+                                prop="OrderNumber"
+                                label="Номер заявки"
+                                width="auto"
+                            >
+                            </el-table-column>
+                            <el-table-column
+                                prop="OrderQTY"
+                                label="Заказанный обьем"
+                                width="auto"
+                            >
+                            </el-table-column>
+                            <el-table-column
+                                prop="Article"
+                                label="Артикул"
+                                width="auto"
+                            >
+                            </el-table-column>
+                            <el-table-column
+                                prop="ProdOrderNumber"
+                                label="Номер заказа"
+                                width="auto"
+                            >
+                            </el-table-column>
+                            <el-table-column
+                                prop="ProdOrderStatus"
+                                label="Статус заказа"
+                                width="auto"
+                            >
+                            </el-table-column>
+                            <el-table-column
+                                prop="ProdOrderQTY"
+                                label="Обьем заказа"
+                                width="auto"
+                            >
+                            </el-table-column>
+                            <el-table-column
+                                prop="Color"
+                                label="Цвет"
+                                width="auto"
+                            >
+                            </el-table-column>
+                            <el-table-column
+                                prop="Config"
+                                label="Конфигурация"
+                                width="auto"
+                            >
+                            </el-table-column>
+                            <el-table-column
+                                prop="Thickness"
+                                label="Толщина"
+                                width="auto"
+                            >
+                            </el-table-column>
+                            <el-table-column
+                                prop="DeliveryDate"
+                                label="Дата поставки"
+                                width="auto"
+                            >
+                            </el-table-column>
+                            <el-table-column
+                                prop="EndDate"
+                                label="Дата окончания"
+                                width="auto"
+                            >
+                            </el-table-column>
+                            <el-table-column
+                                prop="LeadOrLagTime"
+                                label="Отклонения от даты поставки"
+                                width="auto"
+                            >
+                            </el-table-column>
+                            <el-table-column
+                                prop="ManagerName"
+                                label="Менеджер"
+                                width="auto"
+                            >
+                            </el-table-column>
+                            <el-table-column
+                                prop="ContractorName"
+                                label="Кампания"
+                                width="auto"
+                            >
+                            </el-table-column>
+
+                        </el-table>
+                    </div>
+                    <!--                        <v-client-table-->
+                    <!--                            :data="data.orders"-->
+                    <!--                            :columns="columns"-->
+                    <!--                            :options="options"-->
+                    <!--                            ref="task-table"-->
+                    <!--                            class="table table-bordered table-checkable dataTable no-footer dtr-inline collapsed orders__tracking__table table-hover"-->
+                    <!--                        />-->
+                </div>
             </div>
         </div>
-
-        <div class="m-portlet__body">
-            <v-client-table
-                :data="data.orders"
-                :columns="columns"
-                :options="options"
-                ref="task-table"
-                class="table table-bordered table-checkable dataTable no-footer dtr-inline collapsed orders__tracking__table table-hover"
-            />
-        </div>
-
     </div>
+
 </template>
 
 <script>
@@ -246,6 +234,15 @@ export default {
     },
 
     methods: {
+
+        handleEdit(index, row) {
+            console.log(index, row);
+        },
+
+        handleDelete(index, row) {
+            console.log(index, row);
+        },
+
 
         getData() {
             axios.get(this.url ).then((response) => {
@@ -318,53 +315,3 @@ export default {
 
 </script>
 
-<!--<style scoped>-->
-<!--.scroll-table-body {-->
-<!--    height: 300px;-->
-<!--    overflow-x: auto;-->
-<!--    margin-top: 0px;-->
-<!--    margin-bottom: 20px;-->
-<!--    border-bottom: 1px solid #eee;-->
-<!--}-->
-<!--.scroll-table table {-->
-<!--    width:100%;-->
-<!--    table-layout: fixed;-->
-<!--    border: none;-->
-<!--}-->
-<!--.scroll-table thead th {-->
-<!--    font-weight: bold;-->
-<!--    text-align: left;-->
-<!--    border: none;-->
-<!--    padding: 10px 15px;-->
-<!--    background: #d8d8d8;-->
-<!--    font-size: 14px;-->
-<!--    border-left: 1px solid #ddd;-->
-<!--    border-right: 1px solid #ddd;-->
-<!--}-->
-<!--.scroll-table tbody td {-->
-<!--    text-align: left;-->
-<!--    border-left: 1px solid #ddd;-->
-<!--    border-right: 1px solid #ddd;-->
-<!--    padding: 10px 15px;-->
-<!--    font-size: 14px;-->
-<!--    vertical-align: top;-->
-<!--}-->
-<!--.scroll-table tbody tr:nth-child(even){-->
-<!--    background: #f3f3f3;-->
-<!--}-->
-
-<!--/* Стили для скролла */-->
-<!--::-webkit-scrollbar {-->
-<!--    width: 6px;-->
-<!--}-->
-<!--::-webkit-scrollbar-track {-->
-<!--    box-shadow: inset 0 0 6px rgba(0,0,0,0.3);-->
-<!--}-->
-<!--::-webkit-scrollbar-thumb {-->
-<!--    box-shadow: inset 0 0 6px rgba(0,0,0,0.3);-->
-<!--}-->
-
-<!--.status_select {-->
-<!--    width: 60%;-->
-<!--}-->
-<!--</style>-->

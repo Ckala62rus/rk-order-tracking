@@ -41,3 +41,7 @@ h1  {
 .error__auth {
     color: #f55252;
 }
+
+.order__table {
+    width: 1700px;
+}
