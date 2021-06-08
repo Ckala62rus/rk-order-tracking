@@ -109,4 +109,15 @@ class OrderRepository extends Repository
     {
         return $query->where('RealizationStatus', $status);
     }
+
+    /**
+     * Filter by article
+     * @param Builder $query
+     * @param string $article
+     * @return Builder
+     */
+    public function whereArticle(Builder $query, string $article): Builder
+    {
+        return $query->where('Article', 'like', '%' . $article . '%');
+    }
 }

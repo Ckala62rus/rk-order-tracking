@@ -13,7 +13,7 @@
                 </div>
 
                 <div class="row order__table">
-                    <div class="col-lg-6 col-md-9 col-sm-12 p-10">
+                    <div class="col-lg-4 col-md-4 col-sm-4 p-10">
 
                         <h3>Фильтры поиска</h3>
 
@@ -32,6 +32,11 @@
                                     <option :value="null">Нет статуса</option>
                                     <option :key="item.realisation_status" :value="item.realisation_status" v-for="item in realisationStatus">{{item.decription}}</option>
                                 </select>
+
+                                <div class="form-group">
+                                    <label>Артикул</label>
+                                    <input type="text" class="form-control" v-model="filter.article" placeholder="Введите артикул"/>
+                                </div>
 
                                 <div class="p-0 mt-6">
                                     <date-picker v-model="filter.date_from" valueType="format"></date-picker> Начальная дата
@@ -153,13 +158,6 @@
 
                         </el-table>
                     </div>
-                    <!--                        <v-client-table-->
-                    <!--                            :data="data.orders"-->
-                    <!--                            :columns="columns"-->
-                    <!--                            :options="options"-->
-                    <!--                            ref="task-table"-->
-                    <!--                            class="table table-bordered table-checkable dataTable no-footer dtr-inline collapsed orders__tracking__table table-hover"-->
-                    <!--                        />-->
                 </div>
             </div>
         </div>
@@ -225,6 +223,7 @@ export default {
                 realisation_status: null,
                 date_from: null,
                 date_to: null,
+                article: null,
             },
             url: '/orders?limit=500',
             urlBase: '/orders?limit=500',
@@ -233,16 +232,13 @@ export default {
         }
     },
 
+    // watch: {
+        // 'item.someOtherProp': function (newVal, oldVal){
+        //     //to work with changes in someOtherProp
+        // },
+    // },
+
     methods: {
-
-        handleEdit(index, row) {
-            console.log(index, row);
-        },
-
-        handleDelete(index, row) {
-            console.log(index, row);
-        },
-
 
         getData() {
             axios.get(this.url ).then((response) => {
@@ -288,6 +284,10 @@ export default {
                 this.query += '&realisation_status=' + this.filter.realisation_status;
             }
 
+            if (this.filter.article != null) {
+                this.query += '&article=' + this.filter.article;
+            }
+
             this.url = this.query;
             this.getData();
         },
@@ -301,7 +301,7 @@ export default {
     },
 
     mounted() {
-        this.$refs['task-table'].setLimit(10);
+        // this.$refs['task-table'].setLimit(10);
         this.interval = setInterval(() => {
             this.getData();
         }, 25000);

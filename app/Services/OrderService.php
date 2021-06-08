@@ -93,6 +93,12 @@ class OrderService
                 ->whereRealisationStatus($query, $data['realisation_status']);
         }
 
+        if (isset($data['article'])) {
+            $query = $this
+                ->orderRepository
+                ->whereArticle($query, $data['article']);
+        }
+
         $user = Auth::user();
 
         $query = $this
