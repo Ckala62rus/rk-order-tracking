@@ -12,13 +12,9 @@
                     </div>
                 </div>
 
-                <div class="row order__table">
-                    <div class="col-lg-4 col-md-4 col-sm-4 p-10">
-
-                        <h3>Фильтры поиска</h3>
-
-                        <form class="form" @submit.prevent="setFilter()">
-
+                <form class="form" @submit.prevent="setFilter()">
+                    <div class="row order__table">
+                        <div class="col-lg-3 col-md-3 col-sm-3 p-10">
                             <div class="form-group">
 
                                 <label for="project">Статус заказа</label>
@@ -33,30 +29,39 @@
                                     <option :key="item.realisation_status" :value="item.realisation_status" v-for="item in realisationStatus">{{item.decription}}</option>
                                 </select>
 
-                                <div class="form-group">
-                                    <label>Артикул</label>
-                                    <input type="text" class="form-control" v-model="filter.article" placeholder="Введите артикул"/>
-                                </div>
-
-                                <div class="p-0 mt-6">
-                                    <date-picker v-model="filter.date_from" valueType="format"></date-picker> Начальная дата
-                                </div>
-
-                                <div class="p-0 mt-6">
-                                    <date-picker v-model="filter.date_to" valueType="format"></date-picker> Конечная дата
-                                </div>
-
                                 <div class=" p-0 mt-3">
                                     <button type="submit" class="btn btn-primary" id="Date">Найти</button>
                                     <button class="btn btn-bg-danger ml-5" @click="resetFilter">Сброс</button>
                                 </div>
 
                             </div>
+                        </div>
 
+                    <div class="col-lg-3 col-md-3 col-sm-3 p-10">
+                        <form>
+                            <div class="form-group">
+                                <label>Артикул</label>
+                                <input type="text" class="form-control" v-model="filter.article" placeholder="Введите артикул"/>
+
+                                <label>Цвет</label>
+                                <input type="text" class="form-control" v-model="filter.color" placeholder="Введите цвет"/>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="col-lg-3 col-md-3 col-sm-3 p-10">
+                        <form>
+                            <div class="p-0 mt-8">
+                                <date-picker v-model="filter.date_from" valueType="format"></date-picker> Начальная дата
+                            </div>
+
+                            <div class="p-0 mt-8">
+                                <date-picker v-model="filter.date_to" valueType="format"></date-picker> Конечная дата
+                            </div>
                         </form>
                     </div>
                 </div>
-
+                </form>
                 <div class="m-portlet__body">
                     <div class="col md 12">
                         <el-table
@@ -224,6 +229,7 @@ export default {
                 date_from: null,
                 date_to: null,
                 article: null,
+                color: null,
             },
             url: '/orders?limit=500',
             urlBase: '/orders?limit=500',
@@ -262,7 +268,9 @@ export default {
             this.filter.status =
                 this.filter.date_from =
                     this.filter.realisation_status =
-                        this.filter.date_to = null;
+                        this.filter.date_to =
+                            this.filter.article =
+                                this.filter.color = null;
         },
 
         setFilter() {
@@ -286,6 +294,10 @@ export default {
 
             if (this.filter.article != null) {
                 this.query += '&article=' + this.filter.article;
+            }
+
+            if (this.filter.color != null) {
+                this.query += '&color=' + this.filter.color;
             }
 
             this.url = this.query;

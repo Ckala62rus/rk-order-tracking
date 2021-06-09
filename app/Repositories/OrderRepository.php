@@ -120,4 +120,15 @@ class OrderRepository extends Repository
     {
         return $query->where('Article', 'like', '%' . $article . '%');
     }
+
+    /**
+     * Filter by color
+     * @param Builder $query
+     * @param string $color
+     * @return Builder
+     */
+    public function whereColor(Builder $query, string $color): Builder
+    {
+        return $query->where('Color', 'like', '%' . $color . '%');
+    }
 }

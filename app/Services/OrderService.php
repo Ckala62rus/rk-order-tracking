@@ -99,6 +99,12 @@ class OrderService
                 ->whereArticle($query, $data['article']);
         }
 
+        if (isset($data['color'])) {
+            $query = $this
+                ->orderRepository
+                ->whereColor($query, $data['color']);
+        }
+
         $user = Auth::user();
 
         $query = $this
