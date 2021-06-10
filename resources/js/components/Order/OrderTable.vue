@@ -2,7 +2,7 @@
 
     <div class="container-fluid">
         <div class="row">
-            <div class="card card-custom">
+            <div class="card card-custom order__card">
 
                 <div class="card-header">
                     <div class="card-title">
@@ -15,15 +15,17 @@
                 <form class="form" @submit.prevent="setFilter()">
                     <div class="row order__table">
                         <div class="col-lg-3 col-md-3 col-sm-3 p-10">
-                            <div class="form-group">
+                            <div class="form-group mt-3">
 
-                                <label for="project">Статус заказа</label>
+<!--                                <label for="project">Статус заказа</label>-->
+                                <span class="form-text text-muted">Статус заказа</span>
                                 <select class="form-control status_select" id="project" v-model="filter.status">
                                     <option :value="null">Нет статуса</option>
                                     <option :key="item.id" :value="item.id" v-for="item in status">{{item.status}}</option>
                                 </select>
 
-                                <label for="project">Статус реализации</label>
+<!--                                <label for="project">Статус реализации</label>-->
+                                <span class="form-text text-muted">Статус реализации</span>
                                 <select class="form-control status_select" id="project2" v-model="filter.realisation_status">
                                     <option :value="null">Нет статуса</option>
                                     <option :key="item.realisation_status" :value="item.realisation_status" v-for="item in realisationStatus">{{item.decription}}</option>
@@ -39,11 +41,13 @@
 
                     <div class="col-lg-3 col-md-3 col-sm-3 p-10">
                         <form>
-                            <div class="form-group">
-                                <label>Артикул</label>
+                            <div class="form-group mt-3">
+<!--                                <label>Артикул</label>-->
+                                <span class="form-text text-muted">Артикул</span>
                                 <input type="text" class="form-control" v-model="filter.article" placeholder="Введите артикул"/>
 
-                                <label>Цвет</label>
+<!--                                <label>Цвет</label>-->
+                                <span class="form-text text-muted">Цвет</span>
                                 <input type="text" class="form-control" v-model="filter.color" placeholder="Введите цвет"/>
                             </div>
                         </form>
@@ -51,12 +55,14 @@
 
                     <div class="col-lg-3 col-md-3 col-sm-3 p-10">
                         <form>
-                            <div class="p-0 mt-8">
-                                <date-picker v-model="filter.date_from" valueType="format"></date-picker> Начальная дата
+                            <div class="p-0 mt-3">
+                                <span class="form-text text-muted">Начальная дата поставки</span>
+                                <date-picker v-model="filter.date_from" valueType="format"></date-picker>
                             </div>
 
-                            <div class="p-0 mt-8">
-                                <date-picker v-model="filter.date_to" valueType="format"></date-picker> Конечная дата
+                            <div class="p-0 mt-3">
+                                <span class="form-text text-muted">Конечная дата поставки</span>
+                                <date-picker v-model="filter.date_to" valueType="format"></date-picker>
                             </div>
                         </form>
                     </div>
