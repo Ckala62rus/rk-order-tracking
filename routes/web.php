@@ -32,6 +32,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('vue', [\App\Http\Controllers\Lk\OrderController::class, 'vueOrders']);
     Route::get('users', [UserController::class, 'users']);
     Route::resource('admin/users', UserController::class)->middleware('admin');
+    Route::get('detail/orders', [\App\Http\Controllers\Lk\OrderApiController::class, 'getDetailInformationFromModal']);
 });
 
 //Route::get('realisation-status', [\App\Http\Controllers\Lk\OrderApiController::class, 'getRealisationStatuses']);

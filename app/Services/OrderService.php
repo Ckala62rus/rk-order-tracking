@@ -171,4 +171,23 @@ class OrderService
             ->all();
     }
 
+    /**
+     * Get detail information
+     * @return LengthAwarePaginator
+     */
+    public function getDetailInformation(): LengthAwarePaginator
+    {
+        $query = $this
+            ->orderRepository
+            ->query();
+
+        $user = Auth::user();
+
+        $query = $this
+            ->orderRepository
+            ->whereUser($query, $user->account_id);
+
+        return $query
+            ->paginate(1000);
+    }
 }

@@ -88,12 +88,23 @@
                                 width="auto"
                             >
                             </el-table-column>
+
+<!--                            SumQtySpeciallSku-->
+
                             <el-table-column
-                                prop="OrderQTY"
+                                prop="SumQtySpeciallSku"
                                 label="Заказанный обьем"
                                 width="auto"
                             >
                             </el-table-column>
+
+<!--                            <el-table-column-->
+<!--                                prop="OrderQTY"-->
+<!--                                label="Заказанный обьем"-->
+<!--                                width="auto"-->
+<!--                            >-->
+<!--                            </el-table-column>-->
+
                             <el-table-column
                                 prop="Article"
                                 label="Артикул"
@@ -154,17 +165,15 @@
                                 width="auto"
                             >
                             </el-table-column>
+
                             <el-table-column
-                                prop="ManagerName"
-                                label="Менеджер"
-                                width="auto"
-                            >
-                            </el-table-column>
-                            <el-table-column
-                                prop="ContractorName"
-                                label="Кампания"
-                                width="auto"
-                            >
+                                label="Детализация">
+                                <template slot-scope="scope">
+                                    <el-button
+                                        size="mini"
+                                        type="success"
+                                        @click="show('order-info')">Подробно</el-button>
+                                </template>
                             </el-table-column>
 
                         </el-table>
@@ -172,6 +181,76 @@
                 </div>
             </div>
         </div>
+
+        <modal
+            name="order-info"
+            :width="'80%'"
+            :height="'40%'"
+        >
+            <div class="example-modal-content">
+                <el-table
+                    :data="tableData"
+                    height="350"
+                    style="width: 100%"
+                >
+                    <el-table-column
+                        prop="date"
+                        label="Date"
+                        width="180">
+                    </el-table-column>
+                    <el-table-column
+                        prop="name"
+                        label="Name"
+                        width="180">
+                    </el-table-column>
+                    <el-table-column
+                        prop="address"
+                        label="Address">
+                    </el-table-column>
+                    <el-table-column
+                        prop="address1"
+                        label="Address1">
+                    </el-table-column>
+                    <el-table-column
+                        prop="address2"
+                        label="Address2">
+                    </el-table-column>
+                </el-table>
+            </div>
+        </modal>
+
+        <modal name="order-info1" :height="'150'" :width="'150'">
+            <div class="card card-custom">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        Детализация о заказе
+                    </h3>
+
+                    <el-table
+                        :data="tableData"
+                        height="250"
+                        style="width: 100%">
+                        <el-table-column
+                            prop="date"
+                            label="Date"
+                            width="180">
+                        </el-table-column>
+                        <el-table-column
+                            prop="name"
+                            label="Name"
+                            width="180">
+                        </el-table-column>
+                        <el-table-column
+                            prop="address"
+                            label="Address">
+                        </el-table-column>
+
+                    </el-table>
+
+                </div>
+            </div>
+        </modal>
+
     </div>
 
 </template>
@@ -241,6 +320,46 @@ export default {
             urlBase: '/orders?limit=500',
             query: '',
             interval: null,
+
+            tableData: [{
+                date: '2016-05-03',
+                name: 'Tom',
+                address: 'No. 189, Grove St, Los Angeles',
+                address1: 'No. 189, Grove St, Los Angeles',
+                address2: 'No. 189, Grove St, Los Angeles',
+            }, {
+                date: '2016-05-02',
+                name: 'Tom',
+                address: 'No. 189, Grove St, Los Angeles',
+                address1: 'No. 189, Grove St, Los Angeles',
+                address2: 'No. 189, Grove St, Los Angeles',
+            }, {
+                date: '2016-05-04',
+                name: 'Tom',
+                address: 'No. 189, Grove St, Los Angeles'
+            }, {
+                date: '2016-05-01',
+                name: 'Tom',
+                address: 'No. 189, Grove St, Los Angeles',
+                address1: 'No. 189, Grove St, Los Angeles',
+                address2: 'No. 189, Grove St, Los Angeles',
+            }, {
+                date: '2016-05-08',
+                name: 'Tom',
+                address: 'No. 189, Grove St, Los Angeles'
+            }, {
+                date: '2016-05-06',
+                name: 'Tom',
+                address: 'No. 189, Grove St, Los Angeles',
+                address1: 'No. 189, Grove St, Los Angeles',
+                address2: 'No. 189, Grove St, Los Angeles',
+            }, {
+                date: '2016-05-07',
+                name: 'Tom',
+                address: 'No. 189, Grove St, Los Angeles',
+                address1: 'No. 189, Grove St, Los Angeles',
+                address2: 'No. 189, Grove St, Los Angeles',
+            }],
         }
     },
 
@@ -251,6 +370,18 @@ export default {
     // },
 
     methods: {
+
+        handleGetInfo(index, row) {
+            console.log(index, row);
+        },
+
+        show(modal_name, row) {
+            this.$modal.show(modal_name, row);
+        },
+
+        hide(modal_name) {
+            this.$modal.hide(modal_name);
+        },
 
         getData() {
             axios.get(this.url ).then((response) => {
@@ -267,6 +398,13 @@ export default {
         getRealisationStatuses() {
             axios.get('/realisation-status' ).then((response) => {
                 this.realisationStatus = response.data.data;
+            })
+        },
+
+        getDetailInformation() {
+            axios.get('/detail/orders' ).then((response) => {
+                // this.realisationStatus = response.data.data;
+                console.log(response.data.data);
             })
         },
 
@@ -323,6 +461,8 @@ export default {
         this.interval = setInterval(() => {
             this.getData();
         }, 25000);
+
+        // this.getDetailInformation();
     },
 
     destroyed() {

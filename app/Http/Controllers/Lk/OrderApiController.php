@@ -79,4 +79,24 @@ class OrderApiController extends Controller
             'data' => RealisationStatusResource::collection($realisationStatuses)
         ], JsonResponse::HTTP_OK);
     }
+
+    /**
+     * Get detail information for modal window
+     * @return JsonResponse
+     */
+    public function getDetailInformationFromModal(): JsonResponse
+    {
+        $orders = $this
+            ->orderService
+            ->getDetailInformation();
+
+        $data = $this
+            ->orderService
+            ->dataAdapter($orders);
+
+        return response()->json([
+            'data' => OrderResource::collection($data),
+            'count' => $data->total(),
+        ], JsonResponse::HTTP_OK);
+    }
 }
