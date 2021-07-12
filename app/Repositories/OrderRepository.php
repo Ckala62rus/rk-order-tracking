@@ -41,6 +41,18 @@ class OrderRepository extends Repository
     }
 
     /**
+     * Where order id = $orderId
+     * @param Builder $query
+     * @param string $orderId
+     * @return Builder
+     */
+    public function whereOrderNumber(Builder $query, string $orderId): Builder
+    {
+        return $query
+            ->where('OrderNumber', $orderId);
+    }
+
+    /**
      * Return data
      * @param Builder $query
      * @return Collection

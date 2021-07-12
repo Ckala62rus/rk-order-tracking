@@ -1,0 +1,20 @@
+<?php
+
+namespace App\Http\Requests\Order;
+
+use Illuminate\Foundation\Http\FormRequest;
+
+class OrderDetailRequest extends FormRequest
+{
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array
+     */
+    public function rules()
+    {
+        return [
+            "order_number" => "required|max:30",
+        ];
+    }
+}

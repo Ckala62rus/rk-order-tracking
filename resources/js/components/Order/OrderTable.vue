@@ -89,8 +89,6 @@
                             >
                             </el-table-column>
 
-<!--                            SumQtySpeciallSku-->
-
                             <el-table-column
                                 prop="SumQtySpeciallSku"
                                 label="Заказанный обьем"
@@ -172,7 +170,7 @@
                                     <el-button
                                         size="mini"
                                         type="success"
-                                        @click="show('order-info')">Подробно</el-button>
+                                        @click="getDetailOrderInfo(scope.row.OrderNumber)">Подробно</el-button>
                                 </template>
                             </el-table-column>
 
@@ -189,65 +187,33 @@
         >
             <div class="example-modal-content">
                 <el-table
-                    :data="tableData"
+                    :data="orderDetailItems"
                     height="350"
                     style="width: 100%"
                 >
                     <el-table-column
-                        prop="date"
-                        label="Date"
+                        prop="OrderNumber"
+                        label="Номер заявки"
                         width="180">
                     </el-table-column>
                     <el-table-column
-                        prop="name"
-                        label="Name"
+                        prop="OrderQTY"
+                        label="Объем заявки"
                         width="180">
                     </el-table-column>
                     <el-table-column
-                        prop="address"
-                        label="Address">
+                        prop="Article"
+                        label="Артикул">
                     </el-table-column>
                     <el-table-column
-                        prop="address1"
-                        label="Address1">
+                        prop="Color"
+                        label="Цвет">
                     </el-table-column>
                     <el-table-column
-                        prop="address2"
-                        label="Address2">
+                        prop="ManagerName"
+                        label="Менеджер">
                     </el-table-column>
                 </el-table>
-            </div>
-        </modal>
-
-        <modal name="order-info1" :height="'150'" :width="'150'">
-            <div class="card card-custom">
-                <div class="card-header">
-                    <h3 class="card-title">
-                        Детализация о заказе
-                    </h3>
-
-                    <el-table
-                        :data="tableData"
-                        height="250"
-                        style="width: 100%">
-                        <el-table-column
-                            prop="date"
-                            label="Date"
-                            width="180">
-                        </el-table-column>
-                        <el-table-column
-                            prop="name"
-                            label="Name"
-                            width="180">
-                        </el-table-column>
-                        <el-table-column
-                            prop="address"
-                            label="Address">
-                        </el-table-column>
-
-                    </el-table>
-
-                </div>
             </div>
         </modal>
 
@@ -318,48 +284,10 @@ export default {
             },
             url: '/orders?limit=500',
             urlBase: '/orders?limit=500',
+            urlDetailOrder: 'detail/orders',
             query: '',
             interval: null,
-
-            tableData: [{
-                date: '2016-05-03',
-                name: 'Tom',
-                address: 'No. 189, Grove St, Los Angeles',
-                address1: 'No. 189, Grove St, Los Angeles',
-                address2: 'No. 189, Grove St, Los Angeles',
-            }, {
-                date: '2016-05-02',
-                name: 'Tom',
-                address: 'No. 189, Grove St, Los Angeles',
-                address1: 'No. 189, Grove St, Los Angeles',
-                address2: 'No. 189, Grove St, Los Angeles',
-            }, {
-                date: '2016-05-04',
-                name: 'Tom',
-                address: 'No. 189, Grove St, Los Angeles'
-            }, {
-                date: '2016-05-01',
-                name: 'Tom',
-                address: 'No. 189, Grove St, Los Angeles',
-                address1: 'No. 189, Grove St, Los Angeles',
-                address2: 'No. 189, Grove St, Los Angeles',
-            }, {
-                date: '2016-05-08',
-                name: 'Tom',
-                address: 'No. 189, Grove St, Los Angeles'
-            }, {
-                date: '2016-05-06',
-                name: 'Tom',
-                address: 'No. 189, Grove St, Los Angeles',
-                address1: 'No. 189, Grove St, Los Angeles',
-                address2: 'No. 189, Grove St, Los Angeles',
-            }, {
-                date: '2016-05-07',
-                name: 'Tom',
-                address: 'No. 189, Grove St, Los Angeles',
-                address1: 'No. 189, Grove St, Los Angeles',
-                address2: 'No. 189, Grove St, Los Angeles',
-            }],
+            orderDetailItems: {},
         }
     },
 
@@ -375,12 +303,19 @@ export default {
             console.log(index, row);
         },
 
-        show(modal_name, row) {
-            this.$modal.show(modal_name, row);
+        show(modal_name) {
+            this.$modal.show(modal_name);
         },
 
         hide(modal_name) {
             this.$modal.hide(modal_name);
+        },
+
+        async getDetailOrderInfo(orderNumber){
+            await axios.get(this.urlDetailOrder + "?order_number=" + orderNumber).then((response) => {
+                this.orderDetailItems = response.data.data;
+                this.$modal.show("order-info");
+            })
         },
 
         getData() {
@@ -403,7 +338,6 @@ export default {
 
         getDetailInformation() {
             axios.get('/detail/orders' ).then((response) => {
-                // this.realisationStatus = response.data.data;
                 console.log(response.data.data);
             })
         },
@@ -461,8 +395,6 @@ export default {
         this.interval = setInterval(() => {
             this.getData();
         }, 25000);
-
-        // this.getDetailInformation();
     },
 
     destroyed() {

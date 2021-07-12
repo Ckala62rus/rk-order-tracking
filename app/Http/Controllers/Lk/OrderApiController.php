@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Lk;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Order\OrderDetailRequest;
 use App\Http\Resources\Order\OrderResource;
 use App\Http\Resources\OrderStatus\StatusResource;
 use App\Http\Resources\RealisationStatus\RealisationStatusResource;
@@ -82,13 +83,16 @@ class OrderApiController extends Controller
 
     /**
      * Get detail information for modal window
+     * @param OrderDetailRequest $request
      * @return JsonResponse
      */
-    public function getDetailInformationFromModal(): JsonResponse
+    public function getDetailInformationFromModal(OrderDetailRequest $request): JsonResponse
     {
+        $orderId = $request->only("order_number");
+
         $orders = $this
             ->orderService
-            ->getDetailInformation();
+            ->getDetailInformation($orderId["order_number"]);
 
         $data = $this
             ->orderService

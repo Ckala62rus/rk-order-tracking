@@ -130,6 +130,7 @@ class OrderService
             $item->EndDate = Carbon::parse($item->EndDate)->format('d-m-Y');
             $item->OrderDate = Carbon::parse($item->OrderDate)->format('d-m-Y');
             $item->OrderQTY = number_format($item->OrderQTY, 0, ',', ' ');
+            $item->SumQtySpeciallSku = number_format($item->SumQtySpeciallSku, 0, ',', ' ');
             $item->ProdOrderQTY = number_format($item->ProdOrderQTY, 0, ',', ' ');
         }
 
@@ -173,9 +174,10 @@ class OrderService
 
     /**
      * Get detail information
+     * @param string $orderId
      * @return LengthAwarePaginator
      */
-    public function getDetailInformation(): LengthAwarePaginator
+    public function getDetailInformation(string $orderId): LengthAwarePaginator
     {
         $query = $this
             ->orderRepository
@@ -185,7 +187,7 @@ class OrderService
 
         $query = $this
             ->orderRepository
-            ->whereUser($query, $user->account_id);
+            ->whereOrderNumber($query, $orderId);
 
         return $query
             ->paginate(1000);

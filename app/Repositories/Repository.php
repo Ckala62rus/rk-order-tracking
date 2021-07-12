@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 
-abstract class Repository
+abstract class Repository implements RepositoryInterface
 {
     /**
      * @var
