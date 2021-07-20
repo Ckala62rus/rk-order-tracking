@@ -18,14 +18,14 @@
                             <div class="form-group mt-3">
 
 <!--                                <label for="project">Статус заказа</label>-->
-                                <span class="form-text text-muted">Статус заказа</span>
+                                <span class="form-text text__color__form">Статус заказа</span>
                                 <select class="form-control status_select" id="project" v-model="filter.status">
                                     <option :value="null">Нет статуса</option>
                                     <option :key="item.id" :value="item.id" v-for="item in status">{{item.status}}</option>
                                 </select>
 
 <!--                                <label for="project">Статус реализации</label>-->
-                                <span class="form-text text-muted">Статус реализации</span>
+                                <span class="form-text text__color__form">Статус реализации</span>
                                 <select class="form-control status_select" id="project2" v-model="filter.realisation_status">
                                     <option :value="null">Нет статуса</option>
                                     <option :key="item.realisation_status" :value="item.realisation_status" v-for="item in realisationStatus">{{item.decription}}</option>
@@ -43,11 +43,11 @@
                         <form>
                             <div class="form-group mt-3">
 <!--                                <label>Артикул</label>-->
-                                <span class="form-text text-muted">Артикул</span>
+                                <span class="form-text text__color__form">Артикул</span>
                                 <input type="text" class="form-control" v-model="filter.article" placeholder="Введите артикул"/>
 
 <!--                                <label>Цвет</label>-->
-                                <span class="form-text text-muted">Цвет</span>
+                                <span class="form-text text__color__form">Цвет</span>
                                 <input type="text" class="form-control" v-model="filter.color" placeholder="Введите цвет"/>
                             </div>
                         </form>
@@ -56,12 +56,12 @@
                     <div class="col-lg-3 col-md-3 col-sm-3 p-10">
                         <form>
                             <div class="p-0 mt-3">
-                                <span class="form-text text-muted">Начальная дата поставки</span>
+                                <span class="form-text text__color__form">Начальная дата поставки</span>
                                 <date-picker v-model="filter.date_from" valueType="format"></date-picker>
                             </div>
 
                             <div class="p-0 mt-3">
-                                <span class="form-text text-muted">Конечная дата поставки</span>
+                                <span class="form-text text__color__form">Конечная дата поставки</span>
                                 <date-picker v-model="filter.date_to" valueType="format"></date-picker>
                             </div>
                         </form>
@@ -170,7 +170,7 @@
                                     <el-button
                                         size="mini"
                                         type="success"
-                                        @click="getDetailOrderInfo(scope.row.OrderNumber)">Подробно</el-button>
+                                        @click="getDetailOrderInfo(scope.row.OrderNumber)" style="background-color: #0BB7AF">Подробно</el-button>
                                 </template>
                             </el-table-column>
 
@@ -405,3 +405,12 @@ export default {
 
 </script>
 
+<style scope>
+.table-bordered th, .table-bordered td {
+    border: 1px solid rgba(255, 168,0, 0.15);
+}
+
+.text__color__form {
+    color: #fff;
+}
+</style>

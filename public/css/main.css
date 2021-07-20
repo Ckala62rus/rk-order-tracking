@@ -49,3 +49,15 @@ h1  {
 .order__card {
     margin-left: 50px;
 }
+
+.card.card-custom > .card-header {
+    background-color: #ff9184;
+}
+
+.card.card-custom {
+    background-color: #4a516b;
+}
+
+.card-header {
+    border-bottom: none;
+}
