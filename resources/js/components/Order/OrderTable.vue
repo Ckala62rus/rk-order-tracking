@@ -32,8 +32,8 @@
                                 </select>
 
                                 <div class=" p-0 mt-3">
-                                    <button type="submit" class="btn btn-primary" id="Date">Найти</button>
-                                    <button class="btn btn-bg-danger ml-5" @click="resetFilter">Сброс</button>
+                                    <button type="submit" class="btn color__button" id="Date">Найти</button>
+                                    <button class="btn color__button ml-5" @click="resetFilter">Сброс</button>
                                 </div>
 
                             </div>
@@ -406,9 +406,9 @@ export default {
 </script>
 
 <style scope>
-.table-bordered th, .table-bordered td {
-    border: 1px solid rgba(255, 168,0, 0.15);
-}
+/*.table-bordered th, .table-bordered td {*/
+/*    border: 1px solid rgba(255, 168,0, 0.15);*/
+/*}*/
 
 .text__color__form {
     color: #fff;

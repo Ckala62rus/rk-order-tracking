@@ -8,7 +8,7 @@
                             Список пользователей
                         </h3>
                     </div>
-                    <div class="card-toolbar">
+                    <div class="card-toolbar" >
 
                         <a href="#" class="btn btn-primary font-weight-bolder" @click="createUserModal">
                             <span class="svg-icon svg-icon-md"><!--begin::Svg Icon | path:/metronic/themes/metronic/theme/html/demo1/dist/assets/media/svg/icons/Design/Flatten.svg-->
@@ -27,7 +27,7 @@
                         <!--end::Button-->
                     </div>
                 </div>
-                <div class="card-body">
+                <div class="card-body" style="background-color: white">
                     <div class="dataTables_wrapper dt-bootstrap4 no-footer">
                         <v-server-table
                             :url="url"
@@ -77,7 +77,7 @@
                 </div>
                 <!--begin::Form-->
                 <form @submit.prevent="editUser">
-                    <div class="card-body">
+                    <div class="card-body" style="background-color: white;">
                         <div class="form-group">
                             <label>Имя<span class="text-danger">*</span></label>
                             <input
@@ -166,7 +166,7 @@
                 </div>
                 <!--begin::Form-->
                 <form @submit.prevent="createUser">
-                    <div class="card-body">
+                    <div class="card-body" style="background-color: white;">
                         <div class="form-group">
                             <label>Имя<span class="text-danger">*</span></label>
                             <input
@@ -376,5 +376,7 @@ export default {
 </script>
 
 <style scoped>
-
+.backgroud__card{
+    background-color: white;
+}
 </style>

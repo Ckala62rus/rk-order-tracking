@@ -61,3 +61,7 @@ h1  {
 .card-header {
     border-bottom: none;
 }
+
+.color__button {
+    background-color: #a3ccd2;
+}
