@@ -34,7 +34,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('admin/users', UserController::class)->middleware('admin');
     Route::get('detail/orders', [\App\Http\Controllers\Lk\OrderApiController::class, 'getDetailInformationFromModal']);
     Route::get('manager/order/table', [\App\Http\Controllers\Lk\OrderController::class, 'managerOrderTable']);
-
+    Route::get('manager/order/companies', [\App\Http\Controllers\Lk\OrderApiController::class, 'getCompanies']);
 });
 
 //Route::get('manager/order/companies', [\App\Http\Controllers\Lk\OrderApiController::class, 'getCompanies']);
