@@ -103,4 +103,19 @@ class OrderApiController extends Controller
             'count' => $data->total(),
         ], JsonResponse::HTTP_OK);
     }
+
+    /**
+     * Get companies
+     * @return JsonResponse
+     */
+    public function getCompanies(): JsonResponse
+    {
+        $companies = $this
+            ->orderService
+            ->getCompanies();
+
+        return response()->json([
+            'companies' => $companies,
+        ], JsonResponse::HTTP_OK);
+    }
 }

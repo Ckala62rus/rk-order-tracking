@@ -6,10 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Models\Orders;
 use Carbon\Carbon;
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 
 /**
@@ -53,10 +55,26 @@ class OrderController extends Controller
      */
     public function vueOrders()
     {
-        if (Auth::user()->is_manager != false) {
-            return response(['Access is denied'], JsonResponse::HTTP_FORBIDDEN);
+        $user = Auth::user();
+
+        if ($user->is_admin == true || $user->is_manager == true) {
+            return view('lk.manager.manager-table');
+//            return response(['Access is denied'], JsonResponse::HTTP_FORBIDDEN);
         }
         return view('lk.vue-table');
+    }
+
+    /**
+     * Manager table
+     * @return Application|ResponseFactory|Factory|View|Response
+     */
+    public function managerOrderTable()
+    {
+        $user = Auth::user();
+        if ($user->is_admin == false && $user->is_manager == false) {
+            return response(['Access is denied'], JsonResponse::HTTP_FORBIDDEN);
+        }
+        return view('lk.manager.manager-table');
     }
 
     /**

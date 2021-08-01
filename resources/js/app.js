@@ -55,6 +55,7 @@ Vue.use(ElementUI, {locale});
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('orders-table', require('./components/Order/OrderTable').default);
 Vue.component('users-table', require('./components/User/UserIndex').default);
+Vue.component('orders-manager-table', require('./components/Manager/OrderManagerTable').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

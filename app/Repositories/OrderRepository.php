@@ -143,4 +143,14 @@ class OrderRepository extends Repository
     {
         return $query->where('Color', 'like', '%' . $color . '%');
     }
+
+    /**
+     * Get companies
+     * @param Builder $query
+     * @return Builder
+     */
+    public function getCompanies(Builder $query): Builder
+    {
+        return $query->select(['ContractorName', 'AccountNum'])->distinct();
+    }
 }

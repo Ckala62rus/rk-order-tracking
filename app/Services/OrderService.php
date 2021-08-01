@@ -11,6 +11,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 
+use function MongoDB\BSON\toJSON;
+
 class OrderService
 {
     /**
@@ -76,6 +78,8 @@ class OrderService
             ->orderRepository
             ->query();
 
+        $user = Auth::user();
+
         if (isset($data['status'])) {
             $query = $this
                 ->filterByStatus($data['status'], $query);
@@ -105,11 +109,15 @@ class OrderService
                 ->whereColor($query, $data['color']);
         }
 
-        $user = Auth::user();
-
-        $query = $this
-            ->orderRepository
-            ->whereUser($query, $user->account_id);
+        if (isset($data['company_id']) && ( $user->is_admin == true || $user->is_manager == true)) {
+            $query = $this
+                ->orderRepository
+                ->whereUser($query, $data['company_id']);
+        } else {
+            $query = $this
+                ->orderRepository
+                ->whereUser($query, $user->account_id);
+        }
 
         return $query
             ->paginate($limit);
@@ -191,5 +199,22 @@ class OrderService
 
         return $query
             ->paginate(1000);
+    }
+
+    /**
+     * Get companies
+     * @return Collection
+     */
+    public function getCompanies(): Collection
+    {
+        $query = $this
+            ->orderRepository
+            ->query();
+
+        $query = $this
+            ->orderRepository
+            ->getCompanies($query);
+
+        return $query->get();
     }
 }
