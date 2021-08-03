@@ -29,11 +29,22 @@
                                     <option :key="item.realisation_status" :value="item.realisation_status" v-for="item in realisationStatus">{{item.decription}}</option>
                                 </select>
 
-                                <span class="form-text text__color__form">Компания</span>
-                                <select v-if="companies.length > 0" class="form-control status_select" v-model="filter.company_id">
-                                    <option :value="null"></option>
-                                    <option :key="company.AccountNum" :value="company.AccountNum" v-for="company in companies">{{company.ContractorName}}</option>
-                                </select>
+<!--                                <span class="form-text text__color__form">Компания</span>-->
+<!--                                <select v-if="companies.length > 0" class="form-control status_select" v-model="filter.company_id">-->
+<!--                                    <option :value="null"></option>-->
+<!--                                    <option :key="company.AccountNum" :value="company.AccountNum" v-for="company in companies">{{company.ContractorName}}</option>-->
+<!--                                </select>-->
+
+                                <template>
+                                    <el-select class="p-0 mt-4" v-model="filter.company_id" filterable placeholder="Компания">
+                                        <el-option
+                                            v-for="item in companies"
+                                            :key="item.AccountNum"
+                                            :label="item.ContractorName"
+                                            :value="item.AccountNum">
+                                        </el-option>
+                                    </el-select>
+                                </template>
 
                                 <div class=" p-0 mt-3">
                                     <button type="submit" class="btn color__button" id="Date">Найти</button>
@@ -70,6 +81,7 @@
                                 </div>
                             </form>
                         </div>
+
                     </div>
                 </form>
                 <div class="m-portlet__body">
@@ -351,6 +363,7 @@ export default {
                                     this.filter.company_id = null;
 
             this.data.orders = [];
+            //this.filter.company_id = '';
         },
 
         setFilter() {
