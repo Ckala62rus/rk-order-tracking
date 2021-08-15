@@ -11,8 +11,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 
-use function MongoDB\BSON\toJSON;
-
 class OrderService
 {
     /**
@@ -135,7 +133,7 @@ class OrderService
             $item->OrderConfirmQTY = round($item->OrderConfirmQTY, 2);
             $item->ProdOrderQTY = round($item->ProdOrderQTY, 2);
             $item->DeliveryDate = Carbon::parse($item->DeliveryDate)->format('d-m-Y');
-            $item->EndDate = Carbon::parse($item->EndDate)->format('d-m-Y');
+            $item->EndDate = $item->EndDate ? Carbon::parse($item->EndDate)->format('d-m-Y') : '';
             $item->OrderDate = Carbon::parse($item->OrderDate)->format('d-m-Y');
             $item->OrderQTY = number_format($item->OrderQTY, 0, ',', ' ');
             $item->SumQtySpeciallSku = number_format($item->SumQtySpeciallSku, 0, ',', ' ');

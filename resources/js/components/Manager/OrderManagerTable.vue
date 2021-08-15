@@ -14,42 +14,56 @@
 
                 <form class="form" @submit.prevent="setFilter()">
                     <div class="row order__table">
+
+                        <div class="col-lg-2 col-md-2 col-sm-2 p-14">
+
+                            <template>
+                                <el-select class="p-0 mt-4" v-model="filter.company_id" filterable placeholder="Компания">
+                                    <el-option
+                                        v-for="item in companies"
+                                        :key="item.AccountNum"
+                                        :label="item.ContractorName"
+                                        :value="item.AccountNum">
+                                    </el-option>
+                                </el-select>
+                            </template>
+
+                            <div class=" p-0 mt-3">
+                                <button type="submit" class="btn color__button" id="Date">Найти</button>
+                                <button class="btn color__button ml-5" @click="resetFilter">Сброс</button>
+                            </div>
+                        </div>
+
                         <div class="col-lg-3 col-md-3 col-sm-3 p-10">
                             <div class="form-group mt-3">
 
                                 <span class="form-text text__color__form">Статус заказа</span>
                                 <select class="form-control status_select" id="project" v-model="filter.status">
-                                    <option :value="null">Нет статуса</option>
+                                    <option :value="null">Все статусы</option>
                                     <option :key="item.id" :value="item.id" v-for="item in status">{{item.status}}</option>
                                 </select>
 
                                 <span class="form-text text__color__form">Статус реализации</span>
                                 <select class="form-control status_select" id="project2" v-model="filter.realisation_status">
-                                    <option :value="null">Нет статуса</option>
+                                    <option :value="null">Все статусы</option>
                                     <option :key="item.realisation_status" :value="item.realisation_status" v-for="item in realisationStatus">{{item.decription}}</option>
                                 </select>
 
-<!--                                <span class="form-text text__color__form">Компания</span>-->
-<!--                                <select v-if="companies.length > 0" class="form-control status_select" v-model="filter.company_id">-->
-<!--                                    <option :value="null"></option>-->
-<!--                                    <option :key="company.AccountNum" :value="company.AccountNum" v-for="company in companies">{{company.ContractorName}}</option>-->
-<!--                                </select>-->
+<!--                                <template>-->
+<!--                                    <el-select class="p-0 mt-4" v-model="filter.company_id" filterable placeholder="Компания">-->
+<!--                                        <el-option-->
+<!--                                            v-for="item in companies"-->
+<!--                                            :key="item.AccountNum"-->
+<!--                                            :label="item.ContractorName"-->
+<!--                                            :value="item.AccountNum">-->
+<!--                                        </el-option>-->
+<!--                                    </el-select>-->
+<!--                                </template>-->
 
-                                <template>
-                                    <el-select class="p-0 mt-4" v-model="filter.company_id" filterable placeholder="Компания">
-                                        <el-option
-                                            v-for="item in companies"
-                                            :key="item.AccountNum"
-                                            :label="item.ContractorName"
-                                            :value="item.AccountNum">
-                                        </el-option>
-                                    </el-select>
-                                </template>
-
-                                <div class=" p-0 mt-3">
-                                    <button type="submit" class="btn color__button" id="Date">Найти</button>
-                                    <button class="btn color__button ml-5" @click="resetFilter">Сброс</button>
-                                </div>
+<!--                                <div class=" p-0 mt-3">-->
+<!--                                    <button type="submit" class="btn color__button" id="Date">Найти</button>-->
+<!--                                    <button class="btn color__button ml-5" @click="resetFilter">Сброс</button>-->
+<!--                                </div>-->
 
                             </div>
                         </div>
