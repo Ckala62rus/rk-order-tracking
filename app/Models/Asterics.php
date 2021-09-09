@@ -5,10 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class RealisationStatus extends Model
+class Asterics extends Model
 {
     use HasFactory;
 
-    protected $connection = 'sqlsrv';
-    protected $table = 'RealizationStatus';
+    protected $connection = "pgsql";
+    protected $table = "users";
 }

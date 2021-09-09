@@ -4,12 +4,14 @@ namespace App\Services;
 
 use App\Repositories\OrderRepository;
 use App\Repositories\OrderStatusRepository;
+use App\Repositories\PrjVersRepository;
 use App\Repositories\RealisationStatusRepository;
 use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class OrderService
 {
@@ -29,19 +31,27 @@ class OrderService
     public RealisationStatusRepository $realisationStatusRepository;
 
     /**
+     * @var PrjVersRepository
+     */
+    public PrjVersRepository $prjVersRepository;
+
+    /**
      * OrderService constructor.
      * @param OrderRepository $orderRepository
      * @param OrderStatusRepository $orderStatusRepository
      * @param RealisationStatusRepository $realisationStatusRepository
+     * @param PrjVersRepository $prjVersRepository
      */
     public function __construct(
         OrderRepository $orderRepository,
         OrderStatusRepository $orderStatusRepository,
-        RealisationStatusRepository $realisationStatusRepository
+        RealisationStatusRepository $realisationStatusRepository,
+        PrjVersRepository $prjVersRepository
     ) {
         $this->orderRepository = $orderRepository;
         $this->orderStatusRepository = $orderStatusRepository;
         $this->realisationStatusRepository = $realisationStatusRepository;
+        $this->prjVersRepository = $prjVersRepository;
     }
 
     /**
@@ -214,5 +224,45 @@ class OrderService
             ->getCompanies($query);
 
         return $query->get();
+    }
+
+    /**
+     * Return zip information for orders
+     * @param array $data
+     * @return Collection
+     */
+    public function zipOrderInfo(array $data): Collection
+    {
+        $user = Auth::user();
+
+        $query = $this
+            ->prjVersRepository
+            ->query();
+
+        if (isset($data["date_from"]) && isset($data["date_to"])) {
+            $query = $this->prjVersRepository->filterByDate($query, $data["date_from"], $data["date_to"]);
+        }
+        if (isset($data["realisation_status"])) {
+            $query = $this->prjVersRepository->whereRealisationStatus($query, $data["realisation_status"]);
+        }
+        if (isset($data["article"])) {
+            $query = $this->prjVersRepository->whereArticle($query, $data["article"]);
+        }
+        if (isset($data["color"])) {
+            $query = $this->prjVersRepository->whereColor($query, $data["color"]);
+        }
+
+        if (isset($data['company_id']) && ( $user->is_admin == true || $user->is_manager == true)) {
+            $query = $this
+                ->prjVersRepository
+                ->whereUser($query, $data['company_id']);
+        } else {
+            $query = $this
+                ->prjVersRepository
+                ->whereUser($query, $user->account_id);
+        }
+
+        return $query
+            ->get();
     }
 }

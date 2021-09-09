@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Lk;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Order\OrderDetailRequest;
+use App\Http\Requests\Order\SimpleOrderRequest;
 use App\Http\Resources\Order\OrderResource;
+use App\Http\Resources\Order\SimpleOrderResource;
 use App\Http\Resources\OrderStatus\StatusResource;
 use App\Http\Resources\RealisationStatus\RealisationStatusResource;
 use App\Services\OrderService;
@@ -116,6 +118,25 @@ class OrderApiController extends Controller
 
         return response()->json([
             'companies' => $companies,
+        ], JsonResponse::HTTP_OK);
+    }
+
+    /**
+     * Return zip order for company
+     * @param SimpleOrderRequest $request
+     * @return JsonResponse
+     */
+    public function newOrder(SimpleOrderRequest $request): JsonResponse
+    {
+        $data = $request->all();
+
+        $orders = $this
+            ->orderService
+            ->zipOrderInfo($data);
+
+        return response()->json([
+            'data' => SimpleOrderResource::collection($orders),
+            'count' => count($orders),
         ], JsonResponse::HTTP_OK);
     }
 }

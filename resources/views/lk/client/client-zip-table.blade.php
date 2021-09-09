@@ -2,6 +2,6 @@
 
 @section('content')
     <div class="jumbotron jumbotron-fluid">
-        <orders-manager-table></orders-manager-table>
+        <client-zip-orders-table></client-zip-orders-table>
     </div>
 @endsection

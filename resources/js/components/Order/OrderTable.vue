@@ -1,6 +1,6 @@
 <template>
 
-    <div class="container-fluid">
+    <div class="">
         <div class="row">
             <div class="card card-custom order__card">
 

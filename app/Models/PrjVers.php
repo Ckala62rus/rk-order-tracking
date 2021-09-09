@@ -5,10 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class RealisationStatus extends Model
+class PrjVers extends Model
 {
     use HasFactory;
 
-    protected $connection = 'sqlsrv';
-    protected $table = 'RealizationStatus';
+    protected $connection = "sqlsrv";
+    protected $table = "PrjVersCustomersOrdersDetail";
 }

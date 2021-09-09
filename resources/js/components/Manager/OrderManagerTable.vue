@@ -1,6 +1,7 @@
 <template>
 
-    <div class="container-fluid">
+    <div class="">
+
         <div class="row">
             <div class="card card-custom order__card">
 
@@ -381,6 +382,7 @@ export default {
         },
 
         setFilter() {
+            console.log(123)
             this.query = this.urlBase;
 
             if (this.filter.status != null) {

@@ -58,10 +58,25 @@ class OrderController extends Controller
         $user = Auth::user();
 
         if ($user->is_admin == true || $user->is_manager == true) {
-            return view('lk.manager.manager-table');
+            return view('lk.zip-order-table');
+//            return view('lk.manager.manager-table');
 //            return response(['Access is denied'], JsonResponse::HTTP_FORBIDDEN);
         }
-        return view('lk.vue-table');
+        return view('lk.client.client-zip-table');
+    }
+
+    /**
+     * return client zip order table
+     * @return Application|Factory|View
+     */
+    public function clientZipTable()
+    {
+        $user = Auth::user();
+
+        if ($user->is_admin == true || $user->is_manager == true) {
+            return view('lk.manager.manager-table');
+        }
+        return view('lk.client.client-zip-table');
     }
 
     /**
@@ -75,6 +90,29 @@ class OrderController extends Controller
             return response(['Access is denied'], JsonResponse::HTTP_FORBIDDEN);
         }
         return view('lk.manager.manager-table');
+    }
+
+    /**
+     * Return zip order table from client
+     * @return Application|ResponseFactory|Factory|View|Response
+     */
+    public function zipOrderTable()
+    {
+        $user = Auth::user();
+//        if ($user->is_admin == false) {
+//            return response(['Access is denied'], JsonResponse::HTTP_FORBIDDEN);
+//        }
+        return view('lk.zip-order-table');
+    }
+
+    /**
+     * Return zip detail order
+     * @param int $id
+     * @return Application|Factory|View
+     */
+    public function zipOrderDetail(int $id)
+    {
+        return view('lk.zip-order-detail', ["id"=>$id]);
     }
 
     /**

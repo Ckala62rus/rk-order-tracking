@@ -28,14 +28,17 @@ Route::middleware(['auth'])->group(function () {
     Route::get('dashboard', [\App\Http\Controllers\Lk\OrderController::class, 'template']);
     Route::get('orders', [\App\Http\Controllers\Lk\OrderApiController::class, 'getOrders']); // vue for axios
     Route::get('status', [\App\Http\Controllers\Lk\OrderApiController::class, 'getStatuses']);
-    Route::get('realisation-status', [\App\Http\Controllers\Lk\OrderApiController::class, 'getRealisationStatuses']);
+//    Route::get('realisation-status', [\App\Http\Controllers\Lk\OrderApiController::class, 'getRealisationStatuses']);
     Route::get('vue', [\App\Http\Controllers\Lk\OrderController::class, 'vueOrders']);
     Route::get('users', [UserController::class, 'users']);
     Route::resource('admin/users', UserController::class)->middleware('admin');
     Route::get('detail/orders', [\App\Http\Controllers\Lk\OrderApiController::class, 'getDetailInformationFromModal']);
     Route::get('manager/order/table', [\App\Http\Controllers\Lk\OrderController::class, 'managerOrderTable']);
     Route::get('manager/order/companies', [\App\Http\Controllers\Lk\OrderApiController::class, 'getCompanies']);
+    Route::get('zip/orders', [\App\Http\Controllers\Lk\OrderController::class, 'zipOrderTable']);
 });
-
+Route::get('realisation-status', [\App\Http\Controllers\Lk\OrderApiController::class, 'getRealisationStatuses']);
 //Route::get('manager/order/companies', [\App\Http\Controllers\Lk\OrderApiController::class, 'getCompanies']);
 //Route::get('realisation-status', [\App\Http\Controllers\Lk\OrderApiController::class, 'getRealisationStatuses']);
+Route::get('test', [\App\Http\Controllers\Lk\OrderApiController::class, 'newOrder']);
+Route::get('zip/detail/{id}', [\App\Http\Controllers\Lk\OrderController::class, 'zipOrderDetail']);
