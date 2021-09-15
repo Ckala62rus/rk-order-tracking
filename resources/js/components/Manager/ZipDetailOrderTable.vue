@@ -3,12 +3,14 @@
     <!--begin::Container-->
     <div class="">
 
+<!--        <h1>Детальная информация по заказам c id={{this.id}}</h1>-->
+
         <div class="col-xl-12" style="width: 100%">
             <!--begin::Card-->
             <div class="card card-custom gutter-b">
                 <div class="card-header">
                     <div class="card-title">
-                        <h3 class="card-label">Сжатая информация по заказам</h3>
+                        <h3 class="card-label">Подробная информация по заказам</h3>
                     </div>
                 </div>
 
@@ -17,18 +19,21 @@
 
                         <div class="form-group row">
                             <div class="col-lg-3">
-                                <label>Цвет:</label>
-                                <input type="text" v-model="filter.color" class="form-control" placeholder="Введите цвет"/>
+                                <label>Статусы реализации:</label>
+                                <select class="form-control datepicker_width" v-model="filter.realisation_status">
+                                    <option :value="null">Статус не выбран</option>
+                                    <option
+                                        :key="item.realisation_status"
+                                        :value="item.realisation_status"
+                                        v-for="item in realisationStatus"
+                                    >{{item.decription}}</option>
+                                </select>
                             </div>
                             <div class="col-lg-3">
-                                <label>Артикул:</label>
-                                <input type="text" v-model="filter.article" class="form-control" placeholder="Введите артикул"/>
-                            </div>
-                            <div class="col-lg-3">
-                                <label>Статусы реализации заявки:</label>
-                                <select class="form-control" id="project2" v-model="filter.realisation_status">
-                                    <option :value="null">Все статусы</option>
-                                    <option :key="item.realisation_status" :value="item.realisation_status" v-for="item in realisationStatus">{{item.decription}}</option>
+                                <label>Статус заказа:</label>
+                                <select class="form-control datepicker_width" v-model="filter.status">
+                                    <option :value="null">Статус не выбран</option>
+                                    <option :key="item.id" :value="item.id" v-for="item in status">{{item.status}}</option>
                                 </select>
                             </div>
                         </div>
@@ -60,7 +65,7 @@
                         <el-table
                             :data="tableData"
                             height="550"
-                            style="width: 100%"
+                            style="width: 100%;"
                             :fit=true
                         >
                             <el-table-column
@@ -69,11 +74,6 @@
                                 label="Номер заявки"
                                 width="150"
                             >
-                                <template slot-scope="scope">
-                                    <el-button
-                                        size="mini"
-                                    ><a :href="'/zip/detail/' +  scope.row.id" target="_blank">{{scope.row.OrderNumber}}</a></el-button>
-                                </template>
                             </el-table-column>
 
                             <el-table-column
@@ -96,36 +96,55 @@
                                 label="Толщина"
                                 width="100">
                             </el-table-column>
+
                             <el-table-column
-                                prop="SumQtySpeciallSku"
+                                prop="OrderDate"
+                                label="Дата размещения заказа"
+                                width="145">
+                            </el-table-column>
+
+                            <el-table-column
+                                prop="OrderedQTYPZ"
                                 label="Заказанный обьем"
                                 width="110">
                             </el-table-column>
+
                             <el-table-column
-                                prop="SumQtyIzm"
-                                label="Измеренный обьем"
-                                width="160">
+                                prop="ProdOrderNumber"
+                                label="Номер заказа"
+                                width="115">
                             </el-table-column>
+
                             <el-table-column
-                                prop="SumQtySales"
-                                label="Проданный обьем"
-                                width="180">
+                                prop="ProdOrderStatus"
+                                label="Статус заказа"
+                                width="120">
                             </el-table-column>
+
+                            <el-table-column
+                                prop="ProdOrderQTY"
+                                label="Обьем заказа"
+                                width="120">
+                            </el-table-column>
+
                             <el-table-column
                                 prop="DeliveryDate"
                                 label="Дата поставки"
-                                width="140">
+                                width="120">
                             </el-table-column>
+
                             <el-table-column
                                 prop="EndDate"
                                 label="Дата окончания"
-                                width="140">
+                                width="130">
                             </el-table-column>
+
                             <el-table-column
                                 prop="LeadOrLagTime"
-                                label="Отклонение от даты поставки"
-                                width="170">
+                                label="Отклонения от даты поставки"
+                                width="130">
                             </el-table-column>
+
                         </el-table>
                     </template>
                     <!--end::Example-->
@@ -136,47 +155,45 @@
     </div>
 
     <!--end::Container-->
-
 </template>
 
 <script>
 export default {
+    props: [
+        'id'
+    ],
+
     data() {
         return {
-            tableData: [],
-            url: "/test?",
+            url: "/zip/detail-orders?",
             query: '',
-            urlBase: '/test?',
+            urlBase: '/zip/detail-orders?',
+            tableData: [],
             realisationStatus: {},
-            companies: {},
+            status: {},
             filter: {
                 realisation_status: null,
                 date_from: null,
                 date_to: null,
-                article: null,
-                color: null,
-                company_id: null,
+                status: null,
             },
         }
     },
 
     methods: {
         getData() {
-            axios.get(this.url).then((response) => {
+            axios.get(this.url + "&order_id=" + this.id).then((response) => {
                 this.tableData = response.data.data;
             })
         },
-        handleEdit(index, row) {
-            console.log(index, row);
+        getStatuses() {
+            axios.get('/status' ).then((response) => {
+                this.status = response.data.data;
+            })
         },
         getRealisationStatuses() {
             axios.get('/realisation-status' ).then((response) => {
                 this.realisationStatus = response.data.data;
-            })
-        },
-        getCompanies() {
-            axios.get('/manager/order/companies' ).then((response) => {
-                this.companies = response.data.companies;
             })
         },
         setFilter() {
@@ -194,12 +211,8 @@ export default {
                 this.query += '&realisation_status=' + this.filter.realisation_status;
             }
 
-            if (this.filter.article != null) {
-                this.query += '&article=' + this.filter.article;
-            }
-
-            if (this.filter.color != null) {
-                this.query += '&color=' + this.filter.color;
+            if (this.filter.status != null) {
+                this.query += '&status=' + this.filter.status;
             }
 
             this.url = this.query;
@@ -210,23 +223,21 @@ export default {
             this.filter.date_from =
                 this.filter.realisation_status =
                     this.filter.date_to =
-                        this.filter.article =
-                            this.filter.color = null;
-            this.tableData = [];
+                        this.filter.status = null;
         },
     },
 
     created() {
+        this.getData();
+        this.getStatuses();
         this.getRealisationStatuses();
-        this.getCompanies();
     },
+
+    mounted() {},
 }
 </script>
 
 <style scoped>
-.input_text_color {
-    color: #3F4254;
-}
 .datepicker_width {
     width: 100%;
 }

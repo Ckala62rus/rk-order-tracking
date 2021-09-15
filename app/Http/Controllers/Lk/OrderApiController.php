@@ -5,13 +5,17 @@ namespace App\Http\Controllers\Lk;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Order\OrderDetailRequest;
 use App\Http\Requests\Order\SimpleOrderRequest;
+use App\Http\Requests\Order\ZipOrderDetailRequest;
 use App\Http\Resources\Order\OrderResource;
 use App\Http\Resources\Order\SimpleOrderResource;
 use App\Http\Resources\OrderStatus\StatusResource;
 use App\Http\Resources\RealisationStatus\RealisationStatusResource;
+use App\Mail\TestMail;
+use App\Models\User;
 use App\Services\OrderService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class OrderApiController extends Controller
 {
@@ -134,8 +138,55 @@ class OrderApiController extends Controller
             ->orderService
             ->zipOrderInfo($data);
 
+        $calculateVolume = $this
+            ->orderService
+            ->calculateVolume($orders);
+
         return response()->json([
             'data' => SimpleOrderResource::collection($orders),
+            'count' => count($orders),
+            'volumes' => $calculateVolume,
+        ], JsonResponse::HTTP_OK);
+    }
+
+    /**
+     * Return zip detail orders by Row# id
+     * @param ZipOrderDetailRequest $request
+     * @return JsonResponse
+     */
+    public function getDetailZipOrders(ZipOrderDetailRequest $request): JsonResponse
+    {
+        $data = $request->all();
+
+        $orders = $this
+            ->orderService
+            ->detailZipOrders($data);
+
+        $orders = $this
+            ->orderService
+            ->adapterZipOrderDetail($orders);
+
+        return response()->json([
+            'data' => $orders,
+            'count' => count($orders),
+        ], JsonResponse::HTTP_OK);
+    }
+
+    /**
+     * Return orders by article from ArticleVersCustomersOrdersDetail table
+     * @param ZipOrderDetailRequest $request
+     * @return JsonResponse
+     */
+    public function getDetailZipOrderByGroup(ZipOrderDetailRequest $request): JsonResponse
+    {
+        $data = $request->all();
+
+        $orders = $this
+            ->orderService
+            ->getOrdersByArticle($data);
+
+        return response()->json([
+            'data' => $orders,
             'count' => count($orders),
         ], JsonResponse::HTTP_OK);
     }

@@ -42,3 +42,7 @@ Route::get('realisation-status', [\App\Http\Controllers\Lk\OrderApiController::c
 //Route::get('realisation-status', [\App\Http\Controllers\Lk\OrderApiController::class, 'getRealisationStatuses']);
 Route::get('test', [\App\Http\Controllers\Lk\OrderApiController::class, 'newOrder']);
 Route::get('zip/detail/{id}', [\App\Http\Controllers\Lk\OrderController::class, 'zipOrderDetail']);
+Route::get('zip/detail-orders', [\App\Http\Controllers\Lk\OrderApiController::class, 'getDetailZipOrders']);
+
+Route::get('zip/detail-orders/group/{id}', [\App\Http\Controllers\Lk\OrderController::class, 'zipOrderDetailGroup']);
+Route::get('zip/detail-orders/group', [\App\Http\Controllers\Lk\OrderApiController::class, 'getDetailZipOrderByGroup']);

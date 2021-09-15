@@ -116,6 +116,15 @@ class OrderController extends Controller
     }
 
     /**
+     * @param int $id
+     * @return Application|Factory|View
+     */
+    public function zipOrderDetailGroup(int $id)
+    {
+        return view('lk.zip-order-detail-group', ["id"=>$id]);
+    }
+
+    /**
      * Client Dashboard
      * @return Application|Factory|View
      */

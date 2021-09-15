@@ -58,6 +58,8 @@ Vue.component('users-table', require('./components/User/UserIndex').default);
 Vue.component('orders-manager-table', require('./components/Manager/OrderManagerTable').default);
 Vue.component('simple-orders-table', require('./components/Order/SimpleOrderTable').default);
 Vue.component('client-zip-orders-table', require('./components/Order/ClientZipOrderTable').default);
+Vue.component('zip-detail-orders-table', require('./components/Manager/ZipDetailOrderTable').default);
+Vue.component('zip-detail-orders-group-table', require('./components/Manager/ZipDetailOrderGroupTable').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

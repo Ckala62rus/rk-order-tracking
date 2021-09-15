@@ -153,4 +153,28 @@ class OrderRepository extends Repository
     {
         return $query->select(['ContractorName', 'AccountNum'])->distinct();
     }
+
+    /**
+     * Where Config = $config
+     * @param Builder $query
+     * @param string $config
+     * @return Builder
+     */
+    public function whereConfig(Builder $query, string $config): Builder
+    {
+        return $query
+            ->where('Config', 'like', '%' . $config . '%');
+    }
+
+    /**
+     * Where Thiknes = $thickness
+     * @param Builder $query
+     * @param string $thickness
+     * @return Builder
+     */
+    public function whereThickness(Builder $query, string $thickness): Builder
+    {
+        return $query
+            ->where('Thickness', 'like', '%' . $thickness . '%');
+    }
 }

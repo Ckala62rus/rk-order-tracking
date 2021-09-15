@@ -1,0 +1,61 @@
+<?php
+
+namespace App\Repositories;
+
+use App\Models\ArticleVersCustomersOrderDetail;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
+
+class ArticleVersCustomersOrdersDetailRepository extends Repository
+{
+    /**
+     * ArticleVersCustomersOrdersDetailRepository constructor.
+     */
+    public function __construct()
+    {
+        $this->model = new ArticleVersCustomersOrderDetail();
+    }
+
+    /**
+     * Create new query
+     * @return Builder
+     */
+    public function query(): Builder
+    {
+        return $this
+            ->model
+            ->newQuery();
+    }
+
+    /**
+     * Find orders by AccountNum
+     * @param Builder $query
+     * @param string $accountId
+     * @return Builder
+     */
+    public function whereAccountNum(Builder $query, string $accountId): Builder
+    {
+        return $query->where("AccountNum", $accountId);
+    }
+
+    /**
+     * Find orders by ItemId
+     * @param Builder $query
+     * @param string $itemId
+     * @return Builder
+     */
+    public function whereItemId(Builder $query, string $itemId): Builder
+    {
+        return $query->where("ItemId", $itemId);
+    }
+
+    /**
+     * Execute query builder and return orders collection
+     * @param Builder $query
+     * @return Collection
+     */
+    public function execute(Builder $query): Collection
+    {
+        return $query->get();
+    }
+}

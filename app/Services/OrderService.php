@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Models\User;
+use App\Repositories\ArticleVersCustomersOrdersDetailRepository;
 use App\Repositories\OrderRepository;
 use App\Repositories\OrderStatusRepository;
 use App\Repositories\PrjVersRepository;
@@ -11,7 +13,6 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 class OrderService
 {
@@ -36,22 +37,30 @@ class OrderService
     public PrjVersRepository $prjVersRepository;
 
     /**
+     * @var ArticleVersCustomersOrdersDetailRepository
+     */
+    public ArticleVersCustomersOrdersDetailRepository $articleVersCustomersOrdersDetailRepository;
+
+    /**
      * OrderService constructor.
      * @param OrderRepository $orderRepository
      * @param OrderStatusRepository $orderStatusRepository
      * @param RealisationStatusRepository $realisationStatusRepository
      * @param PrjVersRepository $prjVersRepository
+     * @param ArticleVersCustomersOrdersDetailRepository $articleVersCustomersOrdersDetailRepository
      */
     public function __construct(
         OrderRepository $orderRepository,
         OrderStatusRepository $orderStatusRepository,
         RealisationStatusRepository $realisationStatusRepository,
-        PrjVersRepository $prjVersRepository
+        PrjVersRepository $prjVersRepository,
+        ArticleVersCustomersOrdersDetailRepository $articleVersCustomersOrdersDetailRepository
     ) {
         $this->orderRepository = $orderRepository;
         $this->orderStatusRepository = $orderStatusRepository;
         $this->realisationStatusRepository = $realisationStatusRepository;
         $this->prjVersRepository = $prjVersRepository;
+        $this->articleVersCustomersOrdersDetailRepository = $articleVersCustomersOrdersDetailRepository;
     }
 
     /**
@@ -199,8 +208,6 @@ class OrderService
             ->orderRepository
             ->query();
 
-        $user = Auth::user();
-
         $query = $this
             ->orderRepository
             ->whereOrderNumber($query, $orderId);
@@ -264,5 +271,150 @@ class OrderService
 
         return $query
             ->get();
+    }
+
+    /**
+     * Get detail orders by filters
+     * @param array $data
+     * @return Collection
+     */
+    public function detailZipOrders(array $data): Collection
+    {
+        $order = $this
+            ->prjVersRepository
+            ->getRecordByRowId($data["order_id"]);
+
+        $filters = [
+            'order_number' => $order->OrderNumber,
+            'article' => $order->Article,
+            'color' => $order->Color,
+            'config' => $order->Config,
+            'thickness' => $order->Thickness,
+        ];
+
+        $query = $this
+            ->orderRepository
+            ->query();
+
+        if (isset($filters["order_number"])){
+            $query = $this
+                ->orderRepository
+                ->whereOrderNumber($query, $filters["order_number"]);
+        }
+
+        if (isset($filters["article"])){
+            $query = $this
+                ->orderRepository
+                ->whereArticle($query, $filters["article"]);
+        }
+
+        if (isset($filters["color"])){
+            $query = $this
+                ->orderRepository
+                ->whereColor($query, $filters["color"]);
+        }
+
+        if (isset($filters["config"])){
+            $query = $this
+                ->orderRepository
+                ->whereConfig($query, $filters["config"]);
+        }
+
+        if (isset($filters["thickness"])){
+            $query = $this
+                ->orderRepository
+                ->whereThickness($query, $filters["thickness"]);
+        }
+
+        if (isset($data['status'])) {
+            $query = $this
+                ->filterByStatus($data['status'], $query);
+        }
+
+        if (isset($data['date_from']) && isset($data['date_to'])) {
+            $query = $this
+                ->orderRepository
+                ->filterByDate($query, $data['date_from'], $data['date_to']);
+        }
+
+        if (isset($data['realisation_status'])) {
+            $query = $this
+                ->orderRepository
+                ->whereRealisationStatus($query, $data['realisation_status']);
+        }
+
+        return $query->get();
+    }
+
+    /**
+     * Adapter for zip order detail
+     * @param Collection $data
+     * @return Collection
+     */
+    public function adapterZipOrderDetail(Collection $data): Collection
+    {
+        foreach ($data as $item){
+            $item->OrderDate = $item->OrderDate ? Carbon::parse($item->OrderDate)->format('d-m-Y') : '';
+            $item->ProdOrderQTY = number_format($item->ProdOrderQTY, 0, ',', ' ');
+            $item->DeliveryDate = $item->DeliveryDate ? Carbon::parse($item->DeliveryDate)->format('d-m-Y') : '';
+            $item->EndDate = $item->EndDate ? Carbon::parse($item->EndDate)->format('d-m-Y') : '';
+            $item->OrderedQTYPZ = number_format($item->OrderedQTYPZ, 0, ',', ' ');
+        }
+
+        return $data;
+    }
+
+    /**
+     * Return order by filter article from
+     * @param array $data
+     * @return Collection
+     */
+    public function getOrdersByArticle(array $data): Collection
+    {
+        $orderRow = $this
+            ->prjVersRepository
+            ->getRecordByRowId($data["order_id"]);
+
+        $query = $this
+            ->articleVersCustomersOrdersDetailRepository
+            ->query();
+
+        $query = $this
+            ->articleVersCustomersOrdersDetailRepository
+            ->whereAccountNum($query, $orderRow->AccountNum);
+
+        $query = $this
+            ->articleVersCustomersOrdersDetailRepository
+            ->whereItemId($query, $orderRow->ItemId);
+
+        return $this
+            ->articleVersCustomersOrdersDetailRepository
+            ->execute($query);
+    }
+
+    /**
+     * Calculate volumes for orders
+     * @param Collection $orders
+     * @return int[]
+     */
+    public function calculateVolume(Collection $orders): array
+    {
+        $volumes = [
+            "SumQtySpeciallSku" => 0, // Заказанный обьем
+            "SumQtyIzm" => 0, // Измеренный обьем
+            "SumQtySales" => 0, // Проданный обьем
+        ];
+
+        foreach ($orders as $order) {
+            $volumes["SumQtySpeciallSku"] += (int)$order->SumQtySpeciallSku;
+            $volumes["SumQtyIzm"] += (int)$order->SumQtyIzm;
+            $volumes["SumQtySales"] += (int)$order->SumQtySales;
+        }
+
+        $volumes["SumQtySpeciallSku"] = number_format($volumes["SumQtySpeciallSku"], 0, ',', ' ');
+        $volumes["SumQtyIzm"] = number_format($volumes["SumQtyIzm"], 0, ',', ' ');
+        $volumes["SumQtySales"] = number_format($volumes["SumQtySales"], 0, ',', ' ');
+
+        return $volumes;
     }
 }

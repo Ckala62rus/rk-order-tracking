@@ -16,6 +16,7 @@ class SimpleOrderResource extends JsonResource
      */
     public function toArray($request)
     {
+
         return [
             "id" => $this["Row#"],
             "OrderNumber" => $this->OrderNumber,
@@ -26,11 +27,12 @@ class SimpleOrderResource extends JsonResource
             "SumQtySpeciallSku" => number_format($this->SumQtySpeciallSku, 0, ',', ' '),
             "SumQtyIzm" => number_format($this->SumQtyIzm, 0, ',', ' '),
             "SumQtySales" => number_format($this->SumQtySales, 0, ',', ' '),
-            "DeliveryDate" => Carbon::parse($this->DeliveryDate)->format('d-m-Y'),
-            "EndDate" => Carbon::parse($this->EndDate)->format('d-m-Y'),
+            "DeliveryDate" => $this->DeliveryDate ? Carbon::parse($this->DeliveryDate)->format('d-m-Y') : "",
+            "EndDate" => $this->EndDate ? Carbon::parse($this->EndDate)->format('d-m-Y') : "",
             "LeadOrLagTime" => $this->LeadOrLagTime,
             "ContractorNameActual" => $this->ContractorNameActual,
             "AccountNum" => $this->AccountNum,
+            "ItemId" => $this->ItemId,
         ];
     }
 }
