@@ -23,6 +23,11 @@ class ZipOrderDetailGroupResource extends JsonResource
             "Thickness" => $this->Thickness,
             "SumQtySpeciallSku" => number_format($this->SumQtySpeciallSku, 0, ',', ' '),
             "RealizationStatus" => $this->RealizationStatus,
+            "ContractorNameActual" => $this->ContractorNameActual,
+            "Decryption" => $this->Decryption,
+            "SumQtyIzm" => $this->SumQtyIzm,
+            "SumQtySales" => $this->SumQtySales,
+            "Balance_View" => $this->Balance_View,
         ];
     }
 }

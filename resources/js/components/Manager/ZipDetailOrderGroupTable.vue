@@ -55,7 +55,7 @@
                             <el-table-column
                                 prop="Article"
                                 label="Артикул"
-                                width="180">
+                                width="250">
                             </el-table-column>
                             <el-table-column
                                 prop="Color"
@@ -65,18 +65,28 @@
                             <el-table-column
                                 prop="Config"
                                 label="Конфигурация"
-                                width="140">
+                                width="250">
                             </el-table-column>
                             <el-table-column
                                 prop="Thickness"
                                 label="Толщина"
-                                width="100">
+                                width="250">
                             </el-table-column>
-
                             <el-table-column
                                 prop="SumQtySpeciallSku"
                                 label="Заказанный обьем"
-                                width="110">
+                                width="250">
+                            </el-table-column>
+
+                            <el-table-column
+                                prop="SumQtyIzm"
+                                label="Измеренный обьем"
+                                width="250">
+                            </el-table-column>
+                            <el-table-column
+                                prop="SumQtySales"
+                                label="Проданный обьем"
+                                width="250">
                             </el-table-column>
 
                         </el-table>
@@ -103,7 +113,11 @@ export default {
             query: '',
             urlBase: '/zip/detail-orders/group/?' + "order_id=" + this.id,
             tableData: [],
-            realisationStatus: {},
+            realisationStatus: [
+                // {decription: "Реализовано", realisation_status: "3"},
+                {decription: "Частично реализовано", realisation_status: "2"},
+                {decription: "Не реализовано", realisation_status: "1"},
+            ],
             status: {},
             filter: {
                 realisation_status: null,
@@ -150,7 +164,7 @@ export default {
 
     created() {
         this.getData();
-        this.getRealisationStatuses();
+        // this.getRealisationStatuses();
     },
 
     mounted() {},
