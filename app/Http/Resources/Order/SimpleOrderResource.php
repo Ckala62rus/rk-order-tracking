@@ -33,6 +33,7 @@ class SimpleOrderResource extends JsonResource
             "ContractorNameActual" => $this->ContractorNameActual,
             "AccountNum" => $this->AccountNum,
             "ItemId" => $this->ItemId,
+            "RegistrChange" => $this->RegistrChange,
         ];
     }
 }

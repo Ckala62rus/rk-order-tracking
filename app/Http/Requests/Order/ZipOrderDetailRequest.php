@@ -14,7 +14,9 @@ class ZipOrderDetailRequest extends FormRequest
     public function rules()
     {
         return [
-            "order_id" => 'required'
+            "order_id" => 'required',
+            "color" => 'sometimes',
+            "realisation_status" => 'sometimes',
         ];
     }
 }

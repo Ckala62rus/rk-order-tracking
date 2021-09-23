@@ -387,6 +387,18 @@ class OrderService
             ->articleVersCustomersOrdersDetailRepository
             ->whereItemId($query, $orderRow->ItemId);
 
+        if (isset($data["color"])) {
+            $query = $this
+                ->articleVersCustomersOrdersDetailRepository
+                ->whereColor($query, $data["color"]);
+        }
+
+        if (isset($data["realisation_status"])) {
+            $query = $this
+                ->articleVersCustomersOrdersDetailRepository
+                ->whereRealizationStatus($query, $data["realisation_status"]);
+        }
+
         return $this
             ->articleVersCustomersOrdersDetailRepository
             ->execute($query);

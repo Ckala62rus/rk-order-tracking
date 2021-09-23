@@ -10,5 +10,5 @@ class PrjVers extends Model
     use HasFactory;
 
     protected $connection = "sqlsrv";
-    protected $table = "PrjVersCustomersOrdersDetail";
+    protected $table = "PrjCustomersOrdersDetail";
 }

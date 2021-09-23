@@ -185,8 +185,10 @@
                                 <el-table-column
                                     prop="Color"
                                     label="Цвет"
-                                    width="180">
+                                    width="180"
+                                >
                                 </el-table-column>
+
                                 <el-table-column
                                     prop="Config"
                                     label="Конфигурация"
@@ -217,11 +219,22 @@
                                     label="Дата поставки"
                                     width="140">
                                 </el-table-column>
+
                                 <el-table-column
                                     prop="EndDate"
                                     label="Дата окончания"
-                                    width="140">
+                                    width="140"
+                                >
+                                    <template slot-scope="scope">
+                                        <div :class="{
+                                            red_column_color: scope.row.RegistrChange == 1,
+                                            green_column_color: scope.row.RegistrChange == 2,
+                                        }">
+                                            {{scope.row.EndDate}}
+                                        </div>
+                                    </template>
                                 </el-table-column>
+
                                 <el-table-column
                                     prop="LeadOrLagTime"
                                     label="Отклонение от даты поставки"
@@ -345,6 +358,15 @@ export default {
 .input_text_color {
     color: #3F4254;
 }
+
+.red_column_color {
+    color: #FF6666;
+}
+
+.green_column_color {
+    color: #29bf51;
+}
+
 .datepicker_width {
     width: 100%;
 }

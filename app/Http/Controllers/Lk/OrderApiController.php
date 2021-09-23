@@ -8,6 +8,7 @@ use App\Http\Requests\Order\SimpleOrderRequest;
 use App\Http\Requests\Order\ZipOrderDetailRequest;
 use App\Http\Resources\Order\OrderResource;
 use App\Http\Resources\Order\SimpleOrderResource;
+use App\Http\Resources\Order\ZipOrderDetailGroupResource;
 use App\Http\Resources\OrderStatus\StatusResource;
 use App\Http\Resources\RealisationStatus\RealisationStatusResource;
 use App\Mail\TestMail;
@@ -144,6 +145,7 @@ class OrderApiController extends Controller
 
         return response()->json([
             'data' => SimpleOrderResource::collection($orders),
+//            'data' => $orders,
             'count' => count($orders),
             'volumes' => $calculateVolume,
         ], JsonResponse::HTTP_OK);
@@ -186,7 +188,7 @@ class OrderApiController extends Controller
             ->getOrdersByArticle($data);
 
         return response()->json([
-            'data' => $orders,
+            'data' => ZipOrderDetailGroupResource::collection($orders),
             'count' => count($orders),
         ], JsonResponse::HTTP_OK);
     }

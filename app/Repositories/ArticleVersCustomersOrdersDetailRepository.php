@@ -50,6 +50,28 @@ class ArticleVersCustomersOrdersDetailRepository extends Repository
     }
 
     /**
+     * Filter by color field
+     * @param Builder $query
+     * @param string $color
+     * @return Builder
+     */
+    public function whereColor(Builder $query, string $color): Builder
+    {
+        return $query->where('Color', 'like', '%' . $color . '%');
+    }
+
+    /**
+     * Filter by realizationStatus
+     * @param Builder $query
+     * @param $status
+     * @return Builder
+     */
+    public function whereRealizationStatus(Builder $query, $status): Builder
+    {
+        return $query->where("RealizationStatus", $status);
+    }
+
+    /**
      * Execute query builder and return orders collection
      * @param Builder $query
      * @return Collection

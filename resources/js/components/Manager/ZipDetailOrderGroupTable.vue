@@ -10,9 +10,35 @@
             <div class="card card-custom gutter-b">
                 <div class="card-header">
                     <div class="card-title">
-                        <h3 class="card-label">Подробная информация по заказам</h3>
+                        <h3 class="card-label">Сгрупированная информация по заказам</h3>
                     </div>
                 </div>
+
+                <form class="form" @submit.prevent="setFilter()">
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <div class="col-lg-3">
+                                <label>Статусы реализации:</label>
+                                <select class="form-control datepicker_width" v-model="filter.realisation_status">
+                                    <option :value="null">Все статусы</option>
+                                    <option
+                                        :key="item.realisation_status"
+                                        :value="item.realisation_status"
+                                        v-for="item in realisationStatus"
+                                    >{{item.decription}}</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-3">
+                                <label>Цвет:</label>
+                                <input type="text" v-model="filter.color" class="form-control" placeholder="Введите цвет"/>
+                            </div>
+                            <div class="col-lg-3 pt-6">
+                                <button type="submit" class="btn btn-primary mr-2">Найти</button>
+                                <button type="reset" class="btn btn-secondary" @click="resetFilter">Сброс</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
 
                 <div class="card-footer"></div>
 
@@ -27,14 +53,6 @@
                             :fit=true
                         >
                             <el-table-column
-                                align="right"
-                                prop="OrderNumber"
-                                label="Номер заявки"
-                                width="150"
-                            >
-                            </el-table-column>
-
-                            <el-table-column
                                 prop="Article"
                                 label="Артикул"
                                 width="180">
@@ -42,7 +60,7 @@
                             <el-table-column
                                 prop="Color"
                                 label="Цвет"
-                                width="180">
+                                width="250">
                             </el-table-column>
                             <el-table-column
                                 prop="Config"
@@ -56,51 +74,9 @@
                             </el-table-column>
 
                             <el-table-column
-                                prop="OrderDate"
-                                label="Дата размещения заказа"
-                                width="145">
-                            </el-table-column>
-
-                            <el-table-column
                                 prop="SumQtySpeciallSku"
                                 label="Заказанный обьем"
                                 width="110">
-                            </el-table-column>
-
-                            <el-table-column
-                                prop="ProdOrderNumber"
-                                label="Номер заказа"
-                                width="115">
-                            </el-table-column>
-
-                            <el-table-column
-                                prop="ProdOrderStatus"
-                                label="Статус заказа"
-                                width="120">
-                            </el-table-column>
-
-                            <el-table-column
-                                prop="ProdOrderQTY"
-                                label="Обьем заказа"
-                                width="120">
-                            </el-table-column>
-
-                            <el-table-column
-                                prop="DeliveryDate"
-                                label="Дата поставки"
-                                width="120">
-                            </el-table-column>
-
-                            <el-table-column
-                                prop="EndDate"
-                                label="Дата окончания"
-                                width="130">
-                            </el-table-column>
-
-                            <el-table-column
-                                prop="LeadOrLagTime"
-                                label="Отклонения от даты поставки"
-                                width="130">
                             </el-table-column>
 
                         </el-table>
@@ -123,31 +99,58 @@ export default {
 
     data() {
         return {
-            url: "/zip/detail-orders/group/?",
+            url: "/zip/detail-orders/group/?" + "order_id=" + this.id,
             query: '',
-            urlBase: '/zip/detail-orders/group/?',
+            urlBase: '/zip/detail-orders/group/?' + "order_id=" + this.id,
             tableData: [],
             realisationStatus: {},
             status: {},
             filter: {
                 realisation_status: null,
-                date_from: null,
-                date_to: null,
-                status: null,
+                color: null,
             },
         }
     },
 
     methods: {
         getData() {
-            axios.get(this.url + "order_id=" + this.id).then((response) => {
+            axios.get(this.url).then((response) => {
                 this.tableData = response.data.data;
             })
+        },
+        getRealisationStatuses() {
+            axios.get('/realisation-status' ).then((response) => {
+                this.realisationStatus = response.data.data;
+            })
+        },
+        setFilter() {
+            this.query = this.urlBase;
+
+            if (this.filter.realisation_status != null) {
+                this.query += '&realisation_status=' + this.filter.realisation_status;
+            }
+
+            if (this.filter.color != null) {
+                this.query += '&color=' + this.filter.color;
+            }
+
+            this.url = this.query;
+
+            if (this.filter.company_id === null) {
+                return;
+            }
+            this.getData();
+        },
+        resetFilter() {
+            this.filter.realisation_status =
+                this.filter.color = null;
+            this.setFilter();
         },
     },
 
     created() {
         this.getData();
+        this.getRealisationStatuses();
     },
 
     mounted() {},

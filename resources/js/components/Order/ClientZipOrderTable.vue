@@ -79,8 +79,15 @@
                             <el-table-column
                                 prop="Article"
                                 label="Артикул"
-                                width="180">
+                                width="180"
+                            >
+                                <template slot-scope="scope">
+                                    <el-button
+                                        size="mini"
+                                    ><a :href="'/zip/detail-orders/group/' +  scope.row.id" target="_blank" style="color: black">{{scope.row.Article}}</a></el-button>
+                                </template>
                             </el-table-column>
+
                             <el-table-column
                                 prop="Color"
                                 label="Цвет"
@@ -116,11 +123,22 @@
                                 label="Дата поставки"
                                 width="140">
                             </el-table-column>
+
                             <el-table-column
                                 prop="EndDate"
                                 label="Дата окончания"
-                                width="140">
+                                width="140"
+                            >
+                                <template slot-scope="scope">
+                                    <div :class="{
+                                            red_column_color: scope.row.RegistrChange == 1,
+                                            green_column_color: scope.row.RegistrChange == 2,
+                                        }">
+                                        {{scope.row.EndDate}}
+                                    </div>
+                                </template>
                             </el-table-column>
+
                             <el-table-column
                                 prop="LeadOrLagTime"
                                 label="Отклонение от даты поставки"
@@ -213,12 +231,14 @@ export default {
                         this.filter.article =
                             this.filter.color = null;
             this.tableData = [];
+            this.setFilter();
         },
     },
 
     created() {
         this.getRealisationStatuses();
         this.getCompanies();
+        this.getData();
     },
 }
 </script>
@@ -229,5 +249,12 @@ export default {
 }
 .datepicker_width {
     width: 100%;
+}
+.red_column_color {
+    color: #FF6666;
+}
+
+.green_column_color {
+    color: #29bf51;
 }
 </style>

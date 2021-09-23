@@ -10,5 +10,5 @@ class ArticleVersCustomersOrderDetail extends Model
     use HasFactory;
 
     protected $connection = "sqlsrv";
-    protected $table = "ArticleVersCustomersOrdersDetail";
+    protected $table = "ArticleCustomersOrdersDetail";
 }

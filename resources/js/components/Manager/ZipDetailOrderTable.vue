@@ -136,7 +136,16 @@
                             <el-table-column
                                 prop="EndDate"
                                 label="Дата окончания"
-                                width="130">
+                                width="130"
+                            >
+                                <template slot-scope="scope">
+                                    <div :class="{
+                                            red_column_color: scope.row.RegistrChange == 1,
+                                            green_column_color: scope.row.RegistrChange == 2,
+                                        }">
+                                        {{scope.row.EndDate}}
+                                    </div>
+                                </template>
                             </el-table-column>
 
                             <el-table-column
@@ -240,5 +249,12 @@ export default {
 <style scoped>
 .datepicker_width {
     width: 100%;
+}
+.red_column_color {
+    color: #FF6666;
+}
+
+.green_column_color {
+    color: #29bf51;
 }
 </style>
