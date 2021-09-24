@@ -36,13 +36,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('manager/order/table', [\App\Http\Controllers\Lk\OrderController::class, 'managerOrderTable']);
     Route::get('manager/order/companies', [\App\Http\Controllers\Lk\OrderApiController::class, 'getCompanies']);
     Route::get('zip/orders', [\App\Http\Controllers\Lk\OrderController::class, 'zipOrderTable']);
-});
-Route::get('realisation-status', [\App\Http\Controllers\Lk\OrderApiController::class, 'getRealisationStatuses']);
-//Route::get('manager/order/companies', [\App\Http\Controllers\Lk\OrderApiController::class, 'getCompanies']);
-//Route::get('realisation-status', [\App\Http\Controllers\Lk\OrderApiController::class, 'getRealisationStatuses']);
-Route::get('test', [\App\Http\Controllers\Lk\OrderApiController::class, 'newOrder']);
-Route::get('zip/detail/{id}', [\App\Http\Controllers\Lk\OrderController::class, 'zipOrderDetail']);
-Route::get('zip/detail-orders', [\App\Http\Controllers\Lk\OrderApiController::class, 'getDetailZipOrders']);
 
-Route::get('zip/detail-orders/group/{id}', [\App\Http\Controllers\Lk\OrderController::class, 'zipOrderDetailGroup']);
-Route::get('zip/detail-orders/group', [\App\Http\Controllers\Lk\OrderApiController::class, 'getDetailZipOrderByGroup']);
+    Route::get('realisation-status', [\App\Http\Controllers\Lk\OrderApiController::class, 'getRealisationStatuses']);
+    Route::get('test', [\App\Http\Controllers\Lk\OrderApiController::class, 'newOrder']);
+    Route::get('zip/detail/{id}', [\App\Http\Controllers\Lk\OrderController::class, 'zipOrderDetail']);
+    Route::get('zip/detail-orders', [\App\Http\Controllers\Lk\OrderApiController::class, 'getDetailZipOrders']);
+    Route::get('zip/detail-orders/group/{id}', [\App\Http\Controllers\Lk\OrderController::class, 'zipOrderDetailGroup']);
+    Route::get('zip/detail-orders/group', [\App\Http\Controllers\Lk\OrderApiController::class, 'getDetailZipOrderByGroup']);
+
+});

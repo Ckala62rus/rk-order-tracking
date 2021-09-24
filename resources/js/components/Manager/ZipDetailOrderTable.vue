@@ -10,7 +10,7 @@
             <div class="card card-custom gutter-b">
                 <div class="card-header">
                     <div class="card-title">
-                        <h3 class="card-label">Подробная информация по заказам</h3>
+                        <h3 class="card-label">Детализация размещенных заказов</h3>
                     </div>
                 </div>
 
@@ -79,7 +79,7 @@
                             <el-table-column
                                 prop="Article"
                                 label="Артикул"
-                                width="180">
+                                width="150">
                             </el-table-column>
                             <el-table-column
                                 prop="Color"
@@ -89,7 +89,7 @@
                             <el-table-column
                                 prop="Config"
                                 label="Конфигурация"
-                                width="140">
+                                width="125">
                             </el-table-column>
                             <el-table-column
                                 prop="Thickness"
@@ -104,27 +104,33 @@
                             </el-table-column>
 
                             <el-table-column
+                                prop="ProdOrderNumber"
+                                label="Номер заказа"
+                                width="130">
+                            </el-table-column>
+
+                            <el-table-column
+                                prop="ProdOrderStatus"
+                                label="Статус заказа"
+                                width="190">
+                            </el-table-column>
+
+                            <el-table-column
                                 prop="OrderedQTYPZ"
                                 label="Заказанный обьем"
                                 width="110">
                             </el-table-column>
 
                             <el-table-column
-                                prop="ProdOrderNumber"
-                                label="Номер заказа"
-                                width="115">
+                                prop="SumQtyIzm"
+                                label="Измеренный обьем"
+                                width="110">
                             </el-table-column>
 
                             <el-table-column
-                                prop="ProdOrderStatus"
-                                label="Статус заказа"
-                                width="120">
-                            </el-table-column>
-
-                            <el-table-column
-                                prop="ProdOrderQTY"
-                                label="Обьем заказа"
-                                width="120">
+                                prop="SumQtySales"
+                                label="Проданный обьем"
+                                width="110">
                             </el-table-column>
 
                             <el-table-column
