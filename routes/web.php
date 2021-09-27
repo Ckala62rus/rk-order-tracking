@@ -45,3 +45,5 @@ Route::middleware(['auth'])->group(function () {
     Route::get('zip/detail-orders/group', [\App\Http\Controllers\Lk\OrderApiController::class, 'getDetailZipOrderByGroup']);
 
 });
+
+Route::any('bot', [\App\Http\Controllers\Lk\OrderApiController::class, 'bot']);

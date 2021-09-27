@@ -16,6 +16,7 @@ use App\Models\User;
 use App\Services\OrderService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 class OrderApiController extends Controller
@@ -191,5 +192,11 @@ class OrderApiController extends Controller
             'data' => ZipOrderDetailGroupResource::collection($orders),
             'count' => count($orders),
         ], JsonResponse::HTTP_OK);
+    }
+
+    public function bot()
+    {
+        Log::channel('bot')->info('hello!');
+        dd('bot');
     }
 }

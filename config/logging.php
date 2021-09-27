@@ -35,6 +35,12 @@ return [
     */
 
     'channels' => [
+        'bot' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/telegram/order/bot.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+        ],
+
         'stack' => [
             'driver' => 'stack',
             'channels' => ['single'],
