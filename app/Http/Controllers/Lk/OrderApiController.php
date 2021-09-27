@@ -194,9 +194,10 @@ class OrderApiController extends Controller
         ], JsonResponse::HTTP_OK);
     }
 
-    public function bot()
+    public function bot(Request $request)
     {
-        Log::channel('bot')->info('hello!');
-        dd('bot');
+        $data = $request->all();
+        Log::channel('bot')->info($data);
+        //dd('bot');
     }
 }
