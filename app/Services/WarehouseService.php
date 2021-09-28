@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\TelegramUser;
 use App\Repositories\TelegramLogsRepository;
 use App\Repositories\TelegramUserRepository;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Mockery\Exception;
@@ -82,16 +83,23 @@ class WarehouseService
             $this->command = $params["text_in"];
 
             $user->update([
-                'first_name' => $params["first_name"],
-                'username' => $params["username"],
+                'first_name' => $params["first_name"] ?? null,
+                'username' => $params["username"] ?? null,
             ]);
 
             if ( preg_match('/^\/(help)/', $params["text_in"], $single_command) ) {
                 $this->executeCommandHelp( $params["user_id"] );
+                return;
             }
 
-            if ( preg_match('/^[0-9]{1,2}[%]{1}[0-9]{1,5}$/', $params["text_in"], $code) ) {
-                $this->executeCommandFindCell( $code );
+            if ( preg_match('/^[0-9]{1,2}[%]{1}[0-9]{4,5}$/', $params["text_in"], $code) ) {
+                $this->executeCommandFindCell( $code[0] );
+                return;
+            }
+
+            if ( preg_match('/^[0-9]{4,5}$/', $params["text_in"], $code) ) {
+                $this->executeCommandFindCellByOnlyNumber( $code[0] );
+                return;
             }
         }
     }
@@ -106,14 +114,7 @@ class WarehouseService
         $msg .= "/help - вывод команд";
 
         try {
-            $this
-                ->telegramLogsRepository
-                ->store(
-                    [
-                        "telegram_user_id" => $this->user->telegram_user_id,
-                        "command" => $this->command,
-                    ]
-                );
+            $this->setLogUserCommand();
 
             $this
                 ->telegramNotificationService
@@ -124,8 +125,8 @@ class WarehouseService
     }
 
     /**
-     * @param $param
-     * @param $userId
+     * Get cell by mask query
+     * @param $code
      */
     public function executeCommandFindCell($code): void
     {
@@ -140,7 +141,7 @@ class WarehouseService
 		AND INVENTSUM.CLOSEDQTY = 0
 		AND INVENTSUM.CLOSED = 0
 		AND INVENTDIM.INVENTBATCHID LIKE :number
-        ", [ "number" => $code[0] ]);
+        ", [ "number" => $code ]);
 
         try {
             $msg = "";
@@ -153,14 +154,7 @@ class WarehouseService
                 $msg .= PHP_EOL;
             }
 
-            $this
-                ->telegramLogsRepository
-                ->store(
-                    [
-                        "telegram_user_id" => $this->user->telegram_user_id,
-                        "command" => $this->command,
-                    ]
-                );
+            $this->setLogUserCommand();
 
             $this
                 ->telegramNotificationService
@@ -168,5 +162,44 @@ class WarehouseService
         } catch (Exception $ex) {
             $this->logger->info($ex->getMessage());
         }
+    }
+
+    /**
+     * Get cell by only number
+     * @param int $code
+     */
+    public function executeCommandFindCellByOnlyNumber($code): void
+    {
+        try {
+            $this->executeCommandFindCell($this->getCurrentYear() . '%' . $code);
+        } catch (Exception $ex) {
+            $this->logger->info($ex->getMessage());
+        }
+    }
+
+    /**
+     * Set log user command
+     */
+    public function setLogUserCommand(): void
+    {
+        $this
+            ->telegramLogsRepository
+            ->store(
+                [
+                    "telegram_user_id" => $this->user->telegram_user_id,
+                    "command" => $this->command,
+                ]
+            );
+    }
+
+    /**
+     * Get current year in format last two number
+     * Example 2021 =>  return 21
+     * @return string
+     */
+    public function getCurrentYear(): string
+    {
+        $date = Carbon::now()->format("Y");
+        return $date[2] . $date[3];
     }
 }

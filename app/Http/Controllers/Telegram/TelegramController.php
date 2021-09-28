@@ -36,6 +36,9 @@ class TelegramController extends Controller
             'first_name' => Arr::get($data, 'message.from.first_name'),
             'user_id' => Arr::get($data, 'message.from.id'),
             'text_in' => Arr::get($data, 'message.text'),
+//            'user_id' => 803431360,
+//            'text_in' => 12345,
+//            'text_in' => '/help',
         ];
 
         $this
