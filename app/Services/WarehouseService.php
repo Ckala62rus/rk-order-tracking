@@ -195,25 +195,21 @@ class WarehouseService
      */
     public function executeCommandAddUser($newUser)
     {
-
         $message = "Вы добавлены в телеграм бот";
 
         try {
-            DB::beginTransaction();
-                $user = $this
-                    ->telegramUserRepository
-                    ->store(["telegram_user_id" => $newUser]);
-                if ($user) {
-                    $this
-                        ->telegramNotificationService
-                        ->sendMessageToTelegram($message, $newUser);
-                    $this
-                        ->telegramNotificationService
-                        ->sendMessageToTelegram("Пользователь добавлен", $this->user->telegram_user_id);
-                }
-            DB::commit();
+            $user = $this
+                ->telegramUserRepository
+                ->store(["telegram_user_id" => $newUser]);
+            if ($user) {
+                $this
+                    ->telegramNotificationService
+                    ->sendMessageToTelegram($message, $newUser);
+                $this
+                    ->telegramNotificationService
+                    ->sendMessageToTelegram("Пользователь добавлен", $this->user->telegram_user_id);
+            }
         } catch (Exception $ex) {
-            DB::rollBack();
             $this->logger->info($ex->getMessage());
         }
     }
