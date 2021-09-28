@@ -19,10 +19,10 @@ class CreateTelegramLogsTable extends Migration
             $table->string('command');
             $table->timestamps();
 
-            $table
-                ->foreign('id')
-                ->references('id')
-                ->on('users');
+//            $table
+//                ->foreign('id')
+//                ->references('id')
+//                ->on('users');
         });
     }
 
