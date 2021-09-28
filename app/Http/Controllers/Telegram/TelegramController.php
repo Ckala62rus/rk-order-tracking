@@ -39,6 +39,7 @@ class TelegramController extends Controller
 //            'user_id' => 803431360,
 //            'text_in' => 12345,
 //            'text_in' => '/help',
+//            'text_in' => '/adduser@13467925',
         ];
 
         $this

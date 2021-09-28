@@ -101,6 +101,18 @@ class WarehouseService
                 $this->executeCommandFindCellByOnlyNumber( $code[0] );
                 return;
             }
+
+            if ( preg_match('/^\/(adduser)@(.*)/', $params["text_in"], $newUserId) ) {
+                if($this->user->is_admin == 1) {
+                    $this->executeCommandAddUser( $newUserId[2] );
+                } else {
+                    $this
+                        ->telegramNotificationService
+                        ->sendMessageToTelegram("У Вас недостаточно прав!", $this->user->telegram_user_id);
+                    $this->logger->info("Пользователь " . $this->user->telegram_user_id . " пытался добавить пользователя");
+                }
+                return;
+            }
         }
     }
 
@@ -173,6 +185,34 @@ class WarehouseService
         try {
             $this->executeCommandFindCell($this->getCurrentYear() . '%' . $code);
         } catch (Exception $ex) {
+            $this->logger->info($ex->getMessage());
+        }
+    }
+
+    /**
+     * Add new user in telegram bot
+     * @param $newUser
+     */
+    public function executeCommandAddUser($newUser)
+    {
+        $message = "Вы добавлены в телеграм бот";
+
+        try {
+            DB::beginTransaction();
+                $user = $this
+                    ->telegramUserRepository
+                    ->store(["telegram_user_id" => $newUser]);
+                if ($user) {
+                    $this
+                        ->telegramNotificationService
+                        ->sendMessageToTelegram($message, $newUser);
+                    $this
+                        ->telegramNotificationService
+                        ->sendMessageToTelegram("Пользователь с номером ${$newUser} добавлен", $this->user->telegram_user_id);
+                }
+            DB::commit();
+        } catch (Exception $ex) {
+            DB::rollBack();
             $this->logger->info($ex->getMessage());
         }
     }
