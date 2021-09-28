@@ -195,6 +195,7 @@ class WarehouseService
      */
     public function executeCommandAddUser($newUser)
     {
+
         $message = "Вы добавлены в телеграм бот";
 
         try {
@@ -208,7 +209,7 @@ class WarehouseService
                         ->sendMessageToTelegram($message, $newUser);
                     $this
                         ->telegramNotificationService
-                        ->sendMessageToTelegram("Пользователь с номером ${$newUser} добавлен", $this->user->telegram_user_id);
+                        ->sendMessageToTelegram("Пользователь добавлен", $this->user->telegram_user_id);
                 }
             DB::commit();
         } catch (Exception $ex) {
