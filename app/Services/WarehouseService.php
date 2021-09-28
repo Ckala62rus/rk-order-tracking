@@ -44,6 +44,11 @@ class WarehouseService
     private string $command;
 
     /**
+     * @var string
+     */
+    private string $codeNumber;
+
+    /**
      * WarehouseService constructor.
      * @param Log $logger
      * @param TelegramNotificationService $telegramNotificationService
@@ -155,6 +160,13 @@ class WarehouseService
 		AND INVENTDIM.INVENTBATCHID LIKE :number
         ", [ "number" => $code ]);
 
+        if (!$res) {
+            $this
+                ->telegramNotificationService
+                ->sendMessageToTelegram("Партия с номером " . $this->codeNumber  . " не найдена", $this->user->telegram_user_id);
+            return;
+        }
+
         try {
             $msg = "";
 
@@ -182,6 +194,7 @@ class WarehouseService
      */
     public function executeCommandFindCellByOnlyNumber($code): void
     {
+        $this->codeNumber = $code;
         try {
             $this->executeCommandFindCell($this->getCurrentYear() . '%' . $code);
         } catch (Exception $ex) {
