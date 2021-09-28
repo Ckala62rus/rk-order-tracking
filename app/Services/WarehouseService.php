@@ -118,6 +118,10 @@ class WarehouseService
                 }
                 return;
             }
+
+            $this
+                ->telegramNotificationService
+                ->sendMessageToTelegram("Вы ввели не корректные данные", $this->user->telegram_user_id);
         }
     }
 
