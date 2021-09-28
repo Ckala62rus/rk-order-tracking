@@ -193,11 +193,4 @@ class OrderApiController extends Controller
             'count' => count($orders),
         ], JsonResponse::HTTP_OK);
     }
-
-    public function bot(Request $request)
-    {
-        $data = $request->all();
-        Log::channel('bot')->info($data);
-        //dd('bot');
-    }
 }

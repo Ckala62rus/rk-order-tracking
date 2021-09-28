@@ -46,4 +46,4 @@ Route::middleware(['auth'])->group(function () {
 
 });
 
-Route::any('bot', [\App\Http\Controllers\Lk\OrderApiController::class, 'bot']);
+Route::any('bot', [\App\Http\Controllers\Telegram\TelegramController::class, 'callbackTelegramApi']);
