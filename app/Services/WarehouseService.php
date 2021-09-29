@@ -46,7 +46,7 @@ class WarehouseService
     /**
      * @var string
      */
-    private string $codeNumber;
+    public string $codeNumber;
 
     /**
      * WarehouseService constructor.
@@ -65,6 +65,7 @@ class WarehouseService
         $this->telegramNotificationService = $telegramNotificationService;
         $this->telegramUserRepository = $telegramUserRepository;
         $this->telegramLogsRepository = $telegramLogsRepository;
+        $this->codeNumber = '';
     }
 
     /**
@@ -87,6 +88,9 @@ class WarehouseService
             $this->user = $user;
             $this->command = $params["text_in"];
 
+            $this->logger->info($this->user);
+            $this->logger->info($this->command);
+            
             $user->update([
                 'first_name' => $params["first_name"] ?? null,
                 'username' => $params["username"] ?? null,

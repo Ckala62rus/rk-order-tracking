@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Services\WarehouseService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Log;
 
 class TelegramController extends Controller
 {
@@ -41,7 +42,10 @@ class TelegramController extends Controller
 //            'text_in' => 12345,
 //            'text_in' => '/help',
 //            'text_in' => '/adduser@557327331',
+//            'text_in' => '/help',
         ];
+
+        Log::info($data);
 
         $this
             ->warehouseService
