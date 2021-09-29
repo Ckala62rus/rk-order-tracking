@@ -25,7 +25,7 @@ class ZipOrderDetailGroupResource extends JsonResource
             "RealizationStatus" => $this->RealizationStatus,
             "ContractorNameActual" => $this->ContractorNameActual,
             "Decryption" => $this->Decryption,
-            "SumQtyIzm" => $this->SumQtyIzm,
+            "SumQtyIzm" =>  number_format($this->SumQtyIzm, 0, ',', ' '),
             "SumQtySales" => $this->SumQtySales,
             "Balance_View" => $this->Balance_View,
         ];

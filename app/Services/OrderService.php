@@ -359,6 +359,7 @@ class OrderService
             $item->DeliveryDate = $item->DeliveryDate ? Carbon::parse($item->DeliveryDate)->format('d-m-Y') : '';
             $item->EndDate = $item->EndDate ? Carbon::parse($item->EndDate)->format('d-m-Y') : '';
             $item->OrderedQTYPZ = number_format($item->OrderedQTYPZ, 0, ',', ' ');
+            $item->SumQtyIzm = number_format($item->SumQtyIzm, 0, ',', ' ');
         }
 
         return $data;

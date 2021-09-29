@@ -201,8 +201,8 @@
                                 </el-table-column>
                                 <el-table-column
                                     prop="SumQtySpeciallSku"
-                                    label="Заказанный обьем"
-                                    width="110">
+                                    label="Заказанный обьем клиентом"
+                                    width="155">
                                 </el-table-column>
                                 <el-table-column
                                     prop="SumQtyIzm"

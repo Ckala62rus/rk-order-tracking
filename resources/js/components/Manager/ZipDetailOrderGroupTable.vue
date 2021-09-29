@@ -84,8 +84,8 @@
                                 width="250">
                             </el-table-column>
                             <el-table-column
-                                prop="SumQtySales"
-                                label="Проданный обьем"
+                                prop="Balance_View"
+                                label="Остаток"
                                 width="250">
                             </el-table-column>
 
