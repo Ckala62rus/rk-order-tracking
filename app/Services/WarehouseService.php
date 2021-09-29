@@ -73,6 +73,11 @@ class WarehouseService
      */
     public function getRouteCommand(array $params): void
     {
+
+        if (!$params["user_id"]) {
+            return;
+        }
+
         $query = $this
             ->telegramUserRepository
             ->query();
@@ -88,9 +93,9 @@ class WarehouseService
             $this->user = $user;
             $this->command = $params["text_in"];
 
-            $this->logger->info($this->user);
-            $this->logger->info($this->command);
-            
+//            $this->logger->info($this->user);
+//            $this->logger->info($this->command);
+
             $user->update([
                 'first_name' => $params["first_name"] ?? null,
                 'username' => $params["username"] ?? null,
