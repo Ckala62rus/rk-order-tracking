@@ -16,7 +16,6 @@ class TelegramNotificationService
             CURLOPT_URL => $url,
             CURLOPT_POSTFIELDS => $parameters,
         ];
-
         $c = curl_init();
         curl_setopt_array($c,$curlopt_array);
         $result = curl_exec($c);
