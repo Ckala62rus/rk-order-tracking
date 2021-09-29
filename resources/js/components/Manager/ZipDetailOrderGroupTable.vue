@@ -79,8 +79,8 @@
                             </el-table-column>
 
                             <el-table-column
-                                prop="SumQtyIzm"
-                                label="Измеренный обьем"
+                                prop="SumQtySales"
+                                label="Проданный обьем"
                                 width="250">
                             </el-table-column>
                             <el-table-column
