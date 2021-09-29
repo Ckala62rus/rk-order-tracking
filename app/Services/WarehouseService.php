@@ -88,6 +88,11 @@ class WarehouseService
 
         $user = $query->first();
 
+        if ( preg_match('/^\/(start)/', $params["text_in"], $single_command) ) {
+            $this->telegramNotificationService->sendMessageToTelegram("Вас приветствует бот РК", $params["user_id"]);
+            return;
+        }
+
         if ($user) {
 
             $this->user = $user;
