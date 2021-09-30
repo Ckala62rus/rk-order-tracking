@@ -7,6 +7,7 @@ use App\Services\WarehouseService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
+use Mockery\Exception;
 
 class TelegramController extends Controller
 {
@@ -27,8 +28,9 @@ class TelegramController extends Controller
     /**
      * Get telegram callback api
      * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function callbackTelegramApi(Request $request): void
+    public function callbackTelegramApi(Request $request)
     {
         $data = $request->all();
 
@@ -42,13 +44,18 @@ class TelegramController extends Controller
 //            'text_in' => 12345,
 //            'text_in' => '/help',
 //            'text_in' => '/adduser@557327331',
-//            'text_in' => '/help',
+//            'text_in' => '/test',
         ];
 
         Log::info($data);
 
-        $this
-            ->warehouseService
-            ->getRouteCommand($params);
+        try {
+            $this
+                ->warehouseService
+                ->getRouteCommand($params);
+        } catch (Exception $ex) {
+            return response()->json("", 200);
+        }
+
     }
 }
