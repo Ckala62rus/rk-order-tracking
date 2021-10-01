@@ -41,6 +41,12 @@ return [
             'level' => env('LOG_LEVEL', 'debug'),
         ],
 
+        'job' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/jobs/telegram/job.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+        ],
+
         'stack' => [
             'driver' => 'stack',
             'channels' => ['single'],
