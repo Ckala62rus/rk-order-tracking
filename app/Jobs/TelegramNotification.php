@@ -83,7 +83,7 @@ class TelegramNotification implements ShouldQueue
      */
     public function handle()
     {
-        $this->loggerJob =  Log::channel('job');
+        //$this->loggerJob =  Log::channel('job');
 
         $this->telegramNotificationService = new TelegramNotificationService();
         $this->telegramUserRepository = new TelegramUserRepository();
@@ -95,7 +95,7 @@ class TelegramNotification implements ShouldQueue
             $this->telegramLogsRepository
         );
 
-        $this->loggerJob->info($this->data);
+        //$this->loggerJob->info($this->data);
         $this->warehouse->getRouteCommand($this->data);
     }
 }
