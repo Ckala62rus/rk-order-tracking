@@ -47,3 +47,6 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::any('bot', [\App\Http\Controllers\Telegram\TelegramController::class, 'callbackTelegramApi']);
+Route::get('job', function (){
+    \App\Jobs\TestJob::dispatch()->onQueue("testing");
+});
