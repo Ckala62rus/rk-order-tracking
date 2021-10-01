@@ -112,7 +112,7 @@ class WarehouseService
             }
 
             if ( preg_match('/^[0-9]{1,2}[%]{1}[0-9]{4,5}$/', $params["text_in"], $code) ) {
-                $this->executeCommandFindCell( $code[0] );
+                $this->executeCommandFindCell2( $code[0] );
                 return;
             }
 
@@ -214,7 +214,7 @@ class WarehouseService
     {
         $this->codeNumber = $code;
         try {
-            $this->executeCommandFindCell($this->getCurrentYear() . '%' . $code);
+            $this->executeCommandFindCell2($this->getCurrentYear() . '%' . $code);
         } catch (Exception $ex) {
             $this->logger->info($ex->getMessage());
         }
@@ -228,6 +228,9 @@ class WarehouseService
     {
         $message = "Вы добавлены в телеграм бот";
 
+        // todo Сделать проверку, если пользователь с telegram_user_id есть в БД,
+        // todo отправляем уведомление о том, что пользователь уже есть в базе
+
         try {
             $user = $this
                 ->telegramUserRepository
@@ -240,6 +243,103 @@ class WarehouseService
                     ->telegramNotificationService
                     ->sendMessageToTelegram("Пользователь добавлен", $this->user->telegram_user_id);
             }
+        } catch (Exception $ex) {
+            $this->logger->info($ex->getMessage());
+        }
+    }
+
+    public function executeCommandFindCell2($code)
+    {
+        $data = DB::connection("dax")->select("
+        SET NOCOUNT ON;
+        IF OBJECT_ID('tempdb.dbo.#Initial') IS NOT NULL
+         DROP TABLE #Initial;
+         SELECT INVENTDIM.INVENTBATCHID as Batch,
+         CAST((COALESCE(INVENTTABLE_PT.NAMEALIAS,INVENTTABLE.NAMEALIAS)) as nvarchar(max)) as NAMEALIAS,
+         CAST((COALESCE(INVENTDIM_PT.RUK_INVENTCOLORID,INVENTDIM.RUK_INVENTCOLORID)) as nvarchar(max)) as COLORID,
+         CAST(INVENTDIM.WMSLOCATIONID as nvarchar(max)) as WMSLOCATION,
+         CAST(INVENTDIM.LICENSEPLATEID as nvarchar(max)) as LICENSE,
+         ROW_NUMBER() over(partition by INVENTDIM.INVENTBATCHID order by INVENTDIM.INVENTBATCHID) as rn
+         INTO #Initial
+         FROM INVENTSUM INVENTSUM WITH (READUNCOMMITTED)
+         LEFT LOOP JOIN INVENTDIM INVENTDIM ON INVENTDIM.INVENTDIMID = INVENTSUM.INVENTDIMID
+         JOIN INVENTTABLE INVENTTABLE ON INVENTSUM.ITEMID = INVENTTABLE.ITEMID
+         LEFT JOIN ProdTable ProdTable ON INVENTDIM.INVENTBATCHID = ProdTable.ProdID
+         LEFT JOIN INVENTDIM INVENTDIM_PT ON INVENTDIM_PT.INVENTDIMID = ProdTable.INVENTDIMID
+         LEFT JOIN INVENTTABLE INVENTTABLE_PT ON ProdTable.ITEMID = INVENTTABLE_PT.ITEMID
+         WHERE  INVENTSUM.PARTITION = 5637144576 AND INVENTSUM.DATAAREAID = 'rlc'
+         AND INVENTDIM.PARTITION = 5637144576 AND INVENTDIM.DATAAREAID = 'rlc'
+         AND INVENTSUM.PHYSICALINVENT != 0
+         AND INVENTSUM.CLOSEDQTY = 0
+         AND INVENTSUM.CLOSED = 0
+         AND INVENTDIM.INVENTBATCHID LIKE  :number
+         ;WITH RecursiveConcate
+         AS (
+            SELECT Batch
+                ,CAST(NAMEALIAS AS NVARCHAR(max)) AS NAMEALIAS
+                ,CAST(COLORID AS NVARCHAR(max)) AS COLORID
+                ,CAST(WMSLOCATION AS NVARCHAR(max)) AS WMSLOCATION
+                ,CAST(LICENSE AS NVARCHAR(max)) AS LICENSE
+                ,2 [rn]
+            FROM #Initial AS Initt
+            WHERE Initt.rn = 1
+            UNION ALL
+            SELECT Initt.batch
+                    ,Initt.NAMEALIAS
+                    ,IIF(RecCon.COLORID LIKE '%' + Initt.COLORID + '%', RecCon.COLORID, RecCon.COLORID + ', ' + Initt.COLORID)
+                    ,IIF(RecCon.WMSLOCATION LIKE '%' + Initt.WMSLOCATION + '%', RecCon.WMSLOCATION, RecCon.WMSLOCATION + ', ' + Initt.WMSLOCATION)
+                    ,IIF(RecCon.LICENSE LIKE '%' + Initt.LICENSE + '%', RecCon.LICENSE, RecCon.LICENSE + ', ' + Initt.LICENSE)
+                    ,RecCon.rn + 1
+            FROM #Initial AS Initt
+            JOIN RecursiveConcate RecCon ON Initt.rn = RecCon.rn AND Initt.Batch = RecCon.batch
+            )
+            ,mRank
+        AS (
+            SELECT Batch
+            ,NAMEALIAS
+            ,COLORID
+            ,WMSLOCATION
+            ,LICENSE
+            ,MAX(rn) OVER (PARTITION BY batch) AS mrn
+            ,rn
+            FROM RecursiveConcate
+            )
+        SELECT  BATCH
+            ,NAMEALIAS
+            ,REPLACE(COLORID , ' , ', '') as COLORID
+            ,REPLACE(WMSLOCATION , ' , ', '') as WMSLOCATION
+            ,REPLACE(LICENSE, ' , ', '') as LICENSE
+        FROM mRank
+        WHERE Batch IN (SELECT DISTINCT Batch FROM RecursiveConcate)
+        AND rn IN (mrn)
+        OPTION (MAXRECURSION 32767)
+        DROP TABLE #Initial
+        ", [ "number" => $code]);
+
+        if (!$data) {
+            $this
+                ->telegramNotificationService
+                ->sendMessageToTelegram("Партия с номером " . $this->codeNumber  . " не найдена", $this->user->telegram_user_id);
+            return;
+        }
+
+        try {
+            $msg = "";
+
+            foreach ($data as $item) {
+                $msg .= $item->BATCH . PHP_EOL;
+                $msg .= $item->NAMEALIAS . PHP_EOL;
+                $msg .= $item->COLORID . PHP_EOL;
+                $msg .= $item->WMSLOCATION . PHP_EOL;
+                $msg .= $item->LICENSE . PHP_EOL;
+                $msg .= PHP_EOL;
+            }
+
+            $this->setLogUserCommand();
+
+            $this
+                ->telegramNotificationService
+                ->sendMessageToTelegram($msg, $this->user->telegram_user_id);
         } catch (Exception $ex) {
             $this->logger->info($ex->getMessage());
         }
