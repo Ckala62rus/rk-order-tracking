@@ -117,7 +117,7 @@
 
                             <el-table-column
                                 prop="OrderedQTYPZ"
-                                label="Заказанный обьем"
+                                label="Подтвержденный обьем"
                                 width="110">
                             </el-table-column>
 
