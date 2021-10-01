@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Telegram;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\TelegramNotification;
 use App\Services\WarehouseService;
+use GuzzleHttp\Psr7\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
@@ -41,21 +44,25 @@ class TelegramController extends Controller
             'text_in' => Arr::get($data, 'message.text'),
 
 //            'user_id' => 803431360,
-//            'text_in' => 12345,
+//            'text_in' => 12346,
 //            'text_in' => '/help',
 //            'text_in' => '/adduser@557327331',
 //            'text_in' => '/test',
+//            'text_in' => '21%12345',
         ];
 
-        Log::info($data);
+        TelegramNotification::dispatch($params)->onQueue("telegram");
+        return response()->json("ok", JsonResponse::HTTP_OK);
 
-        try {
-            $this
-                ->warehouseService
-                ->getRouteCommand($params);
-        } catch (Exception $ex) {
-            return response()->json("", 200);
-        }
+//        Log::info($data);
+
+//        try {
+//            $this
+//                ->warehouseService
+//                ->getRouteCommand($params);
+//        } catch (Exception $ex) {
+//            return response()->json("", 200);
+//        }
 
     }
 }

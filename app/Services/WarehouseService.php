@@ -50,18 +50,15 @@ class WarehouseService
 
     /**
      * WarehouseService constructor.
-     * @param Log $logger
      * @param TelegramNotificationService $telegramNotificationService
      * @param TelegramUserRepository $telegramUserRepository
      * @param TelegramLogsRepository $telegramLogsRepository
      */
     public function __construct(
-        Log $logger,
         TelegramNotificationService $telegramNotificationService,
         TelegramUserRepository $telegramUserRepository,
         TelegramLogsRepository $telegramLogsRepository
     ) {
-        $this->logger = $logger::channel('bot');
         $this->telegramNotificationService = $telegramNotificationService;
         $this->telegramUserRepository = $telegramUserRepository;
         $this->telegramLogsRepository = $telegramLogsRepository;
@@ -73,6 +70,7 @@ class WarehouseService
      */
     public function getRouteCommand(array $params): void
     {
+        $this->logger = Log::channel('bot');
 
         if (!$params["user_id"]) {
             return;
@@ -98,9 +96,6 @@ class WarehouseService
             $this->user = $user;
             $this->command = $params["text_in"];
 
-//            $this->logger->info($this->user);
-//            $this->logger->info($this->command);
-
             $user->update([
                 'first_name' => $params["first_name"] ?? null,
                 'username' => $params["username"] ?? null,
@@ -115,6 +110,13 @@ class WarehouseService
                 $this->executeCommandFindCell2( $code[0] );
                 return;
             }
+
+//            if ( preg_match('/^\/(test)/', $params["text_in"], $single_command) ) {
+//                $this
+//                    ->telegramNotificationService
+//                    ->sendMessageToTelegram("Привет!", $this->user->telegram_user_id);
+//                return;
+//            }
 
             if ( preg_match('/^[0-9]{4,5}$/', $params["text_in"], $code) ) {
                 $this->executeCommandFindCellByOnlyNumber( $code[0] );
@@ -146,7 +148,10 @@ class WarehouseService
     public function executeCommandHelp(int $userId): void
     {
         $msg = "Инструкция\n\n";
-        $msg .= "/help - вывод команд";
+        $msg .= "/help - вывод команд\n";
+        $msg .= "12345 - показать партию с номером 12345 за текущий год\n\n";
+        $msg .= "20%12345 - показать партию с номером 12345 за 2020год год\n";
+        $msg .= "первые два числа указывают на год\n\n";
 
         try {
             $this->setLogUserCommand();
