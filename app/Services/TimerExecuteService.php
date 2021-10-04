@@ -13,9 +13,9 @@ class TimerExecuteService
     public static Carbon $start;
 
     /**
-     * @var float
+     * @var int
      */
-    public static float $stop;
+    public static int $stop;
 
     /**
      * Set timer
