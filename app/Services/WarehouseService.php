@@ -6,6 +6,7 @@ use App\Models\TelegramUser;
 use App\Repositories\TelegramLogsRepository;
 use App\Repositories\TelegramUserRepository;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Mockery\Exception;
@@ -233,10 +234,16 @@ class WarehouseService
     {
         $message = "Вы добавлены в телеграм бот";
 
-        // todo Сделать проверку, если пользователь с telegram_user_id есть в БД,
-        // todo отправляем уведомление о том, что пользователь уже есть в базе
-
         try {
+            $existUser =  $this->getTelegramUser($newUser);
+
+            if ($existUser) {
+                $this
+                    ->telegramNotificationService
+                    ->sendMessageToTelegram("Такой пользователь уже существует", $this->user->telegram_user_id);
+                return;
+            }
+
             $user = $this
                 ->telegramUserRepository
                 ->store(["telegram_user_id" => $newUser]);
@@ -373,5 +380,23 @@ class WarehouseService
     {
         $date = Carbon::now()->format("Y");
         return $date[2] . $date[3];
+    }
+
+    /**
+     * Get user by id or return null
+     * @param $userId
+     * @return Model|null
+     */
+    public function getTelegramUser($userId): ?Model
+    {
+        $query = $this
+            ->telegramUserRepository
+            ->query();
+
+        $query = $this
+            ->telegramUserRepository
+            ->whereTelegramUserId($query, $userId);
+
+        return $query->first();
     }
 }
