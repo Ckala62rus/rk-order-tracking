@@ -6,10 +6,11 @@ use Carbon\Carbon;
 
 class TimerExecuteService
 {
+
     /**
-     * @var float
+     * @var Carbon
      */
-    public static float $start;
+    public static Carbon $start;
 
     /**
      * @var float
@@ -21,7 +22,7 @@ class TimerExecuteService
      */
     public static function Start(): void
     {
-        self::$start = microtime(true);
+        self::$start = Carbon::now();
     }
 
     /**
@@ -30,10 +31,6 @@ class TimerExecuteService
      */
     public static function Stop(): int
     {
-        self::$stop = microtime(true);
-
-        return abs(
-            Carbon::parse(self::$start)->format('s') - Carbon::parse(self::$stop)->format('s')
-        );
+        return self::$stop = self::$start->diffInSeconds(Carbon::now());
     }
 }
