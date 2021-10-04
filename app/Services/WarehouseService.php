@@ -125,6 +125,9 @@ class WarehouseService
             }
 
             if ( preg_match('/^\/(adduser)@(.*)/', $params["text_in"], $newUserId) ) {
+
+                TimerExecuteService::Start();
+
                 if($this->user->is_admin == 1) {
                     $this->executeCommandAddUser( $newUserId[2] );
                 } else {
@@ -133,6 +136,8 @@ class WarehouseService
                         ->sendMessageToTelegram("У Вас недостаточно прав!", $this->user->telegram_user_id);
                     $this->logger->info("Пользователь " . $this->user->telegram_user_id . " пытался добавить пользователя");
                 }
+
+                $this->setLogUserCommand(TimerExecuteService::Stop());
                 return;
             }
 
@@ -148,18 +153,20 @@ class WarehouseService
      */
     public function executeCommandHelp(int $userId): void
     {
+        TimerExecuteService::Start();
+
         $msg = "Инструкция\n\n";
-        $msg .= "/help - вывод команд\n";
-        $msg .= "12345 - показать партию с номером 12345 за текущий год\n\n";
-        $msg .= "20%12345 - показать партию с номером 12345 за 2020год год\n";
+        $msg .= "/help - вывод команд.\n";
+        $msg .= "12345 - показать партию с номером 12345 за текущий год.\n\n";
+        $msg .= "20%12345 - показать партию с номером 12345 за 2020 год.\n";
         $msg .= "первые два числа указывают на год\n\n";
 
         try {
-            $this->setLogUserCommand();
-
             $this
                 ->telegramNotificationService
                 ->sendMessageToTelegram($msg, $userId);
+
+            $this->setLogUserCommand(TimerExecuteService::Stop());
         } catch (Exception $ex) {
             $this->logger->info($ex->getMessage());
         }
@@ -232,6 +239,8 @@ class WarehouseService
      */
     public function executeCommandAddUser($newUser)
     {
+        TimerExecuteService::Start();
+
         $message = "Вы добавлены в телеграм бот";
 
         try {
@@ -247,6 +256,7 @@ class WarehouseService
             $user = $this
                 ->telegramUserRepository
                 ->store(["telegram_user_id" => $newUser]);
+
             if ($user) {
                 $this
                     ->telegramNotificationService
@@ -255,6 +265,9 @@ class WarehouseService
                     ->telegramNotificationService
                     ->sendMessageToTelegram("Пользователь добавлен", $this->user->telegram_user_id);
             }
+
+            $this->setLogUserCommand(TimerExecuteService::Stop());
+
         } catch (Exception $ex) {
             $this->logger->info($ex->getMessage());
         }
@@ -262,6 +275,8 @@ class WarehouseService
 
     public function executeCommandFindCell2($code)
     {
+        TimerExecuteService::Start();
+
         $data = DB::connection("dax")->select("
         SET NOCOUNT ON;
         IF OBJECT_ID('tempdb.dbo.#Initial') IS NOT NULL
@@ -346,11 +361,11 @@ class WarehouseService
                 $msg .= PHP_EOL;
             }
 
-            $this->setLogUserCommand();
-
             $this
                 ->telegramNotificationService
                 ->sendMessageToTelegram($msg, $this->user->telegram_user_id);
+
+            $this->setLogUserCommand(TimerExecuteService::Stop());
         } catch (Exception $ex) {
             $this->logger->info($ex->getMessage());
         }
@@ -358,15 +373,18 @@ class WarehouseService
 
     /**
      * Set log user command
+     * @param null $time
+     * @return Model
      */
-    public function setLogUserCommand(): void
+    public function setLogUserCommand($time = null): Model
     {
-        $this
+        return $this
             ->telegramLogsRepository
             ->store(
                 [
                     "telegram_user_id" => $this->user->telegram_user_id,
                     "command" => $this->command,
+                    "execute_time" => $time ?? 0,
                 ]
             );
     }

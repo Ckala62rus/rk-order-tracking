@@ -24,18 +24,13 @@ class TelegramNotification implements ShouldQueue
     /**
      * @var int
      */
-    public $tries = 5; // Количество попыток выполнения задания
+    public int $tries = 5; // Количество попыток выполнения задания
 
     /**
      * Input params
      * @var array
      */
     public array $data;
-
-    /**
-     * @var LoggerInterface
-     */
-    public LoggerInterface $loggerJob;
 
     /**
      * @var LoggerInterface
@@ -83,8 +78,6 @@ class TelegramNotification implements ShouldQueue
      */
     public function handle()
     {
-        //$this->loggerJob =  Log::channel('job');
-
         $this->telegramNotificationService = new TelegramNotificationService();
         $this->telegramUserRepository = new TelegramUserRepository();
         $this->telegramLogsRepository = new TelegramLogsRepository();
@@ -95,7 +88,6 @@ class TelegramNotification implements ShouldQueue
             $this->telegramLogsRepository
         );
 
-        //$this->loggerJob->info($this->data);
         $this->warehouse->getRouteCommand($this->data);
     }
 }

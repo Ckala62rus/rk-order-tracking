@@ -12,5 +12,6 @@ class TelegramLogs extends Model
     protected $fillable = [
         'telegram_user_id',
         'command',
+        'execute_time',
     ];
 }
