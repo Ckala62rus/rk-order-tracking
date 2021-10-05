@@ -217,7 +217,7 @@
                                 <el-table-column
                                     prop="DeliveryDate"
                                     label="Дата поставки заказа"
-                                    width="140">
+                                    width="130">
                                 </el-table-column>
 
                                 <el-table-column
