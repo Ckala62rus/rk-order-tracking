@@ -216,13 +216,13 @@
                                 </el-table-column>
                                 <el-table-column
                                     prop="DeliveryDate"
-                                    label="Дата поставки"
+                                    label="Дата поставки заказа"
                                     width="140">
                                 </el-table-column>
 
                                 <el-table-column
                                     prop="EndDate"
-                                    label="Дата окончания"
+                                    label="Дата окончания заказа"
                                     width="140"
                                 >
                                     <template slot-scope="scope">
