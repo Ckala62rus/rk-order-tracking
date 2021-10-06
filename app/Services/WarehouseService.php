@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\TelegramUser;
 use App\Repositories\TelegramLogsRepository;
 use App\Repositories\TelegramUserRepository;
+use App\Sql\SqlScripts;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
@@ -112,6 +113,11 @@ class WarehouseService
                 return;
             }
 
+            if ( preg_match('/^([0-9]{1,2}[%]{1}[0-9]{4,5})[*]$/', $params["text_in"], $code) ) {
+                $this->executeCommandFindCellWithColor($code[1]);
+                return;
+            }
+
 //            if ( preg_match('/^\/(test)/', $params["text_in"], $single_command) ) {
 //                $this
 //                    ->telegramNotificationService
@@ -160,6 +166,7 @@ class WarehouseService
         $msg .= "12345 - показать партию с номером 12345 за текущий год.\n\n";
         $msg .= "20%12345 - показать партию с номером 12345 за 2020 год.\n";
         $msg .= "первые два числа указывают на год\n\n";
+        $msg .= "20%12345* - найти партию с цветом\n\n";
 
         try {
             $this
@@ -273,79 +280,21 @@ class WarehouseService
         }
     }
 
-    public function executeCommandFindCell2($code)
+    /**
+     * Find part by code without color
+     * @param $code
+     */
+    public function executeCommandFindCell2($code): void
     {
         TimerExecuteService::Start();
 
-        $data = DB::connection("dax")->select("
-        SET NOCOUNT ON;
-        IF OBJECT_ID('tempdb.dbo.#Initial') IS NOT NULL
-	    DROP TABLE #Initial;
+        $sql = SqlScripts::getSqlQuery();
 
-        SELECT INVENTDIM.INVENTBATCHID as Batch,
-          CAST((COALESCE(INVENTTABLE_PT.NAMEALIAS,INVENTTABLE.NAMEALIAS)) as nvarchar(max)) as NAMEALIAS,
-          CAST(INVENTDIM.WMSLOCATIONID as nvarchar(max)) as WMSLOCATION,
-          CAST(INVENTDIM.LICENSEPLATEID as nvarchar(max)) as LICENSE,
-          ROW_NUMBER() over(partition by INVENTDIM.INVENTBATCHID order by INVENTDIM.INVENTBATCHID) as rn
-        INTO #Initial
-        FROM INVENTSUM INVENTSUM WITH (READUNCOMMITTED)
-        LEFT LOOP JOIN INVENTDIM INVENTDIM ON INVENTDIM.INVENTDIMID = INVENTSUM.INVENTDIMID
-        JOIN INVENTTABLE INVENTTABLE ON INVENTSUM.ITEMID = INVENTTABLE.ITEMID
-        LEFT JOIN ProdTable ProdTable ON INVENTDIM.INVENTBATCHID = ProdTable.ProdID
-        LEFT JOIN INVENTTABLE INVENTTABLE_PT ON ProdTable.ITEMID = INVENTTABLE_PT.ITEMID
-               WHERE  INVENTSUM.PARTITION = 5637144576 AND INVENTSUM.DATAAREAID = 'rlc'
-                     AND INVENTDIM.PARTITION = 5637144576 AND INVENTDIM.DATAAREAID = 'rlc'
-                     AND INVENTSUM.PHYSICALINVENT != 0
-                     AND INVENTSUM.CLOSEDQTY = 0
-                     AND INVENTSUM.CLOSED = 0
-                     AND INVENTDIM.INVENTBATCHID LIKE :number
+        $data = DB::connection("dax")->select($sql, [ "number" => $code]);
 
-        ;WITH RecursiveConcate
-        AS (
-            SELECT Batch
-                ,CAST(NAMEALIAS AS NVARCHAR(max)) AS NAMEALIAS
-                ,CAST(WMSLOCATION AS NVARCHAR(max)) AS WMSLOCATION
-                ,CAST(LICENSE AS NVARCHAR(max)) AS LICENSE
-                ,2 [rn]
-            FROM #Initial AS Initt
-            WHERE Initt.rn = 1
+        $isExistPart = $this->partNotFound($data);
 
-            UNION ALL
-
-            SELECT Initt.batch
-                ,Initt.NAMEALIAS
-                ,IIF(RecCon.WMSLOCATION LIKE '%' + Initt.WMSLOCATION + '%', RecCon.WMSLOCATION, RecCon.WMSLOCATION + ', ' + Initt.WMSLOCATION)
-                ,IIF(RecCon.LICENSE LIKE '%' + Initt.LICENSE + '%', RecCon.LICENSE, RecCon.LICENSE + ', ' + Initt.LICENSE)
-                ,RecCon.rn + 1
-            FROM #Initial AS Initt
-            JOIN RecursiveConcate RecCon ON Initt.rn = RecCon.rn
-                AND Initt.Batch = RecCon.batch
-            )
-            ,mRank
-        AS (
-            SELECT Batch
-                ,NAMEALIAS
-                ,WMSLOCATION
-                ,LICENSE
-                ,MAX(rn) OVER (PARTITION BY batch) AS mrn
-                ,rn
-            FROM RecursiveConcate
-            )
-        SELECT  BATCH
-                ,NAMEALIAS
-                ,REPLACE(WMSLOCATION , ' , ', '') as WMSLOCATION
-                ,REPLACE(LICENSE, ' , ', '') as LICENSE
-        FROM mRank
-        WHERE Batch IN (SELECT DISTINCT Batch FROM RecursiveConcate)
-              AND rn IN (mrn)
-        OPTION (MAXRECURSION 32767)
-        DROP TABLE #Initial
-        ", [ "number" => $code]);
-
-        if (!$data) {
-            $this
-                ->telegramNotificationService
-                ->sendMessageToTelegram("Партия с номером " . $this->codeNumber  . " не найдена", $this->user->telegram_user_id);
+        if (!$isExistPart) {
             return;
         }
 
@@ -355,7 +304,46 @@ class WarehouseService
             foreach ($data as $item) {
                 $msg .= $item->BATCH . PHP_EOL;
                 $msg .= $item->NAMEALIAS . PHP_EOL;
-//                $msg .= $item->COLORID . PHP_EOL;
+                $msg .= "Яч: " . $item->WMSLOCATION . PHP_EOL;
+                $msg .= "НЗ: " . $item->LICENSE . PHP_EOL;
+                $msg .= PHP_EOL;
+            }
+
+            $this
+                ->telegramNotificationService
+                ->sendMessageToTelegram($msg, $this->user->telegram_user_id);
+
+            $this->setLogUserCommand(TimerExecuteService::Stop());
+        } catch (Exception $ex) {
+            $this->logger->info($ex->getMessage());
+        }
+    }
+
+    /**
+     * Get part by number with color
+     * @param string $number
+     */
+    public function executeCommandFindCellWithColor(string $number): void
+    {
+        TimerExecuteService::Start();
+
+        $sql = SqlScripts::getSqlQueryWithColor();
+
+        $data = DB::connection("dax")->select($sql, ["number" => $number]);
+
+        $isExistPart = $this->partNotFound($data);
+
+        if (!$isExistPart) {
+            return;
+        }
+
+        try {
+            $msg = "";
+
+            foreach ($data as $item) {
+                $msg .= $item->BATCH . PHP_EOL;
+                $msg .= $item->NAMEALIAS . PHP_EOL;
+                $msg .= $item->COLORID . PHP_EOL;
                 $msg .= "Яч: " . $item->WMSLOCATION . PHP_EOL;
                 $msg .= "НЗ: " . $item->LICENSE . PHP_EOL;
                 $msg .= PHP_EOL;
@@ -387,6 +375,23 @@ class WarehouseService
                     "execute_time" => $time ?? 0,
                 ]
             );
+    }
+
+    /**
+     * Find part and return true or false
+     * @param array $data
+     * @return bool
+     */
+    public function partNotFound(array $data): bool
+    {
+        if (!$data) {
+            $this
+                ->telegramNotificationService
+                ->sendMessageToTelegram("Партия с номером " . $this->codeNumber  . " не найдена", $this->user->telegram_user_id);
+            return false;
+        }
+
+        return true;
     }
 
     /**
