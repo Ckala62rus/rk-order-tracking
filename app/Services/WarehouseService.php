@@ -118,15 +118,13 @@ class WarehouseService
                 return;
             }
 
-//            if ( preg_match('/^\/(test)/', $params["text_in"], $single_command) ) {
-//                $this
-//                    ->telegramNotificationService
-//                    ->sendMessageToTelegram("Привет!", $this->user->telegram_user_id);
-//                return;
-//            }
-
             if ( preg_match('/^[0-9]{4,5}$/', $params["text_in"], $code) ) {
                 $this->executeCommandFindCellByOnlyNumber( $code[0] );
+                return;
+            }
+
+            if ( preg_match('/^([0-9]{4,5})[*]$/', $params["text_in"], $code) ) {
+                $this->executeCommandFIndCellByOnlyNumberWithColor($code[1]);
                 return;
             }
 
@@ -162,11 +160,12 @@ class WarehouseService
         TimerExecuteService::Start();
 
         $msg = "Инструкция\n\n";
-        $msg .= "/help - вывод команд.\n";
+        $msg .= "/help - вывод команд.\n\n";
         $msg .= "12345 - показать партию с номером 12345 за текущий год.\n\n";
         $msg .= "20%12345 - показать партию с номером 12345 за 2020 год.\n";
-        $msg .= "первые два числа указывают на год\n\n";
-        $msg .= "20%12345* - найти партию с цветом\n\n";
+        $msg .= "первые два числа указывают на год.\n\n";
+        $msg .= "20%12345* - найти партию с цветом за 2020 год.\n\n";
+        $msg .= "12345* - найти партию с цветом за текущий год.\n\n";
 
         try {
             $this
@@ -235,6 +234,20 @@ class WarehouseService
         $this->codeNumber = $code;
         try {
             $this->executeCommandFindCell2($this->getCurrentYear() . '%' . $code);
+        } catch (Exception $ex) {
+            $this->logger->info($ex->getMessage());
+        }
+    }
+
+    /**
+     * Find part with color by only number
+     * @param $code
+     */
+    public function executeCommandFIndCellByOnlyNumberWithColor($code): void
+    {
+        $this->codeNumber = $code;
+        try {
+            $this->executeCommandFindCellWithColor($this->getCurrentYear() . '%' . $code);
         } catch (Exception $ex) {
             $this->logger->info($ex->getMessage());
         }
