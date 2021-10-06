@@ -356,7 +356,7 @@ class WarehouseService
             foreach ($data as $item) {
                 $msg .= $item->BATCH . PHP_EOL;
                 $msg .= $item->NAMEALIAS . PHP_EOL;
-                $msg .= $item->COLORID . PHP_EOL;
+                $msg .= "Цвет: " . $item->COLORID . PHP_EOL;
                 $msg .= "Яч: " . $item->WMSLOCATION . PHP_EOL;
                 $msg .= "НЗ: " . $item->LICENSE . PHP_EOL;
                 $msg .= PHP_EOL;
