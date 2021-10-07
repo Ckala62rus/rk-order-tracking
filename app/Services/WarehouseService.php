@@ -128,6 +128,11 @@ class WarehouseService
                 return;
             }
 
+//            if ( preg_match('/^([0-9a-zA-Z_]{1,20})[#]$/', $params["text_in"], $code) ) {
+//                $this->executeCommandFindCellWithPartString($code[1]);
+//                return;
+//            }
+
             if ( preg_match('/^\/(adduser)@(.*)/', $params["text_in"], $newUserId) ) {
 
                 TimerExecuteService::Start();
@@ -356,7 +361,47 @@ class WarehouseService
             foreach ($data as $item) {
                 $msg .= $item->BATCH . PHP_EOL;
                 $msg .= $item->NAMEALIAS . PHP_EOL;
+                $msg .= "Конфиг: " . $item->CONFIGID . PHP_EOL;
                 $msg .= "Цвет: " . $item->COLORID . PHP_EOL;
+                $msg .= "Яч: " . $item->WMSLOCATION . PHP_EOL;
+                $msg .= "НЗ: " . $item->LICENSE . PHP_EOL;
+                $msg .= PHP_EOL;
+            }
+
+            $this
+                ->telegramNotificationService
+                ->sendMessageToTelegram($msg, $this->user->telegram_user_id);
+
+            $this->setLogUserCommand(TimerExecuteService::Stop());
+        } catch (Exception $ex) {
+            $this->logger->info($ex->getMessage());
+        }
+    }
+
+    /**
+     * Get part by number with number and word
+     * @param string $number
+     */
+    public function executeCommandFindCellWithPartString(string $number): void
+    {
+        TimerExecuteService::Start();
+
+        $sql = SqlScripts::getSqlQueryByPartial();
+
+        $data = DB::connection("dax")->select($sql, ["number" => '%' . $number . '%']);
+
+        $isExistPart = $this->partNotFound($data);
+
+        if (!$isExistPart) {
+            return;
+        }
+        dd($data);
+        try {
+            $msg = "";
+
+            foreach ($data as $item) {
+                $msg .= $item->BATCH . PHP_EOL;
+                $msg .= $item->NAMEALIAS . PHP_EOL;
                 $msg .= "Яч: " . $item->WMSLOCATION . PHP_EOL;
                 $msg .= "НЗ: " . $item->LICENSE . PHP_EOL;
                 $msg .= PHP_EOL;
