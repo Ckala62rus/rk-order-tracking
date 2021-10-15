@@ -8,7 +8,7 @@
                 <div class="card card-custom gutter-b">
                     <div class="card-header">
                         <div class="card-title">
-                            <h3 class="card-label">Размещенные заказы</h3>
+                            <h3 class="card-label">Размещенные заявки</h3>
                         </div>
                     </div>
 

@@ -10,7 +10,7 @@
             <div class="card card-custom gutter-b">
                 <div class="card-header">
                     <div class="card-title">
-                        <h3 class="card-label">Детализация размещенных заказов</h3>
+                        <h3 class="card-label">Производственные заказы</h3>
                     </div>
                 </div>
 
