@@ -201,7 +201,7 @@
                                 </el-table-column>
                                 <el-table-column
                                     prop="SumQtySpeciallSku"
-                                    label="Заказанный обьем клиентом"
+                                    label="Заказанный обьем"
                                     width="155">
                                 </el-table-column>
                                 <el-table-column
@@ -216,13 +216,13 @@
                                 </el-table-column>
                                 <el-table-column
                                     prop="DeliveryDate"
-                                    label="Дата поставки заказа"
+                                    label="Дата поставки заявки"
                                     width="130">
                                 </el-table-column>
 
                                 <el-table-column
                                     prop="EndDate"
-                                    label="Дата окончания заказа"
+                                    label="Дата окончания заявки"
                                     width="140"
                                 >
                                     <template slot-scope="scope">
