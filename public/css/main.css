@@ -1,67 +1,7 @@
-/*h1  {*/
-/*    color: #0a53be;*/
-/*    text-align: center;*/
-/*    margin: 20px 0;*/
-/*}*/
+.vue__table__row  {
+    text-align: center;
+}
 
-/*.header_menu {*/
-/*    background-color: #f5a501;*/
-/*    color: wheat;*/
-/*    padding-left: 5px;*/
-/*}*/
-
-/*.logo {*/
-/*    max-width: 5%;*/
-/*    height: auto;*/
-/*}*/
-
-/*.orders__tracking__table thead th {*/
-/*    vertical-align: middle;*/
-/*    text-align: center;*/
-/*}*/
-
-/*.orders__tracking__table th {*/
-/*    text-align: center;*/
-/*    vertical-align: middle;*/
-/*    padding: 5px;*/
-/*}*/
-
-/*.orders__tracking__table {*/
-/*    font-size: 12px;*/
-/*}*/
-
-/*.orders__tracking__table {*/
-/*    table-layout: fixed;*/
-/*}*/
-
-/*.order_table_header {*/
-/*    background-color: #e7d7fb;*/
-/*}*/
-
-/*.error__auth {*/
-/*    color: #f55252;*/
-/*}*/
-
-/*.order__table {*/
-/*    width: 1700px;*/
-/*}*/
-
-/*.order__card {*/
-/*    margin-left: 50px;*/
-/*}*/
-
-/*.card.card-custom > .card-header {*/
-/*    background-color: #ff9184;*/
-/*}*/
-
-/*.card.card-custom {*/
-/*    background-color: #4a516b;*/
-/*}*/
-
-/*.card-header {*/
-/*    border-bottom: none;*/
-/*}*/
-
-/*.color__button {*/
-/*    background-color: #a3ccd2;*/
-/*}*/
+.vue__table__row__header {
+    text-align: center;
+}

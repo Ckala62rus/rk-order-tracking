@@ -44,9 +44,17 @@ Route::middleware(['auth'])->group(function () {
     Route::get('zip/detail-orders/group/{id}', [\App\Http\Controllers\Lk\OrderController::class, 'zipOrderDetailGroup']);
     Route::get('zip/detail-orders/group', [\App\Http\Controllers\Lk\OrderApiController::class, 'getDetailZipOrderByGroup']);
 
+    /* RDP Cabinet */
+    Route::get("rdp", [\App\Http\Controllers\Lk\RdpController::class, 'index']);
+
 });
 
 Route::any('bot', [\App\Http\Controllers\Telegram\TelegramController::class, 'callbackTelegramApi']);
 Route::get('job', function (){
     \App\Jobs\TestJob::dispatch()->onQueue("testing");
 });
+
+//Route::get("rdp/main", [\App\Http\Controllers\Lk\RdpController::class, 'index']);
+Route::get("api/rdp/statistic", [\App\Http\Controllers\Lk\RdpController::class, 'getStatistics']);
+Route::get("api/rdp/users", [\App\Http\Controllers\Lk\RdpController::class, 'getUsers']);
+Route::post("api/rdp/detail", [\App\Http\Controllers\Lk\RdpController::class, 'getDetailByUser']);

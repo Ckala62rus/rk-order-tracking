@@ -62,6 +62,11 @@ Vue.component('zip-detail-orders-table', require('./components/Manager/ZipDetail
 Vue.component('zip-detail-orders-group-table', require('./components/Manager/ZipDetailOrderGroupTable').default);
 
 /**
+ * RDP cabinet
+ */
+Vue.component('rdp-index', require('./components/Rdp/index').default);
+
+/**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
