@@ -8,6 +8,8 @@ use App\Repositories\UserRdpRepository;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Mockery\Exception;
 
 class UpdateStatisticsCommand extends Command
 {
@@ -56,6 +58,18 @@ class UpdateStatisticsCommand extends Command
      */
     public function handle()
     {
+        try {
+            $this->getStatistic();
+        } catch (Exception $exception) {
+            Log::info($exception->getMessage());
+        }
+    }
+
+    /**
+     * Main scripts for get statistics by RDP
+     */
+    public function getStatistic(): void
+    {
         // обновляем список пользователей в бд
         $this->getUsersAndSaveDatabase();
 
@@ -103,8 +117,6 @@ class UpdateStatisticsCommand extends Command
                     'login' => '',
                     'work_time' => 0,
                 ];
-
-//                dd($statistic);
 
                 foreach ($statistic as $row){
                     $result['date'] = $date->format('Y-m-d');
