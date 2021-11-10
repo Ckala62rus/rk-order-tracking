@@ -26,8 +26,8 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
 //        $schedule->command('command:testCommand')->everyMinute()->withoutOverlapping();
-        $schedule->command('command:UpdateRDPStatistics')->dailyAt('15:20')->withoutOverlapping();
-        $schedule->command('command:WorkStart')->dailyAt('15:15')->withoutOverlapping();
+        $schedule->command('command:UpdateRDPStatistics')->dailyAt('05:20')->withoutOverlapping();
+        $schedule->command('command:WorkStart')->dailyAt('05:10')->withoutOverlapping();
     }
 
     /**
