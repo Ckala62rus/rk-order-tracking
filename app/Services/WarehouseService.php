@@ -128,6 +128,16 @@ class WarehouseService
                 return;
             }
 
+            if ( preg_match('/^([0-9]{1,2}[%]{1}[0-9]{4,10})[@]$/', $params["text_in"], $code) ) {
+                $this->executeCommandFindCellWithColorAndUser($code[1]);
+                return;
+            }
+
+            if ( preg_match('/^([0-9]{4,10})[@]$/', $params["text_in"], $code) ) {
+                $this->executeCommandFindCellByOnlyNumberWithUser($code[1]);
+                return;
+            }
+
 //            if ( preg_match('/^([0-9a-zA-Z_]{1,20})[#]$/', $params["text_in"], $code) ) {
 //                $this->executeCommandFindCellWithPartString($code[1]);
 //                return;
@@ -379,6 +389,61 @@ class WarehouseService
     }
 
     /**
+     * Find part with color and user name by number and year
+     * @param string $number
+     */
+    public function executeCommandFindCellWithColorAndUser(string $number): void
+    {
+        TimerExecuteService::Start();
+
+        $sql = SqlScripts::getSqlQueryByPartialWithUsers();
+
+        $data = DB::connection("dax")->select($sql, ["number" => $number]);
+
+        $isExistPart = $this->partNotFound($data);
+
+        if (!$isExistPart) {
+            return;
+        }
+
+        try {
+            $msg = "";
+
+            foreach ($data as $item) {
+                $msg .= $item->BATCH . PHP_EOL;
+                $msg .= $item->NAMEALIAS . PHP_EOL;
+                $msg .= "Цвет: " . $item->COLORID . PHP_EOL;
+                $msg .= "Яч: " . $item->WMSLOCATION . PHP_EOL;
+                $msg .= "НЗ: " . $item->LICENSE . PHP_EOL;
+                $msg .= "Фио: " . $item->USERNAME . PHP_EOL;
+                $msg .= PHP_EOL;
+            }
+
+            $this
+                ->telegramNotificationService
+                ->sendMessageToTelegram($msg, $this->user->telegram_user_id);
+
+            $this->setLogUserCommand(TimerExecuteService::Stop());
+        } catch (Exception $ex) {
+            $this->logger->info($ex->getMessage());
+        }
+    }
+
+    /**
+     * Find part with color and user name by only number
+     * @param $code
+     */
+    public function executeCommandFindCellByOnlyNumberWithUser($code): void
+    {
+        $this->codeNumber = $code;
+        try {
+            $this->executeCommandFindCellWithColorAndUser($this->getCurrentYear() . '%' . $code);
+        } catch (Exception $ex) {
+            $this->logger->info($ex->getMessage());
+        }
+    }
+
+    /**
      * Get part by number with number and word
      * @param string $number
      */
@@ -395,7 +460,7 @@ class WarehouseService
         if (!$isExistPart) {
             return;
         }
-        dd($data);
+
         try {
             $msg = "";
 
