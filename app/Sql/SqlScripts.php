@@ -266,98 +266,117 @@ class SqlScripts
     {
         return $sql = <<<sql
             SET NOCOUNT ON;
-            DECLARE      @InventBatchId NVARCHAR(10),
-                         @Partition BIGINT,
-                         @DataAreaId NVARCHAR(5),
-                         @ProdInventBatchId NVARCHAR(20);
-            /* Маски партий для теста
-            * 21-KRAST-19286-0129791
-            * 21%0110783
-            */
-            SET @InventBatchId = :number; --подставить номер партии
-            SET @Partition = 5637144576;
-            SET @DataAreaId = 'rlc';
+            DECLARE @InventBatchId NVARCHAR(10)
+            ,@Partition BIGINT
+            ,@DataAreaId NVARCHAR(5)
+            ,@ProdInventBatchId NVARCHAR(20);
 
-            IF OBJECT_ID('tempdb.dbo.#Initial') IS NOT NULL
-                DROP TABLE #Initial;
+        /* Маски партий для теста
+        * 21%0110783
+        * 21%20410
+        * 19%0006054
+        * 21%0127140
+        * 19%0004117
+        * 20%0066201
+        * 20%0066182
+        */
+        SET @InventBatchId = :number;--подставить номер партии
+        SET @Partition = 5637144576;
+        SET @DataAreaId = 'rlc';
 
-            SELECT INVENTDIM.INVENTBATCHID as Batch,
-              CAST((COALESCE(INVENTTABLE_PT.NAMEALIAS,INVENTTABLE.NAMEALIAS)) as nvarchar(max)) as NAMEALIAS,
-              CAST((COALESCE(INVENTDIM_PT.RUK_INVENTCOLORID,INVENTDIM.RUK_INVENTCOLORID)) as nvarchar(max)) as COLORID,
-              CAST(INVENTDIM.WMSLOCATIONID as nvarchar(max)) as WMSLOCATION,
-              CAST(INVENTDIM.LICENSEPLATEID as nvarchar(max)) as LICENSE,
-              WWU.USERNAME,
-              ROW_NUMBER() over(partition by INVENTDIM.INVENTBATCHID order by INVENTDIM.INVENTBATCHID) as rn
-            INTO #Initial
+        IF OBJECT_ID('tempdb.dbo.#Initial') IS NOT NULL
+            DROP TABLE #Initial;
+
+        WITH PreInitial as (
+            SELECT INVENTDIM.INVENTBATCHID AS Batch
+                ,CAST((COALESCE(INVENTTABLE_PT.NAMEALIAS, INVENTTABLE.NAMEALIAS)) AS NVARCHAR(max)) AS NAMEALIAS
+                ,CAST((COALESCE(INVENTDIM_PT.RUK_INVENTCOLORID, INVENTDIM.RUK_INVENTCOLORID)) AS NVARCHAR(max)) AS COLORID
+                ,CAST(INVENTDIM.WMSLOCATIONID AS NVARCHAR(max)) AS WMSLOCATION
+                ,CAST(INVENTDIM.LICENSEPLATEID AS NVARCHAR(max)) AS LICENSE
+                ,COALESCE(WWU.USERNAME, '') AS USERNAME
+                ,IT.DATEPHYSICAL
+                ,MAX(IT.DatePhysical) OVER (PARTITION BY  INVENTDIM.INVENTBATCHID,INVENTDIM.WMSLOCATIONID) as MaxDate
             FROM INVENTSUM INVENTSUM WITH (READUNCOMMITTED)
-            LEFT JOIN INVENTDIM INVENTDIM ON INVENTDIM.INVENTDIMID = INVENTSUM.INVENTDIMID
+            LEFT LOOP JOIN INVENTDIM INVENTDIM ON INVENTDIM.INVENTDIMID = INVENTSUM.INVENTDIMID
             JOIN INVENTTABLE INVENTTABLE ON INVENTSUM.ITEMID = INVENTTABLE.ITEMID
             LEFT JOIN ProdTable ProdTable ON INVENTDIM.INVENTBATCHID = ProdTable.ProdID
             LEFT JOIN INVENTDIM INVENTDIM_PT ON INVENTDIM_PT.INVENTDIMID = ProdTable.INVENTDIMID
             LEFT JOIN INVENTTABLE INVENTTABLE_PT ON ProdTable.ITEMID = INVENTTABLE_PT.ITEMID
-            LEFT JOIN INVENTTRANS IT ON IT.INVENTDIMID = INVENTSUM.INVENTDIMID
+            LEFT JOIN INVENTTRANS IT ON IT.INVENTDIMID = INVENTSUM.INVENTDIMID AND IT.STATUSRECEIPT IN (1, 2)
             LEFT JOIN INVENTTRANSORIGIN ITO ON ITO.RECID = IT.INVENTTRANSORIGIN
             LEFT JOIN WHSWORKLINE WWL ON WWL.WORKID = ITO.REFERENCEID
             LEFT JOIN WHSWORKUSER WWU ON WWU.USERID = WWL.USERID
-                   WHERE  INVENTSUM.PARTITION = @Partition AND INVENTSUM.DATAAREAID = @DataAreaId
-                         AND INVENTDIM.PARTITION = @Partition AND INVENTDIM.DATAAREAID = @DataAreaId
-                         AND INVENTSUM.PHYSICALINVENT != 0
-                         AND INVENTSUM.CLOSEDQTY = 0
-                         AND INVENTSUM.CLOSED = 0
-                         AND INVENTDIM.INVENTBATCHID LIKE @InventBatchId
+            WHERE INVENTSUM.PARTITION = @Partition
+                AND INVENTSUM.DATAAREAID = @DataAreaId
+                AND INVENTDIM.PARTITION = @Partition
+                AND INVENTDIM.DATAAREAID = @DataAreaId
+                AND INVENTSUM.PHYSICALINVENT != 0
+                AND INVENTSUM.CLOSEDQTY = 0
+                AND INVENTSUM.CLOSED = 0
+                AND INVENTDIM.INVENTBATCHID LIKE @InventBatchId
+        )
+        SELECT *,ROW_NUMBER() OVER (PARTITION BY BATCH ORDER BY BATCH) AS rn
+        INTO #Initial
+        FROM PreInitial
+        WHERE DATEPHYSICAL = MaxDate
 
-            /* Обработка слияния нескольких разных строк (цвет, ячейка, номерной знак) в
-             * разрезе партий и артикулов (замена агрегатным
-             * функциям, которые доступны в SQL Server 2017 (14.x))
-            */
-            ;WITH RecursiveConcate
-            AS (
-                SELECT Batch
-                    ,CAST(NAMEALIAS AS NVARCHAR(max)) AS NAMEALIAS
-                    ,CAST(COLORID AS NVARCHAR(max)) AS COLORID
-                    ,CAST(WMSLOCATION AS NVARCHAR(max)) AS WMSLOCATION
-                    ,CAST(LICENSE AS NVARCHAR(max)) AS LICENSE
-                    ,CAST(USERNAME AS NVARCHAR(max)) AS USERNAME
-                    ,2 [rn]
-                FROM #Initial AS Initt
-                WHERE Initt.rn = 1
+        /* Обработка слияния нескольких разных строк (цвет, ячейка, номерной знак) в
+        * разрезе партий и артикулов (замена агрегатным
+        * функциям, которые доступны в SQL Server 2017 (14.x))
+        */
 
-                UNION ALL
+        ;WITH RecursiveConcate
+        AS (
+            SELECT Batch
+                ,CAST(NAMEALIAS AS NVARCHAR(max)) AS NAMEALIAS
+                ,CAST(COLORID AS NVARCHAR(max)) AS COLORID
+                ,CAST(WMSLOCATION AS NVARCHAR(max)) AS WMSLOCATION
+                ,CAST(LICENSE AS NVARCHAR(max)) AS LICENSE
+                ,CAST(USERNAME AS NVARCHAR(max)) AS USERNAME
+                ,2 [rn]
+            FROM #Initial AS Initt
+            WHERE Initt.rn = 1
 
-                SELECT Initt.batch
-                    ,Initt.NAMEALIAS
-                    ,IIF(RecCon.COLORID LIKE '%' + Initt.COLORID + '%', RecCon.COLORID, RecCon.COLORID + ', ' + Initt.COLORID)
-                    ,IIF(RecCon.WMSLOCATION LIKE '%' + Initt.WMSLOCATION + '%', RecCon.WMSLOCATION, RecCon.WMSLOCATION + ', ' + Initt.WMSLOCATION)
-                    ,IIF(RecCon.LICENSE LIKE '%' + Initt.LICENSE + '%', RecCon.LICENSE, RecCon.LICENSE + ', ' + Initt.LICENSE)
-                    ,IIF(RecCon.USERNAME LIKE '%' + Initt.USERNAME + '%', RecCon.USERNAME, RecCon.USERNAME + ', ' + Initt.USERNAME)
-                    ,RecCon.rn + 1
-                FROM #Initial AS Initt
-                JOIN RecursiveConcate RecCon ON Initt.rn = RecCon.rn
-                    AND Initt.Batch = RecCon.batch
-                )
-                ,mRank
-            AS (
-                SELECT Batch
-                    ,NAMEALIAS
-                    ,COLORID
-                    ,WMSLOCATION
-                    ,LICENSE
-                    ,USERNAME
-                    ,MAX(rn) OVER (PARTITION BY batch) AS mrn
-                    ,rn
+            UNION ALL
+
+            SELECT Initt.batch
+                ,Initt.NAMEALIAS
+                ,IIF(RecCon.COLORID LIKE '%' + Initt.COLORID + '%', RecCon.COLORID, RecCon.COLORID + ', ' + Initt.COLORID)
+                ,IIF(RecCon.WMSLOCATION LIKE '%' + Initt.WMSLOCATION + '%', RecCon.WMSLOCATION, RecCon.WMSLOCATION + ', ' + Initt.WMSLOCATION)
+                ,IIF(RecCon.LICENSE LIKE '%' + Initt.LICENSE + '%', RecCon.LICENSE, RecCon.LICENSE + ', ' + Initt.LICENSE)
+                ,IIF(RecCon.USERNAME LIKE '%' + Initt.USERNAME + '%', RecCon.USERNAME, RecCon.USERNAME + ', ' + Initt.USERNAME)
+                ,RecCon.rn + 1
+            FROM #Initial AS Initt
+            JOIN RecursiveConcate RecCon ON Initt.rn = RecCon.rn
+                AND Initt.Batch = RecCon.batch
+            )
+            ,mRank
+        AS (
+            SELECT Batch
+                ,NAMEALIAS
+                ,COLORID
+                ,WMSLOCATION
+                ,LICENSE
+                ,USERNAME
+                ,MAX(rn) OVER (PARTITION BY batch) AS mrn
+                ,rn
+            FROM RecursiveConcate
+            )
+        SELECT BATCH
+            ,NAMEALIAS
+            ,REPLACE(COLORID, ' , ', '') AS COLORID
+            ,REPLACE(WMSLOCATION, ' , ', '') AS WMSLOCATION
+            ,REPLACE(LICENSE, ' , ', '') AS LICENSE
+            ,REPLACE(USERNAME, ' , ', '') AS USERNAME
+        FROM mRank
+        WHERE Batch IN (
+                SELECT DISTINCT Batch
                 FROM RecursiveConcate
                 )
-            SELECT  BATCH
-                    ,NAMEALIAS
-                    ,REPLACE(COLORID , ' , ', '') as COLORID
-                    ,REPLACE(WMSLOCATION , ' , ', '') as WMSLOCATION
-                    ,REPLACE(LICENSE, ' , ', '') as LICENSE
-                    ,REPLACE(USERNAME, ' , ', '') as USERNAME
-            FROM mRank
-            WHERE Batch IN (SELECT DISTINCT Batch FROM RecursiveConcate)
-                  AND rn IN (mrn)
-            OPTION (MAXRECURSION 32767)
-            DROP TABLE #Initial
+            AND rn IN (mrn)
+        OPTION (MAXRECURSION 0)
+
+        DROP TABLE #Initial
         sql;
     }
 }
