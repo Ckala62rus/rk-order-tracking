@@ -415,7 +415,7 @@ class WarehouseService
                 $msg .= "Цвет: " . $item->COLORID . PHP_EOL;
                 $msg .= "Яч: " . $item->WMSLOCATION . PHP_EOL;
                 $msg .= "НЗ: " . $item->LICENSE . PHP_EOL;
-                $msg .= "Фио: " . $item->USERNAME . PHP_EOL;
+                $msg .= "ФИО: " . $item->USERNAME . PHP_EOL;
                 $msg .= PHP_EOL;
             }
 
