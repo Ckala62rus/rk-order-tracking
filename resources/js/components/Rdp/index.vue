@@ -34,11 +34,11 @@
 
                                         <div class="form-group row">
                                             <div class="col-lg-4">
-                                                <label>Начальная дата поставки:</label>
+                                                <label>Начальная дата:</label>
                                                 <date-picker v-model="filter.date_start" valueType="format" class="datepicker_width"></date-picker>
                                             </div>
                                             <div class="col-lg-4">
-                                                <label>Конечная дата поставки:</label>
+                                                <label>Конечная дата:</label>
                                                 <date-picker v-model="filter.date_end" valueType="format" class="datepicker_width"></date-picker>
                                             </div>
                                             <div class="col-lg-4 mt-6">
