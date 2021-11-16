@@ -25,6 +25,7 @@ class User extends Authenticatable
         'password',
         'is_manager',
         'is_admin',
+        'is_user',
         'account_id',
     ];
 
