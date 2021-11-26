@@ -47,6 +47,25 @@ Route::middleware(['auth'])->group(function () {
     /* RDP Cabinet */
     Route::get("rdp", [\App\Http\Controllers\Lk\RdpController::class, 'index']);
 
+    Route::post("user", [UserController::class, 'getMe']);
+    Route::get("api/rdp/statistic", [\App\Http\Controllers\Lk\RdpController::class, 'getStatistics']);
+    Route::get("api/rdp/users", [\App\Http\Controllers\Lk\RdpController::class, 'getUsers']);
+    Route::post("api/rdp/detail", [\App\Http\Controllers\Lk\RdpController::class, 'getDetailByUser']);
+
+    /* Win service */
+    Route::get('windows/server', [\App\Http\Controllers\WinService\WinServerController::class, 'templateServer']);
+    Route::get('windows/dashboard', [\App\Http\Controllers\WinService\WinServerController::class, 'templateDashboard']);
+    Route::get('windows/service/{id}', [\App\Http\Controllers\WinService\WinServiceController::class, 'templateService']);
+    Route::post('windows/service/enable', [\App\Http\Controllers\WinService\WinServiceController::class, 'setEnable']);
+
+    Route::post('windows/server/enable', [\App\Http\Controllers\WinService\WinServerController::class, 'setEnable']);
+    Route::get('windows/server/services', [\App\Http\Controllers\WinService\WinServerController::class, 'getServices']);
+    Route::post('windows/server/services-start', [\App\Http\Controllers\WinService\WinServerController::class, 'startService']);
+    Route::post('windows/server/services-stop', [\App\Http\Controllers\WinService\WinServerController::class, 'stopService']);
+    Route::get('windows/server-update', [\App\Http\Controllers\WinService\WinServerController::class, 'updateInfoByServers']);
+
+    Route::resource("api/win/server", \App\Http\Controllers\WinService\WinServerController::class);
+    Route::resource("api/win/service", \App\Http\Controllers\WinService\WinServiceController::class);
 });
 
 Route::any('bot', [\App\Http\Controllers\Telegram\TelegramController::class, 'callbackTelegramApi']);
@@ -54,7 +73,8 @@ Route::get('job', function (){
     \App\Jobs\TestJob::dispatch()->onQueue("testing");
 });
 
-//Route::get("rdp/main", [\App\Http\Controllers\Lk\RdpController::class, 'index']);
-Route::get("api/rdp/statistic", [\App\Http\Controllers\Lk\RdpController::class, 'getStatistics']);
-Route::get("api/rdp/users", [\App\Http\Controllers\Lk\RdpController::class, 'getUsers']);
-Route::post("api/rdp/detail", [\App\Http\Controllers\Lk\RdpController::class, 'getDetailByUser']);
+//Route::get('/mailable', function () {
+//    $user = App\Models\User::find(1);
+//
+//    return new App\Mail\TestMail($user);
+//});

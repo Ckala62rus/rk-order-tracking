@@ -10,6 +10,7 @@ use App\Http\Resources\User\UserResource;
 use App\Services\UserService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -113,5 +114,16 @@ class UserController extends Controller
     public function users()
     {
         return view('lk.users');
+    }
+
+    /**
+     * Get current user
+     * @return JsonResponse
+     */
+    public function getMe(): JsonResponse
+    {
+        $user = Auth::user();
+
+        return response()->json(['user' => $user], JsonResponse::HTTP_OK);
     }
 }
