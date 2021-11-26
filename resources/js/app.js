@@ -41,6 +41,9 @@ import 'element-ui/lib/theme-chalk/index.css';
 import locale from 'element-ui/lib/locale/lang/en'
 Vue.use(ElementUI, {locale});
 
+import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
+Vue.component('pulse-loader', require('vue-spinner/src/PulseLoader.vue'));
+
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -60,6 +63,13 @@ Vue.component('simple-orders-table', require('./components/Order/SimpleOrderTabl
 Vue.component('client-zip-orders-table', require('./components/Order/ClientZipOrderTable').default);
 Vue.component('zip-detail-orders-table', require('./components/Manager/ZipDetailOrderTable').default);
 Vue.component('zip-detail-orders-group-table', require('./components/Manager/ZipDetailOrderGroupTable').default);
+
+/**
+ * Windows server
+ */
+Vue.component('windows-server', require('./components/Windows/Index').default);
+Vue.component('windows-server-services', require('./components/Windows/Services').default);
+Vue.component('windows-server-dashboard', require('./components/Windows/Dashboard').default);
 
 /**
  * RDP cabinet
