@@ -5,3 +5,11 @@
 .vue__table__row__header {
     text-align: center;
 }
+
+.small_btn {
+    padding: 0.1rem 0.75rem;
+}
+
+.server_error_color {
+    color: indianred;
+}

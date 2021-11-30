@@ -3,6 +3,7 @@
 namespace App\Http\Resources\WinService;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Collection;
 
 class WinServerWithServiceResource extends JsonResource
 {
@@ -19,8 +20,24 @@ class WinServerWithServiceResource extends JsonResource
             'id' => $this->id,
             'server_name' => $this->server_name,
             'description' => $this->description,
+            'is_not_running' =>  count($this->services) > 0 ? $this->isNotRunning($this->services) : false,
 
             'services' => WinServiceResource::collection($this->services)
         ];
+    }
+
+    /**
+     * If exist status != Running returh true
+     * @param Collection $services
+     * @return bool
+     */
+    public function isNotRunning(Collection $services): bool
+    {
+        foreach ($services as $service){
+            if ($service->status != 'Running') {
+                return true;
+            }
+            return false;
+        }
     }
 }
