@@ -37,7 +37,7 @@ class WinServerWithServiceResource extends JsonResource
             if ($service->status != 'Running') {
                 return true;
             }
-            return false;
         }
+        return false;
     }
 }
