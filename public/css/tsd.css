@@ -1,0 +1,17 @@
+header {
+    margin-bottom: 20px;
+}
+
+h1 {
+    color: darkmagenta;
+    text-align: center;
+}
+
+.large_btn {
+    width: 100%;
+    margin-top: 20px;
+}
+
+.hidden {
+    display: none;
+}

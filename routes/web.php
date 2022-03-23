@@ -50,7 +50,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post("user", [UserController::class, 'getMe']);
     Route::get("api/rdp/statistic", [\App\Http\Controllers\Lk\RdpController::class, 'getStatistics']);
     Route::get("api/rdp/users", [\App\Http\Controllers\Lk\RdpController::class, 'getUsers']);
-    Route::post("api/rdp/detail", [\App\Http\Controllers\Lk\RdpController::class, 'getDetailByUser']);
+//    Route::post("api/rdp/detail", [\App\Http\Controllers\Lk\RdpController::class, 'getDetailByUser']);
 
     /* Win service */
     Route::get('windows/server', [\App\Http\Controllers\WinService\WinServerController::class, 'templateServer']);
@@ -67,12 +67,14 @@ Route::middleware(['auth'])->group(function () {
     Route::resource("api/win/server", \App\Http\Controllers\WinService\WinServerController::class);
     Route::resource("api/win/service", \App\Http\Controllers\WinService\WinServiceController::class);
 });
-
+Route::post("api/rdp/detail", [\App\Http\Controllers\Lk\RdpController::class, 'getDetailByUser']);
 Route::any('bot', [\App\Http\Controllers\Telegram\TelegramController::class, 'callbackTelegramApi']);
 Route::get('job', function (){
     \App\Jobs\TestJob::dispatch()->onQueue("testing");
 });
 
+Route::get('tsd', [\App\Http\Controllers\TsdController::class, 'form']);
+Route::post('tsd/api', [\App\Http\Controllers\TsdController::class, 'findPart']);
 //Route::get('/mailable', function () {
 //    $user = App\Models\User::find(1);
 //
