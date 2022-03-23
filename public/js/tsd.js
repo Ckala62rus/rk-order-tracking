@@ -37,7 +37,7 @@ const formControl = () => {
         })
 
         if (data['code'].length !== 0) {
-            fetch('https://rk/tsd/api', {
+            fetch('https://zm.leather.ru/tsd/api', {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
