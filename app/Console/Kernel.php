@@ -28,7 +28,7 @@ class Kernel extends ConsoleKernel
 //        $schedule->command('command:testCommand')->everyMinute()->withoutOverlapping();
         $schedule->command('command:UpdateRDPStatistics')->dailyAt('05:20')->withoutOverlapping();
         $schedule->command('command:WorkStart')->dailyAt('05:10')->withoutOverlapping();
-        $schedule->command('command:GetActualCurrency')->dailyAt('03:10')->withoutOverlapping();
+        $schedule->command('command:GetActualCurrency')->twiceDaily(1, 11)->withoutOverlapping();
     }
 
     /**
