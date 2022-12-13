@@ -18,6 +18,7 @@ const formControl = () => {
     }
 
     returnSearchButton.addEventListener('click', () => {
+        formResultContent.innerHTML = '';
         hideOrShowSearchForm();
     })
 
@@ -36,7 +37,7 @@ const formControl = () => {
             data[key] = value;
         })
 
-        if (data['code'].length !== 0) {
+        if (data['code'].trim().length !== 0) {
             fetch('https://zm.leather.ru/tsd/api', {
                 method: 'POST',
                 headers: {
@@ -54,7 +55,14 @@ const formControl = () => {
                         formResultContent.textContent = res.error;
                         return;
                     }
-                    formResultContent.textContent = res.result;
+                    // formResultContent.textContent = res.result;
+
+                    res.result.forEach(elem => {
+                        let p = document.createElement('p')
+                        p.style.fontSize = '16px';
+                        p.textContent = elem;
+                        formResultContent.append(p)
+                    })
                 })
                 .catch(err => {
                     console.log(err);

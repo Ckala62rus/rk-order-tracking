@@ -9,6 +9,21 @@ use Mockery\Exception;
 
 class TsdService
 {
+    /**
+     * Return result string on front
+     * @var array
+     */
+    protected array $result = [];
+
+    /**
+     * @var TsdStatisticService
+     */
+    protected TsdStatisticService $tsdStatisticService;
+
+    public function __construct(TsdStatisticService $tsdStatisticService)
+    {
+        $this->tsdStatisticService = $tsdStatisticService;
+    }
 
     /**
      * Command execute router
@@ -17,6 +32,7 @@ class TsdService
      */
     public function getRouteCommand(string $code): array
     {
+        $this->tsdStatisticService->createTsdStatistic($code);
 
         if ( preg_match('/^[0-9]{1,2}[%]{1}[0-9]{4,5}$/', $code, $single_command) ) {
             return $this->executeCommandFindCell2($code);
@@ -64,14 +80,20 @@ class TsdService
             $msg = "";
 
             foreach ($data as $item) {
-                $msg .= $item->BATCH . PHP_EOL;
-                $msg .= $item->NAMEALIAS . PHP_EOL;
-                $msg .= "Яч: " . $item->WMSLOCATION . PHP_EOL;
-                $msg .= "НЗ: " . $item->LICENSE . PHP_EOL;
-                $msg .= PHP_EOL;
+//                $msg .= $item->BATCH . PHP_EOL;
+//                $msg .= $item->NAMEALIAS . PHP_EOL;
+//                $msg .= "Яч: " . $item->WMSLOCATION . PHP_EOL;
+//                $msg .= "НЗ: " . $item->LICENSE . PHP_EOL;
+//                $msg .= PHP_EOL;
+
+                $this->result[] = $item->BATCH;
+                $this->result[] = $item->NAMEALIAS;
+                $this->result[] = "Яч: " . $item->WMSLOCATION;
+                $this->result[] = "НЗ: " . $item->LICENSE;
             }
 
-            return ['result' => $msg];
+//            return ['result' => $msg];
+            return ['result' => $this->result];
 
         } catch (Exception $ex) {
             return ['error' => $ex->getMessage()];
@@ -97,16 +119,24 @@ class TsdService
             $msg = "";
 
             foreach ($data as $item) {
-                $msg .= $item->BATCH . PHP_EOL;
-                $msg .= $item->NAMEALIAS . PHP_EOL;
-                $msg .= "Конфиг: " . $item->CONFIGID . PHP_EOL;
-                $msg .= "Цвет: " . $item->COLORID . PHP_EOL;
-                $msg .= "Яч: " . $item->WMSLOCATION . PHP_EOL;
-                $msg .= "НЗ: " . $item->LICENSE . PHP_EOL;
-                $msg .= PHP_EOL;
+//                $msg .= $item->BATCH . PHP_EOL;
+//                $msg .= $item->NAMEALIAS . PHP_EOL;
+//                $msg .= "Конфиг: " . $item->CONFIGID . PHP_EOL;
+//                $msg .= "Цвет: " . $item->COLORID . PHP_EOL;
+//                $msg .= "Яч: " . $item->WMSLOCATION . PHP_EOL;
+//                $msg .= "НЗ: " . $item->LICENSE . PHP_EOL;
+//                $msg .= PHP_EOL;
+
+                $this->result[] = $item->BATCH;
+                $this->result[] = $item->NAMEALIAS;
+                $this->result[] = "Конфиг: " . $item->CONFIGID;
+                $this->result[] = "Цвет: " . $item->COLORID;
+                $this->result[] = "Яч: " . $item->WMSLOCATION;
+                $this->result[] = "НЗ: " . $item->LICENSE;
             }
 
-            return ['result' => $msg];
+//            return ['result' => $msg];
+            return ['result' => $this->result];
 
         } catch (Exception $ex) {
             return ['error' => $ex->getMessage()];
@@ -153,16 +183,24 @@ class TsdService
             $msg = "";
 
             foreach ($data as $item) {
-                $msg .= $item->BATCH . PHP_EOL;
-                $msg .= $item->NAMEALIAS . PHP_EOL;
-                $msg .= "Цвет: " . $item->COLORID . PHP_EOL;
-                $msg .= "Яч: " . $item->WMSLOCATION . PHP_EOL;
-                $msg .= "НЗ: " . $item->LICENSE . PHP_EOL;
-                $msg .= "ФИО: " . $item->USERNAME . PHP_EOL;
-                $msg .= PHP_EOL;
+//                $msg .= $item->BATCH . PHP_EOL;
+//                $msg .= $item->NAMEALIAS . PHP_EOL;
+//                $msg .= "Цвет: " . $item->COLORID . PHP_EOL;
+//                $msg .= "Яч: " . $item->WMSLOCATION . PHP_EOL;
+//                $msg .= "НЗ: " . $item->LICENSE . PHP_EOL;
+//                $msg .= "ФИО: " . $item->USERNAME . PHP_EOL;
+//                $msg .= PHP_EOL;
+
+                $this->result[] = $item->BATCH;
+                $this->result[] = $item->NAMEALIAS;
+                $this->result[] = "Цвет: " . $item->COLORID;
+                $this->result[] = "Яч: " . $item->WMSLOCATION;
+                $this->result[] = "НЗ: " . $item->LICENSE;
+                $this->result[] = "ФИО: " . $item->USERNAME;
             }
 
-            return ['result' => $msg];
+//            return ['result' => $msg];
+            return ['result' => $this->result];
 
         } catch (Exception $ex) {
             return ['error' => $ex->getMessage()];
