@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class ChangeTelegramUserIdInTelegramUsersTable extends Migration
+class CreateTsdStatisticsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,10 @@ class ChangeTelegramUserIdInTelegramUsersTable extends Migration
      */
     public function up()
     {
-        Schema::table('telegram_users', function (Blueprint $table) {
-            $table->unsignedBigInteger('telegram_user_id')->nullable()->change();
+        Schema::create('tsd_statistics', function (Blueprint $table) {
+            $table->id();
+            $table->string('command');
+            $table->timestamps();
         });
     }
 
@@ -25,8 +27,6 @@ class ChangeTelegramUserIdInTelegramUsersTable extends Migration
      */
     public function down()
     {
-        Schema::table('telegram_users', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('tsd_statistics');
     }
 }
