@@ -92,4 +92,4 @@ Route::post('tsd/api', [\App\Http\Controllers\TsdController::class, 'findPart'])
 ////    return new App\Mail\TestMail($user);
 //});
 
-Route::get('test', [KeyLoggerController::class, 'test']);
+//Route::get('test', [KeyLoggerController::class, 'test']);
