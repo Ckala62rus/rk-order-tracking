@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\KeyLoggerController;
 use App\Http\Controllers\Lk\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -66,7 +67,15 @@ Route::middleware(['auth'])->group(function () {
 
     Route::resource("api/win/server", \App\Http\Controllers\WinService\WinServerController::class);
     Route::resource("api/win/service", \App\Http\Controllers\WinService\WinServiceController::class);
+
+    /* KeyLogger */
+    Route::resource('key-logger', KeyLoggerController::class);
+    Route::get('key-logger-dashboard', [KeyLoggerController::class, 'templateDashboard']);
+
+    /* LoginKeyLogger */
+    Route::get('key-logger-logins', [\App\Http\Controllers\LoginKeyLoggerController::class, 'index']);
 });
+
 Route::post("api/rdp/detail", [\App\Http\Controllers\Lk\RdpController::class, 'getDetailByUser']);
 Route::any('bot', [\App\Http\Controllers\Telegram\TelegramController::class, 'callbackTelegramApi']);
 Route::get('job', function (){
@@ -75,8 +84,12 @@ Route::get('job', function (){
 
 Route::get('tsd', [\App\Http\Controllers\TsdController::class, 'form']);
 Route::post('tsd/api', [\App\Http\Controllers\TsdController::class, 'findPart']);
+
 //Route::get('/mailable', function () {
 //    $user = App\Models\User::find(1);
 //
-//    return new App\Mail\TestMail($user);
+//    \Illuminate\Support\Facades\Mail::send(new \App\Mail\TestMail($user));
+////    return new App\Mail\TestMail($user);
 //});
+
+Route::get('test', [KeyLoggerController::class, 'test']);

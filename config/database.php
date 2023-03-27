@@ -117,6 +117,19 @@ return [
             'prefix_indexes' => true,
         ],
 
+        'keylogger' => [
+            'driver' => 'sqlsrv',
+            'url' => env('DATABASE_URL_6'),
+            'host' => env('DB_HOST_6', 'localhost'),
+            'port' => env('DB_PORT_6', '1433'),
+            'database' => env('DB_DATABASE_6', 'forge'),
+            'username' => env('DB_USERNAME_6', 'forge'),
+            'password' => env('DB_PASSWORD_6', ''),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'prefix_indexes' => true,
+        ],
+
     ],
 
     /*
