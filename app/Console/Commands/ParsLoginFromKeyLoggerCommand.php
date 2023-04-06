@@ -55,7 +55,12 @@ class ParsLoginFromKeyLoggerCommand extends Command
 
                     LoginKeyLogger::updateOrCreate(
                         ['login' => $login],
-                        ['login' => $login, 'fio' => $user['FullName']]
+                        [
+                            'login' => $login,
+                            'fio' => $user['FullName'],
+                            'department' => strlen($user['Department']) > 0 ? $user['Department'] : null,
+                            'organization' => strlen($user['Organization']) > 0 ? $user['Organization'] : null,
+                        ]
                     );
                 }
             }

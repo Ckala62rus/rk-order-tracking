@@ -16,16 +16,21 @@ class KeyLoggerIndexResource extends JsonResource
      */
     public function toArray($request)
     {
+        $userModel = $this->getModel($this->login);
+
         return [
             'id' => $this->id,
             'login' => $this->login,
-            'fio' => $this->getFio($this->login) ?? $this->login,
+            'fio' => $userModel ? $userModel->fio : $this->login,
             'first_time' => $this->first_time,
             'last_active_time' => $this->last_active_time,
             'time' => Carbon::parse($this->last_active_time)
                 ->diff(Carbon::parse($this->first_time))
                 ->format('%H:%I:%S'),
-            'details' => $this->details
+            'details' => $this->details,
+            'department' => $userModel ? $userModel->department : 'Отсутствует в 1С',
+            'organization' => $userModel ? $userModel->organization : 'Отсутствует в 1С',
+            'downtime' => $this->downtime ?? ''
         ];
     }
 
@@ -34,7 +39,7 @@ class KeyLoggerIndexResource extends JsonResource
      * @param string $login
      * @return mixed
      */
-    protected function getFio(string $login)
+    protected function getModel(string $login)
     {
         $explodeLogin = explode('\\', $login);
 
@@ -43,6 +48,6 @@ class KeyLoggerIndexResource extends JsonResource
             return null;
         }
 
-        return $model->fio;
+        return $model;
     }
 }

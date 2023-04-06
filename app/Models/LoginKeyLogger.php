@@ -12,5 +12,8 @@ class LoginKeyLogger extends Model
     protected $fillable = [
         'login',
         'fio',
+        'department',
+        'organization',
+        'downtime',
     ];
 }

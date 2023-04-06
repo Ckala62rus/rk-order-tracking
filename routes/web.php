@@ -74,6 +74,9 @@ Route::middleware(['auth'])->group(function () {
 
     /* LoginKeyLogger */
     Route::get('key-logger-logins', [\App\Http\Controllers\LoginKeyLoggerController::class, 'index']);
+
+    /* Export Excel */
+    Route::get('export', [\App\Http\Controllers\KeyLoggerController::class, 'export']);
 });
 
 Route::post("api/rdp/detail", [\App\Http\Controllers\Lk\RdpController::class, 'getDetailByUser']);

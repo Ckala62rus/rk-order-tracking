@@ -51,6 +51,28 @@ class KeyLoggerService
      */
     public function getAllStatisticWithRelation(array $filter): LengthAwarePaginator
     {
+        $query = $this->getQueryForStatistic($filter);
+        return $query->paginate($filter['limit']);
+    }
+
+    /**
+     * Return statistic collection
+     * @param array $filter
+     * @return Collection
+     */
+    public function getQueryForExportExcel(array $filter): Collection
+    {
+        $query = $this->getQueryForStatistic($filter);
+        return $query->get();
+    }
+
+    /**
+     * Return Builder for query statistic
+     * @param array $filter
+     * @return Builder
+     */
+    public function getQueryForStatistic(array $filter): Builder
+    {
         $query = $this->keyLoggerRepository->query();
 
         if (isset($filter['date_start']) && !isset($filter['date_end'])){
@@ -62,8 +84,13 @@ class KeyLoggerService
         }
 
         if (isset($filter['date_start']) && isset($filter['date_end'])){
-            $query->where('first_time', '>=',  Carbon::parse($filter['date_start'])->format('d.m.Y') . ' 00:00:00');
-            $query->where('first_time', '<=',  Carbon::parse($filter['date_end'])->addDays(1)->format('d.m.Y') . ' ' . '23:59:59');
+//            $query->where('first_time', '>=',  Carbon::parse($filter['date_start'])->format('d.m.Y') . ' 00:00:00');
+//            $query->where('first_time', '<=',  Carbon::parse($filter['date_end'])->addDays(1)->format('d.m.Y') . ' ' . '23:59:59');
+
+            $query->where(function ($query) use ($filter){
+                $query->where('first_time', '>=', Carbon::parse($filter['date_start'])->format('d.m.Y') . ' 00:00:00')
+                    ->orWhere('first_time', '<=', Carbon::parse($filter['date_end'])->format('d.m.Y') . ' ' . '23:59:59');
+            });
         }
 
         if (!isset($filter['date_start']) && !isset($filter['date_end'])){
@@ -72,7 +99,6 @@ class KeyLoggerService
 
         if(isset($filter['login'])){
             $user = $this->keyLoggerService->getUserById($filter['login']);
-
             $query->where('login', 'LIKE', '%'.$user->login.'%');
         }
 
@@ -88,7 +114,7 @@ class KeyLoggerService
 
         $query->orderByDesc('id');
 
-        return $query->paginate($filter['limit'] ?? 10);
+        return $query;
     }
 
     /**

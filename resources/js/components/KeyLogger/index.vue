@@ -60,6 +60,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                <button class="btn btn-primary mr-2" @click="toExcel">Выгрузить Excel</button>
                                 <span class="label label-info label-inline mr-2">Общее время работы: {{workTime}}</span>
                             </div>
                         </div>
@@ -67,15 +68,15 @@
                 </form>
 
                 <v-server-table
-                    :url="url"
-                    :columns="columns"
-                    :options="options"
-                    @loaded="onLoaded"
-                    class="vue-tables"
-                    ref="key-logger"
-                >
-                    <div class="" slot="actions" slot-scope="props">
-                        <a href="javascript:;" @click="showDetail(props.row)">
+                        :url="url"
+                        :columns="columns"
+                        :options="options"
+                        @loaded="onLoaded"
+                        class="vue-tables"
+                        ref="key-logger"
+                    >
+                        <div class="" slot="actions" slot-scope="props">
+                            <a href="javascript:;" @click="showDetail(props.row)">
                               <span class="svg-icon svg-icon-primary svg-icon-2x"><!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2020-10-29-133027/theme/html/demo1/dist/../src/media/svg/icons/Home/Trash.svg-->
                                     <span class="svg-icon svg-icon-primary svg-icon-2x"><!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2021-05-06-223557/theme/html/demo1/dist/../src/media/svg/icons/General/Visible.svg-->
                                         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -92,9 +93,10 @@
                                         </svg><!--end::Svg Icon-->
                                     </span>
                               </span>
-                        </a>
-                    </div>
-                </v-server-table>
+                            </a>
+                        </div>
+                    </v-server-table>
+
             </div>
             <!--statistic table end-->
 
@@ -135,21 +137,27 @@ export default {
             users: {},
             columns: [
                 'id',
-                'login',
+                // 'login',
                 'fio',
+                'department',
+                'organization',
                 'first_time',
                 'last_active_time',
                 'time',
+                'downtime',
                 'actions',
             ],
             options: {
                 headings: {
                     'id': 'id',
-                    'login': 'Логин',
+                    // 'login': 'Логин',
                     'fio': 'ФИО',
+                    'department': 'Департамент',
+                    'organization': 'Организация',
                     'first_time': 'Начало сессии',
                     'last_active_time': 'Конец сессии',
                     'time': 'Время работы',
+                    'downtime': 'Время простоя',
                     'actions': 'Действия',
                 },
                 filterable: false,
@@ -258,10 +266,37 @@ export default {
 
         getLogins(){
             axios.get('/key-logger-logins' ).then((response) => {
-                console.log(response.data);
+                // console.log(response.data);
                 this.users = response.data.users;
             })
         },
+
+        toExcel(){
+            let params = this.filter;
+
+            axios({
+                method:'GET',
+                url: '/export',
+                responseType: 'blob',
+                params: {
+                    date_start: params.date_start,
+                    date_end: params.date_end,
+                    login: params.login,
+                }
+            })
+                .then((response) => {
+                    if (response.status === 200){
+                        // console.log(response.headers['accept-ranges'])
+                        const url = window.URL.createObjectURL(new Blob([response.data]));
+                        const link = document.createElement('a');
+                        link.href = url;
+                        link.setAttribute('download', 'output.xlsx'); //or any other extension
+                        document.body.appendChild(link);
+                        link.click();
+                        // console.log(response);
+                    }
+            });
+        }
     },
 
     mounted(){
