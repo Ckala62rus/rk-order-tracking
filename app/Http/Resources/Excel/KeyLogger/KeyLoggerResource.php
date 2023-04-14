@@ -30,11 +30,11 @@ class KeyLoggerResource extends JsonResource
 
             'first_time' => $this->first_time,
             'first_time_date' => Carbon::parse($this->first_time)->format('d.m.Y'),
-            'first_time_time' => Carbon::parse($this->first_time)->format('h:i:s'),
+            'first_time_time' => Carbon::parse($this->first_time)->format('H:i:s'),
 
             'last_active_time' => $this->last_active_time,
             'last_active_time_date' => Carbon::parse($this->last_active_time)->format('d.m.Y'),
-            'last_active_time_time' => Carbon::parse($this->last_active_time)->format('h:i:s'),
+            'last_active_time_time' => Carbon::parse($this->last_active_time)->format('H:i:s'),
 
             'time' => Carbon::parse($this->last_active_time)
                 ->diff(Carbon::parse($this->first_time))
