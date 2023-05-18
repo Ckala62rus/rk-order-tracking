@@ -23,6 +23,7 @@ class KeyLoggerService
 
     /**
      * @param KeyLoggerRepository $keyLoggerRepository
+     * @param LoginKeyLoggerService $keyLoggerService
      */
     public function __construct(
         KeyLoggerRepository $keyLoggerRepository,
@@ -76,25 +77,22 @@ class KeyLoggerService
         $query = $this->keyLoggerRepository->query();
 
         if (isset($filter['date_start']) && !isset($filter['date_end'])){
-            $query->where(
-                'first_time',
-                'LIKE',
-                Carbon::parse($filter['date_start'])->format('d.m.Y') . '%'
-            );
+            $query->where('first_time', '>=', Carbon::parse($filter['date_start'])->format('Y-m-d') . 'T00:00:00');
+            $query->where('first_time', '<=', Carbon::parse($filter['date_start'])->format('Y-m-d') . 'T23:59:59');
         }
 
         if (isset($filter['date_start']) && isset($filter['date_end'])){
-//            $query->where('first_time', '>=',  Carbon::parse($filter['date_start'])->format('d.m.Y') . ' 00:00:00');
-//            $query->where('first_time', '<=',  Carbon::parse($filter['date_end'])->addDays(1)->format('d.m.Y') . ' ' . '23:59:59');
-
             $query->where(function ($query) use ($filter){
-                $query->where('first_time', '>=', Carbon::parse($filter['date_start'])->format('d.m.Y') . ' 00:00:00')
-                    ->orWhere('first_time', '<=', Carbon::parse($filter['date_end'])->format('d.m.Y') . ' ' . '23:59:59');
+                    $start = Carbon::parse($filter['date_start'])->format('Y-m-d');
+                    $end = Carbon::parse($filter['date_end'])->format('Y-m-d');
+
+                $query->whereRaw(DB::raw("first_time between convert(datetime, '" . $start . "T00:00:00', 126) and convert(datetime, '" . $end . "T23:59:59', 126)"));
             });
         }
 
         if (!isset($filter['date_start']) && !isset($filter['date_end'])){
-            $query->where('first_time', 'LIKE', Carbon::now()->format('d.m.Y') . '%');
+            $query->where('first_time', '>=', Carbon::now()->format('Y-m-d') . 'T00:00:00');
+            $query->where('first_time', '<=', Carbon::now()->format('Y-m-d') . 'T23:59:59');
         }
 
         if(isset($filter['login'])){
@@ -109,11 +107,20 @@ class KeyLoggerService
                 DB::raw('max(date) as date'),
             );
             $q->groupBy('active_window');
-//            $q->orderByDesc('id');
+        }]);
+
+        $query->with(['activeWindowsSeconds' => function($q){
+            $q->select(
+                DB::raw('session_id'),
+                DB::raw('window'),
+                DB::raw('SUM(seconds) as seconds'),
+            );
+            $q->groupBy('session_id', 'window');
+            $q->orderByDesc('seconds');
         }]);
 
         $query->orderByDesc('id');
-
+//        dd($query->toSql());
         return $query;
     }
 
@@ -126,20 +133,21 @@ class KeyLoggerService
         $query = $this->keyLoggerRepository->query();
 
         if (isset($filter['date_start']) && !isset($filter['date_end'])){
-            $query->where(
-                'first_time',
-                'LIKE',
-                Carbon::parse($filter['date_start'])->format('d.m.Y') . '%'
-            );
+            $query->where('first_time', '>=', Carbon::parse($filter['date_start'])->format('Y-m-d') . 'T00:00:00');
+            $query->where('first_time', '<=', Carbon::parse($filter['date_start'])->format('Y-m-d') . 'T23:59:59');
         }
 
         if (!isset($filter['date_start']) && !isset($filter['date_end'])){
-            $query->where('first_time', 'LIKE', Carbon::now()->format('d.m.Y') . '%');
+            $query->where('first_time', '>=', Carbon::now()->format('Y-m-d') . 'T00:00:00');
+            $query->where('first_time', '<=', Carbon::now()->format('Y-m-d') . 'T23:59:59');
         }
 
         if (isset($filter['date_start']) && isset($filter['date_end'])){
-            $query->where('first_time', '>=',  Carbon::parse($filter['date_start'])->format('d.m.Y') . ' 00:00:00');
-            $query->where('first_time', '<=',  Carbon::parse($filter['date_end'])->addDays(1)->format('d.m.Y') . ' ' . '23:59:59');
+            $query->where(function ($query) use ($filter){
+                $start = Carbon::parse($filter['date_start'])->format('Y-m-d');
+                $end = Carbon::parse($filter['date_end'])->format('Y-m-d');
+                $query->whereRaw(DB::raw("first_time between convert(datetime, '" . $start . "T00:00:00', 126) and convert(datetime, '" . $end . "T23:59:59', 126)"));
+            });
         }
 
         if(isset($filter['login'])){

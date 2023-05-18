@@ -26,4 +26,13 @@ class KeyLogger extends Model
             'id'
         );
     }
+
+    public function activeWindowsSeconds()
+    {
+        return $this->hasMany(
+            KeyLoggerActiveWindow::class,
+            'session_id',
+            'id'
+        );
+    }
 }

@@ -22,7 +22,7 @@ class KeyLoggerIndexResource extends JsonResource
             'id' => $this->id,
             'login' => $this->login,
             'fio' => $userModel ? $userModel->fio : $this->login,
-            'first_time' => $this->first_time,
+            'first_time' => Carbon::parse($this->first_time)->format('y-m-d H:i:s'),
             'last_active_time' => $this->last_active_time,
             'time' => Carbon::parse($this->last_active_time)
                 ->diff(Carbon::parse($this->first_time))
@@ -30,7 +30,8 @@ class KeyLoggerIndexResource extends JsonResource
             'details' => $this->details,
             'department' => $userModel ? $userModel->department : 'Отсутствует в 1С',
             'organization' => $userModel ? $userModel->organization : 'Отсутствует в 1С',
-            'downtime' => $this->downtime ?? ''
+            'downtime' => $this->downtime ?? '',
+            'activeWindowsSeconds' => $this->activeWindowsSeconds
         ];
     }
 
