@@ -103,7 +103,9 @@
                             <span class="menu-text">Пользователи</span>
                         </a>
                     </li>
+                @endif
 
+                @if($user->is_admin == true || $user->is_show_rdp == true)
                     <li class="menu-item" aria-haspopup="true">
                         <a href="/key-logger-dashboard" class="menu-link ">
                         <span class="svg-icon menu-icon"><!--begin::Svg Icon | path:media/svg/icons/Design/Layers.svg-->
@@ -121,6 +123,9 @@
                             <span class="menu-text">Активность пользователей</span>
                         </a>
                     </li>
+                @endif
+
+                @if($user->is_admin == true)
 
                     <li class="menu-item" aria-haspopup="true">
                         <a href="/windows/server" class="menu-link ">
