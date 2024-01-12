@@ -29,7 +29,7 @@ class RdpDetailResource extends JsonResource
             'event_run' => $this->getStatus($this->Event_run),
             'date_run' => Carbon::parse($this->Date_run)->format('Y-m-d'),
             'day_time_run' => Carbon::parse($this->DayTime_run)->format('H:i:s'),
-            'event_end' => $this->getStatus($this->Event_end),
+            'event_end' =>  $this->Event_end ? $this->getStatus($this->Event_end) : 'Неизвестный статус',
             'date_end' => Carbon::parse($this->Date_end)->format('Y-m-d'),
             'day_time_end' => Carbon::parse($this->DayTime_end)->format('H:i:s'),
             'work_minute' => $this->WorkMinute, // время работы в минутах
