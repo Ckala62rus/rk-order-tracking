@@ -52,8 +52,18 @@ class KeyLoggerService
      */
     public function getAllStatisticWithRelation(array $filter): LengthAwarePaginator
     {
-        $query = $this->getQueryForStatistic($filter);
+        $query = $this->getQueryForStatistic($filter, true);
         return $query->paginate($filter['limit']);
+    }
+
+    /**
+     * Get all statistic with aggregate row.
+     * @param array $filter
+     * @return Builder
+     */
+    public function getAllStatisticWithAggregation(array $filter): Builder
+    {
+        return $this->getQueryForStatistic($filter, false);
     }
 
     /**
@@ -63,16 +73,17 @@ class KeyLoggerService
      */
     public function getQueryForExportExcel(array $filter): Collection
     {
-        $query = $this->getQueryForStatistic($filter);
+        $query = $this->getQueryForStatistic($filter, true);
         return $query->get();
     }
 
     /**
      * Return Builder for query statistic
      * @param array $filter
+     * @param bool $loadRelations
      * @return Builder
      */
-    public function getQueryForStatistic(array $filter): Builder
+    public function getQueryForStatistic(array $filter, bool $loadRelations = false): Builder
     {
         $query = $this->keyLoggerRepository->query();
 
@@ -100,27 +111,28 @@ class KeyLoggerService
             $query->where('login', 'LIKE', '%'.$user->login.'%');
         }
 
-        $query->with(['details' => function($q){
-            $q->select(
-                DB::raw('max(session_id) as session_id'),
-                DB::raw('active_window'),
-                DB::raw('max(date) as date'),
-            );
-            $q->groupBy('active_window');
-        }]);
+        if ($loadRelations) {
+            $query->with(['details' => function($q){
+                $q->select(
+                    DB::raw('max(session_id) as session_id'),
+                    DB::raw('active_window'),
+                    DB::raw('max(date) as date'),
+                );
+                $q->groupBy('active_window');
+            }]);
 
-        $query->with(['activeWindowsSeconds' => function($q){
-            $q->select(
-                DB::raw('session_id'),
-                DB::raw('window'),
-                DB::raw('SUM(seconds) as seconds'),
-            );
-            $q->groupBy('session_id', 'window');
-            $q->orderByDesc('seconds');
-        }]);
+            $query->with(['activeWindowsSeconds' => function($q){
+                $q->select(
+                    DB::raw('session_id'),
+                    DB::raw('window'),
+                    DB::raw('SUM(seconds) as seconds'),
+                );
+                $q->groupBy('session_id', 'window');
+                $q->orderByDesc('seconds');
+            }]);
+        }
 
         $query->orderByDesc('id');
-//        dd($query->toSql());
         return $query;
     }
 

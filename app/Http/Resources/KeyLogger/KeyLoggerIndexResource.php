@@ -22,7 +22,7 @@ class KeyLoggerIndexResource extends JsonResource
             'id' => $this->id,
             'login' => $this->login,
             'fio' => $userModel ? $userModel->fio : $this->login,
-            'first_time' => Carbon::parse($this->first_time)->format('y-m-d H:i:s'),
+            'first_time' => Carbon::parse($this->first_time)->format('Y-m-d H:i:s'),
             'last_active_time' => $this->last_active_time,
             'time' => Carbon::parse($this->last_active_time)
                 ->diff(Carbon::parse($this->first_time))
