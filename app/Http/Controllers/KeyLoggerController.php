@@ -68,49 +68,35 @@ class KeyLoggerController extends Controller
             ->keyLoggerService
             ->calculateDateWorkTime($workToday);
 
-//        $rows = KeyLoggerIndexResource::collection($data);
-
-        // Convert resource to array
-//        $activities = $rows->resolve();
         $activities = $data->toArray();
-//dd($activities->toArray());
+
         $groupActivities = [];
-//        dd($data);
+
         foreach ($activities as $activity) {
-//            dd($activity);
             // если нет таколо ключа(логина), то добавляем модель в $groupActive
             $dateCreateEntity = Carbon::parse($activity["first_time"])->format("Y-m-d");
             $groupActivities[$activity["login"]][$dateCreateEntity][] = $activity;
         }
 
         $groupActivitiesSorted = [];
-//dd($groupActivities);
-//        foreach ($groupActivities as $login => $groupActivity) {
+
         foreach ($groupActivities as $login => $data) {
-//            dd($login);
+
             foreach ($data as $year => $groupActivities) {
-//                dd($year);
-//                foreach ($groupActivities as $groupActivity) {
-//dd(collect($groupActivities)->sortByDesc('id'));
                     // сортируем активности конкретного пользователя по id
                     $sortedGroupActivity = collect($groupActivities)->sortByDesc('id');
 
                     if ($sortedGroupActivity) {
-//                        dd($groupActivity);
-//                        $sorted = collect($groupActivity)->sortByDesc('id');
-//                        dd($sorted);
-//                        dd($sortedGroupActivity->values()->all());
-//                        dd($login);
-//                        dd($groupActivitiesSorted[$login][$year]);
                         $groupActivitiesSorted[$login][$year] = $sortedGroupActivity->values()->all();
                     }
-//                }
+
             }
         }
-//dd($groupActivitiesSorted);
+
         unset($groupActivities);
 
         $statistic = [];
+        $userLogins = [];
 
         // извлекаем первый и последний элементы и заносим в новый массив
         foreach ($groupActivitiesSorted as $login => $date) {
@@ -123,16 +109,37 @@ class KeyLoggerController extends Controller
                         $first = $data->last();
                         $last = $data->first();
 
+                        if (!array_key_exists($first["login"], $userLogins)) {
+                            $userModel = $this->keyLoggerService->getModel($first["login"]);
+                            $userLogins[$first["login"]] = $userModel ?? null;
+                        }
+
                         $statistic[$login][] = [
+                            "id" => $first["id"],
                             "login" => $first["login"],
-//                            "fio" => $first["fio"],
+                            "fio" => $userLogins[$first["login"]] ? $userLogins[$first["login"]]->fio : "Отсутствует в 1С",
                             "first_time" => $first["first_time"],
                             "last_active_time" => $last["last_active_time"],
-//                            "department" => $last["department"],
-//                            "organization" => $last["organization"],
+                            "department" => $userLogins[$first["login"]] ? $userLogins[$first["login"]]->department : "Отсутствует в 1С",
+                            "organization" => $userLogins[$first["login"]] ? $userLogins[$first["login"]]->organization : "Отсутствует в 1С",
                         ];
                     } else {
-                        $statistic[$login][] = $data->first();
+                        $first = $data->first();
+
+                        if (!array_key_exists($first["login"], $userLogins)) {
+                            $userModel = $this->keyLoggerService->getModel($first["login"]);
+                            $userLogins[$first["login"]] = $userModel ?? null;
+                        }
+
+                        $statistic[$login][] = [
+                            "id" => $first["id"],
+                            "login" => $first["login"],
+                            "fio" => $userLogins[$first["login"]] ? $userLogins[$first["login"]]->fio : "Отсутствует в 1С",
+                            "first_time" => $first["first_time"],
+                            "last_active_time" => $last["last_active_time"],
+                            "department" => $userLogins[$first["login"]] ? $userLogins[$first["login"]]->department : "Отсутствует в 1С",
+                            "organization" => $userLogins[$first["login"]] ? $userLogins[$first["login"]]->organization : "Отсутствует в 1С",
+                        ];
                     }
                 }
             }

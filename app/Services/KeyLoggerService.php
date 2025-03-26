@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\LoginKeyLogger;
 use App\Repositories\KeyLoggerRepository;
 use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -185,5 +186,22 @@ class KeyLoggerService
             $seconds += Carbon::parse($line->last_active_time)->diffInSeconds(Carbon::parse($line->first_time));
         }
         return gmdate("H:i:s", $seconds);
+    }
+
+    /**
+     * Get fio from LoginKeyLogger table by domain
+     * @param string $login
+     * @return mixed
+     */
+    public function getModel(string $login)
+    {
+        $explodeLogin = explode('\\', $login);
+
+        $model =  LoginKeyLogger::where('login', 'LIKE', $explodeLogin[1])->first();
+        if (!$model) {
+            return null;
+        }
+
+        return $model;
     }
 }
