@@ -136,7 +136,7 @@ class KeyLoggerController extends Controller
                             "login" => $first["login"],
                             "fio" => $userLogins[$first["login"]] ? $userLogins[$first["login"]]->fio : "Отсутствует в 1С",
                             "first_time" => $first["first_time"],
-                            "last_active_time" => $last["last_active_time"],
+                            "last_active_time" => $first["last_active_time"],
                             "department" => $userLogins[$first["login"]] ? $userLogins[$first["login"]]->department : "Отсутствует в 1С",
                             "organization" => $userLogins[$first["login"]] ? $userLogins[$first["login"]]->organization : "Отсутствует в 1С",
                         ];
