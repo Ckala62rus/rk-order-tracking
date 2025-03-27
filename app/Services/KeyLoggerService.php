@@ -204,4 +204,106 @@ class KeyLoggerService
 
         return $model;
     }
+
+    /**
+     * Sort user activities by login then date.
+     * example [
+     *     "user_login" => [
+     *         "2025-01-01" => [
+     *              [activity],
+     *              [activity],
+     *              ...
+     *         ]
+     *     ]
+     * ]
+     * @param array $activities
+     * @return array
+     */
+    public function aggregationStatistic(array $activities): array
+    {
+        $groupActivities = [];
+
+        foreach ($activities as $activity) {
+            // если нет таколо ключа(логина), то добавляем модель в $groupActive
+            $dateCreateEntity = \Illuminate\Support\Carbon::parse($activity["first_time"])->format("Y-m-d");
+            $groupActivities[$activity["login"]][$dateCreateEntity][] = $activity;
+        }
+
+        return $groupActivities;
+    }
+
+    /**
+     * Sort aggregation activities by id for each activity for each user.
+     * @param array $groupActivities
+     * @return array
+     */
+    public function sortAggregationStatisticById(array $groupActivities): array
+    {
+        $groupActivitiesSorted = [];
+
+        foreach ($groupActivities as $login => $data) {
+            foreach ($data as $year => $groupActivities) {
+                // сортируем активности конкретного пользователя по id
+                $sortedGroupActivity = collect($groupActivities)->sortByDesc('id');
+
+                if ($sortedGroupActivity) {
+                    $groupActivitiesSorted[$login][$year] = $sortedGroupActivity->values()->all();
+                }
+
+            }
+        }
+
+        return $groupActivitiesSorted;
+    }
+
+    /**
+     * Retrieve first and last activity for get first and last time.
+     * @param array $groupActivitiesSorted
+     * @return array
+     */
+    public function retrieveFirstAndLastActivityElements(array $groupActivitiesSorted): array
+    {
+        $statistic = [];
+        $userLogins = [];
+
+        // извлекаем первый и последний элементы и заносим в новый массив
+        foreach ($groupActivitiesSorted as $login => $date) {
+            foreach ($date as $groupActivity) {
+                $data = collect($groupActivity);
+
+                if ($data->isNotEmpty()) {
+                    $statistic[$login][] = $this
+                        ->prepareAggregationStatistic($data, $userLogins);
+                }
+            }
+        }
+        return $statistic;
+    }
+
+    /**
+     * Prepare statistic array
+     * @param \Illuminate\Support\Collection $data
+     * @param array $userLogins
+     * @return array
+     */
+    protected function prepareAggregationStatistic(\Illuminate\Support\Collection $data, array $userLogins): array
+    {
+        $first = $data->last();
+        $last = $data->first();
+
+        if (!array_key_exists($first["login"], $userLogins)) {
+            $userModel = $this->getModel($first["login"]);
+            $userLogins[$first["login"]] = $userModel ?? null;
+        }
+
+        return [
+            "id" => $first["id"],
+            "login" => $first["login"],
+            "fio" => $userLogins[$first["login"]] ? $userLogins[$first["login"]]->fio : "Отсутствует в 1С",
+            "first_time" => $first["first_time"],
+            "last_active_time" => $last["last_active_time"],
+            "department" => $userLogins[$first["login"]] ? $userLogins[$first["login"]]->department : "Отсутствует в 1С",
+            "organization" => $userLogins[$first["login"]] ? $userLogins[$first["login"]]->organization : "Отсутствует в 1С",
+        ];
+    }
 }

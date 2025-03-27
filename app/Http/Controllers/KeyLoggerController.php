@@ -70,81 +70,21 @@ class KeyLoggerController extends Controller
 
         $activities = $data->toArray();
 
-        $groupActivities = [];
+        // сортируем активности пользователей по логину и дате
+        $groupActivities = $this
+            ->keyLoggerService
+            ->aggregationStatistic($activities);
 
-        foreach ($activities as $activity) {
-            // если нет таколо ключа(логина), то добавляем модель в $groupActive
-            $dateCreateEntity = Carbon::parse($activity["first_time"])->format("Y-m-d");
-            $groupActivities[$activity["login"]][$dateCreateEntity][] = $activity;
-        }
-
-        $groupActivitiesSorted = [];
-
-        foreach ($groupActivities as $login => $data) {
-
-            foreach ($data as $year => $groupActivities) {
-                    // сортируем активности конкретного пользователя по id
-                    $sortedGroupActivity = collect($groupActivities)->sortByDesc('id');
-
-                    if ($sortedGroupActivity) {
-                        $groupActivitiesSorted[$login][$year] = $sortedGroupActivity->values()->all();
-                    }
-
-            }
-        }
-
+        $groupActivitiesSorted = $this
+            ->keyLoggerService
+            ->sortAggregationStatisticById($groupActivities);
+        dd($groupActivitiesSorted);
         unset($groupActivities);
 
-        $statistic = [];
-        $userLogins = [];
-
-        // извлекаем первый и последний элементы и заносим в новый массив
-        foreach ($groupActivitiesSorted as $login => $date) {
-            foreach ($date as $groupActivity) {
-                $data = collect($groupActivity);
-
-                if ($data->isNotEmpty()) {
-                    if ($data->count() > 1) {
-
-                        $first = $data->last();
-                        $last = $data->first();
-
-                        if (!array_key_exists($first["login"], $userLogins)) {
-                            $userModel = $this->keyLoggerService->getModel($first["login"]);
-                            $userLogins[$first["login"]] = $userModel ?? null;
-                        }
-
-                        $statistic[$login][] = [
-                            "id" => $first["id"],
-                            "login" => $first["login"],
-                            "fio" => $userLogins[$first["login"]] ? $userLogins[$first["login"]]->fio : "Отсутствует в 1С",
-                            "first_time" => $first["first_time"],
-                            "last_active_time" => $last["last_active_time"],
-                            "department" => $userLogins[$first["login"]] ? $userLogins[$first["login"]]->department : "Отсутствует в 1С",
-                            "organization" => $userLogins[$first["login"]] ? $userLogins[$first["login"]]->organization : "Отсутствует в 1С",
-                        ];
-                    } else {
-                        $first = $data->first();
-
-                        if (!array_key_exists($first["login"], $userLogins)) {
-                            $userModel = $this->keyLoggerService->getModel($first["login"]);
-                            $userLogins[$first["login"]] = $userModel ?? null;
-                        }
-
-                        $statistic[$login][] = [
-                            "id" => $first["id"],
-                            "login" => $first["login"],
-                            "fio" => $userLogins[$first["login"]] ? $userLogins[$first["login"]]->fio : "Отсутствует в 1С",
-                            "first_time" => $first["first_time"],
-                            "last_active_time" => $first["last_active_time"],
-                            "department" => $userLogins[$first["login"]] ? $userLogins[$first["login"]]->department : "Отсутствует в 1С",
-                            "organization" => $userLogins[$first["login"]] ? $userLogins[$first["login"]]->organization : "Отсутствует в 1С",
-                        ];
-                    }
-                }
-            }
-        }
-
+        $statistic = $this
+            ->keyLoggerService
+            ->retrieveFirstAndLastActivityElements($groupActivitiesSorted);
+//        dd($statistic);
         unset($groupActivitiesSorted);
 
         return response()->json([
