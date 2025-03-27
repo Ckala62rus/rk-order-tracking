@@ -48,6 +48,7 @@
                 </div>
             </div>
         </form>
+
         <v-client-table
             :data="tableData"
             :columns="columns"
@@ -142,7 +143,7 @@ export default {
 
     computed: {
         ...mapGetters({
-            users: gettersTypes.users
+            users: gettersTypes.users,
         }),
     },
 
@@ -264,7 +265,7 @@ export default {
                     })
                 })
 
-                console.log(result)
+                // console.log(result)
                 this.tableData = result
             })
         },

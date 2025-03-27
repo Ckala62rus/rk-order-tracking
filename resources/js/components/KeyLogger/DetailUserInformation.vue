@@ -49,16 +49,28 @@
                 </div>
             </div>
         </form>
-        <v-server-table
-            :url="url"
-            :columns="columns"
-            :options="options"
-            @loaded="onLoaded"
-            class="vue-tables"
-            ref="key-logger"
+
+        <div v-show="detailFormLoad">
+            <pulse-loader :loading="detailFormLoad" :color="'#5dc596'" :size="'15px'"></pulse-loader>
+        </div>
+
+        <div
+            v-loading="detailFormLoad"
+            element-loading-text="Loading...!!"
+            element-loading-spinner="el-icon-loading"
+            element-loading-background="rgba(0, 0, 0, 0.5)"
         >
-            <div class="" slot="actions" slot-scope="props">
-                <a href="javascript:;" @click="showDetail(props.row)">
+            <v-server-table
+                :url="url"
+                :columns="columns"
+                :options="options"
+                @loaded="onLoaded"
+                @loading="onLoading"
+                class="vue-tables"
+                ref="key-logger"
+            >
+                <div class="" slot="actions" slot-scope="props">
+                    <a href="javascript:;" @click="showDetail(props.row)">
                               <span class="svg-icon svg-icon-primary svg-icon-2x"><!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2020-10-29-133027/theme/html/demo1/dist/../src/media/svg/icons/Home/Trash.svg-->
                                     <span class="svg-icon svg-icon-primary svg-icon-2x"><!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2021-05-06-223557/theme/html/demo1/dist/../src/media/svg/icons/General/Visible.svg-->
                                         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -75,9 +87,9 @@
                                         </svg><!--end::Svg Icon-->
                                     </span>
                               </span>
-                </a>
+                    </a>
 
-                <a href="javascript:;" @click="showDetailWindowsSeconds(props.row)">
+                    <a href="javascript:;" @click="showDetailWindowsSeconds(props.row)">
                               <span class="svg-icon svg-icon-primary svg-icon-2x"><!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2021-05-14-112058/theme/html/demo2/dist/../src/media/svg/icons/Design/Substract.svg-->
                                   <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                                     <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -87,10 +99,12 @@
                                     </g>
                                   </svg><!--end::Svg Icon-->
                               </span>
-                </a>
+                    </a>
 
-            </div>
-        </v-server-table>
+                </div>
+            </v-server-table>
+        </div>
+
         <!--statistic table end-->
 
         <!--detail modal begin-->
@@ -144,14 +158,20 @@
 
 <script>
 
+import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
 import {mapGetters} from "vuex"
-import {gettersTypes} from "../../store/modules/logger";
+import {actionTypes, gettersTypes} from "../../store/modules/logger";
 
 export default {
     name: "RkDetailUserInformation",
 
+    components: {
+        PulseLoader
+    },
+
     data() {
         return {
+            loading: true,
             url: '/key-logger?',
             query: '',
             urlBase: '/key-logger?',
@@ -169,6 +189,9 @@ export default {
                 'actions',
             ],
             options: {
+                pagination:{
+                    virtual: true
+                },
                 headings: {
                     'id': 'id',
                     // 'login': 'Логин',
@@ -246,11 +269,24 @@ export default {
 
     computed: {
         ...mapGetters({
-            users: gettersTypes.users
+            users: gettersTypes.users,
+            detailFormLoad: gettersTypes.detailFormLoad,
         }),
     },
 
     methods: {
+        openFullScreen2() {
+            const loading = this.$loading({
+                lock: true,
+                text: 'Loading',
+                spinner: 'el-icon-loading',
+                background: 'rgba(0, 0, 0, 0.7)'
+            });
+            setTimeout(() => {
+                loading.close();
+            }, 2000);
+        },
+
         handleClick(tab, event) {
             // console.log(tab, event);
             // console.log(
@@ -324,6 +360,7 @@ export default {
         },
 
         onLoaded(e){
+            this.$store.dispatch(actionTypes.detailFormLoad, false)
             this.workTime = e.data.workTime;
             this.$notify({
                 group: 'foo',
@@ -331,6 +368,10 @@ export default {
                 title: 'Данные обновлены',
                 text: 'Данные обновлены'
             });
+        },
+
+        onLoading(e) {
+            this.$store.dispatch(actionTypes.detailFormLoad, true)
         },
 
         toExcel(){
