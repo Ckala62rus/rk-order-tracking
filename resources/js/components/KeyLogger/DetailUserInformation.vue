@@ -59,7 +59,6 @@
             element-loading-text="Loading..."
             element-loading-spinner="el-icon-loading"
             element-loading-background="rgba(0, 0, 0, 0.5)"
-            element-loading-custom-class="test"
         >
             <v-server-table
                 :url="url"

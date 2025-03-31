@@ -49,13 +49,23 @@
             </div>
         </form>
 
-        <v-client-table
-            :data="tableData"
-            :columns="columns"
-            :options="options"
+        <div v-show="aggregateFormLoad">
+            <pulse-loader :loading="aggregateFormLoad" :color="'#5dc596'" :size="'15px'"></pulse-loader>
+        </div>
+
+        <div
+            v-loading="aggregateFormLoad"
+            element-loading-text="Loading..."
+            element-loading-spinner="el-icon-loading"
+            element-loading-background="rgba(0, 0, 0, 0.5)"
         >
-            <div class="actions_column" slot="actions" slot-scope="props">
-                <a href="javascript:;" @click="showDetail(props.row)">
+            <v-client-table
+                :data="tableData"
+                :columns="columns"
+                :options="options"
+            >
+                <div class="actions_column" slot="actions" slot-scope="props">
+                    <a href="javascript:;" @click="showDetail(props.row)">
                       <span class="svg-icon svg-icon-primary svg-icon-2x"><!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2020-10-29-133027/theme/html/demo1/dist/../src/media/svg/icons/Home/Trash.svg-->
                             <span class="svg-icon svg-icon-primary svg-icon-2x"><!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2021-05-06-223557/theme/html/demo1/dist/../src/media/svg/icons/General/Visible.svg-->
                                 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -72,9 +82,8 @@
                                 </svg><!--end::Svg Icon-->
                             </span>
                       </span>
-                </a>
-
-                <a href="javascript:;" @click="showDetailWindowsSeconds(props.row)">
+                    </a>
+                    <a href="javascript:;" @click="showDetailWindowsSeconds(props.row)">
                       <span class="svg-icon svg-icon-primary svg-icon-2x"><!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2021-05-14-112058/theme/html/demo2/dist/../src/media/svg/icons/Design/Substract.svg-->
                           <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                             <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -84,20 +93,25 @@
                             </g>
                           </svg><!--end::Svg Icon-->
                       </span>
-                </a>
-
-            </div>
-        </v-client-table>
+                    </a>
+                </div>
+            </v-client-table>
+        </div>
     </div>
 </template>
 
 <script>
 
+import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
 import {mapGetters} from "vuex"
-import {gettersTypes} from "../../store/modules/logger";
+import {actionTypes, gettersTypes} from "../../store/modules/logger";
 
 export default {
-    name: "RkAgregateUserInformation",
+    name: "RkAggregateUserInformation",
+
+    components: {
+        PulseLoader
+    },
 
     data() {
         return {
@@ -144,6 +158,7 @@ export default {
     computed: {
         ...mapGetters({
             users: gettersTypes.users,
+            aggregateFormLoad: gettersTypes.aggregateFormLoad,
         }),
     },
 
@@ -237,7 +252,9 @@ export default {
         // },
 
         async loadData() {
-            await axios.get(this.url).then((response) => {
+            this.$store.dispatch(actionTypes.aggregateFormLoad, true)
+
+            await axios.get(this.url).then(async (response) => {
                 const data = Object.entries(response.data.data)
                 console.log(data)
                 this.workTime =  response.data.workTime
@@ -280,6 +297,9 @@ export default {
 
                 // // console.log(result)
                 this.tableData = result
+                this.$store.dispatch(actionTypes.aggregateFormLoad, false)
+            }).catch(async () => {
+              this.$store.dispatch(actionTypes.aggregateFormLoad, false)
             })
         },
 
