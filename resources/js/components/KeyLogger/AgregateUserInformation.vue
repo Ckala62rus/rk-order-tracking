@@ -43,7 +43,7 @@
                             </div>
                         </div>
                         <button class="btn btn-primary mr-2" @click="toExcel">Выгрузить Excel</button>
-                        <span class="label label-info label-inline mr-2">Общее время работы: {{workTime}}</span>
+<!--                        <span class="label label-info label-inline mr-2">Общее время работы: {{workTime}}</span>-->
                     </div>
                 </div>
             </div>
@@ -64,26 +64,11 @@
                 :columns="columns"
                 :options="options"
             >
+                <div class="work" slot="work_time" slot-scope="props">
+                    <p>{{getWorktime(props.row)}}</p>
+                </div>
                 <div class="actions_column" slot="actions" slot-scope="props">
-                    <a href="javascript:;" @click="showDetail(props.row)">
-                      <span class="svg-icon svg-icon-primary svg-icon-2x"><!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2020-10-29-133027/theme/html/demo1/dist/../src/media/svg/icons/Home/Trash.svg-->
-                            <span class="svg-icon svg-icon-primary svg-icon-2x"><!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2021-05-06-223557/theme/html/demo1/dist/../src/media/svg/icons/General/Visible.svg-->
-                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-                                     width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
-                                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                        <rect x="0" y="0" width="24" height="24"/>
-                                        <path
-                                            d="M3,12 C3,12 5.45454545,6 12,6 C16.9090909,6 21,12 21,12 C21,12 16.9090909,18 12,18 C5.45454545,18 3,12 3,12 Z"
-                                            fill="#000000" fill-rule="nonzero" opacity="0.3"/>
-                                        <path
-                                            d="M12,15 C10.3431458,15 9,13.6568542 9,12 C9,10.3431458 10.3431458,9 12,9 C13.6568542,9 15,10.3431458 15,12 C15,13.6568542 13.6568542,15 12,15 Z"
-                                            fill="#000000" opacity="0.3"/>
-                                    </g>
-                                </svg><!--end::Svg Icon-->
-                            </span>
-                      </span>
-                    </a>
-                    <a href="javascript:;" @click="showDetailWindowsSeconds(props.row)">
+                    <a href="javascript:;" @click="showDetailAggregateInformation(props.row)">
                       <span class="svg-icon svg-icon-primary svg-icon-2x"><!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2021-05-14-112058/theme/html/demo2/dist/../src/media/svg/icons/Design/Substract.svg-->
                           <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                             <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -97,6 +82,34 @@
                 </div>
             </v-client-table>
         </div>
+
+        <!--detail active windows modal begin-->
+        <modal
+            name="detail-aggregation_information"
+            :height="'auto'"
+            :width="'70%'"
+            :scrollable=true
+        >
+            <div class="container">
+                <div class="card card-custom rdp_statistic_mg" style="margin-top: 10px">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            Hello world!
+<!--                            {{userName}}-->
+                        </h3>
+                    </div>
+<!--                    <div class="card-body">-->
+<!--                        <v-client-table-->
+<!--                            :data="detailDataWindows"-->
+<!--                            :columns="columnsDetailWindows"-->
+<!--                            :options="optionsDetailWindows"-->
+<!--                        />-->
+<!--                    </div>-->
+                </div>
+            </div>
+        </modal>
+        <!--detail modal end-->
+
     </div>
 </template>
 
@@ -117,12 +130,13 @@ export default {
         return {
             columns: [
                 // 'id',
-                'login',
+                // 'login',
                 'fio',
                 'department',
                 'organization',
-                'first_time',
-                'last_time',
+                'work_time',
+                // 'first_time',
+                // 'last_time',
                 'actions',
             ],
             tableData: [],
@@ -163,14 +177,12 @@ export default {
     },
 
     methods: {
-        handleClick(tab, event) {
-            // console.log(tab, event);
-            // console.log(
-            //     `%c tab %c tap on tab v${tab} %c`,
-            //     'background:#35495e ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff',
-            //     'background:#41b883 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff',
-            //     'background:transparent'
-            // )
+        getWorktime(row) {
+            let login = `RK\\${row.login}`
+            if ( this.workTime[login] ) {
+                return this.workTime[login]
+            }
+            return "00:00:00"
         },
 
         eventClearTool(){
@@ -210,74 +222,25 @@ export default {
         },
         getStatistic() {
             axios.get('/key-logger' ).then((response) => {
-                // this.users = response.data.data;
                 console.log(response.data.data);
             })
         },
-        showDetail(row){
-            this.detailData = []; // обнуляем детализацию
+        showDetailAggregateInformation(row){
+            console.log(row)
+            let date_start = this.filter.date_start
+            let date_end = this.filter.date_end
 
-            this.userName = '';
-            this.userName = row.fio;
-
-            this.detailData = row.details;
-            this.$modal.show('detail');
+            // this.$modal.show('detail-aggregation_information');
         },
-
-        showDetailWindowsSeconds(row){
-            this.detailDataWindows = []; // обнуляем детализацию
-
-            this.userName = '';
-            this.userName = row.fio;
-
-            this.detailDataWindows = row.activeWindowsSeconds;
-            this.$modal.show('detail-windows-seconds');
-        },
-
-        onLoaded(e){
-            this.workTime = e.data.workTime;
-            this.$notify({
-                group: 'foo',
-                type: 'success',
-                title: 'Данные обновлены',
-                text: 'Данные обновлены'
-            });
-        },
-
-        // getLogins(){
-        //     axios.get('/key-logger-logins' ).then((response) => {
-        //         // console.log(response.data);
-        //         this.users = response.data.users;
-        //     })
-        // },
 
         async loadData() {
             this.$store.dispatch(actionTypes.aggregateFormLoad, true)
 
             await axios.get(this.url).then(async (response) => {
                 const data = Object.entries(response.data.data)
-                console.log(data)
+                // console.log(response.data.workTime)
                 this.workTime =  response.data.workTime
                 let result = [];
-                //
-                // data.forEach(elem => {
-                //     let login = elem[0]
-                //     let userData = elem[1]
-                //
-                //     userData.forEach(dataInfo => {
-                //         let userPerformData = {}
-                //
-                //         userPerformData.id = dataInfo.id
-                //         userPerformData.login = dataInfo.login
-                //         userPerformData.department = dataInfo.department
-                //         userPerformData.fio = dataInfo.fio
-                //         userPerformData.organization = dataInfo.organization
-                //         userPerformData.first_time = dataInfo.first_time
-                //         userPerformData.last_time = dataInfo.last_active_time
-                //
-                //         result.push(userPerformData)
-                //     })
-                // })
 
                 data.forEach(elem => {
                     let login = elem[0]
@@ -297,9 +260,9 @@ export default {
 
                 // // console.log(result)
                 this.tableData = result
-                this.$store.dispatch(actionTypes.aggregateFormLoad, false)
-            }).catch(async () => {
-              this.$store.dispatch(actionTypes.aggregateFormLoad, false)
+                await this.$store.dispatch(actionTypes.aggregateFormLoad, false)
+            }).finally(async () => {
+                await this.$store.dispatch(actionTypes.aggregateFormLoad, false)
             })
         },
 
@@ -325,16 +288,13 @@ export default {
                         link.setAttribute('download', 'output.xlsx'); //or any other extension
                         document.body.appendChild(link);
                         link.click();
-                        // console.log(response);
                     }
                 });
         }
     },
 
     async mounted(){
-        // this.getLogins();
         await this.loadData();
-        // this.loadData();
     },
 }
 </script>

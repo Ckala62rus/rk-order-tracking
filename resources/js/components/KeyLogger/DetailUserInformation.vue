@@ -396,16 +396,10 @@ export default {
                         link.setAttribute('download', 'output.xlsx'); //or any other extension
                         document.body.appendChild(link);
                         link.click();
-                        // console.log(response);
                     }
                 });
         }
     },
-
-    mounted() {
-        // this.$loading({
-        // })
-    }
 }
 </script>
 

@@ -252,6 +252,37 @@ class KeyLoggerService
             $seconds += Carbon::parse($line->last_active_time)->diffInSeconds(Carbon::parse($line->first_time));
         }
         return gmdate("H:i:s", $seconds);
+
+    }
+
+    /**
+     * calculate work time for aggregate statistic
+     * @param array $workToday
+     * @return false|string
+     */
+    public function calculateWorkTime(array $workToday){
+        $seconds = 0;
+        foreach ($workToday as $line) {
+            $seconds += Carbon::parse($line->last_active_time)->diffInSeconds(Carbon::parse($line->first_time));
+        }
+        return gmdate("H:i:s", $seconds);
+    }
+
+    /**
+     * Sort worktime for each user
+     * @param array $data
+     * @return array
+     */
+    public function calculateWorkTimeEachUser(array $data): array
+    {
+        $out = [];
+
+        foreach ($data as $login => $activities) {
+            $out[$login] = $this->calculateWorkTime($activities);
+        }
+
+//        dd($out);
+        return $out;
     }
 
     /**
@@ -350,6 +381,21 @@ class KeyLoggerService
 //            }
         }
         return $statistic;
+    }
+
+    /**
+     * Group Activities for each user
+     * @param Collection $data
+     * @return array
+     */
+    public function sortActivitiesByLogin(Collection $data): array
+    {
+        $out = [];
+        foreach ($data as $activity) {
+            $out[$activity->login][] = $activity;
+        }
+
+        return $out;
     }
 
     /**
