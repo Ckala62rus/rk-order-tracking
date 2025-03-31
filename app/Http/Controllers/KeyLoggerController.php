@@ -58,7 +58,7 @@ class KeyLoggerController extends Controller
         $data = $this
             ->keyLoggerService
             ->getAllStatisticWithAggregation($filter)->get();
-
+//dd($data->toArray());
         // расчёт общего времени работы
         $workToday = $this
             ->keyLoggerService
@@ -69,7 +69,7 @@ class KeyLoggerController extends Controller
             ->calculateDateWorkTime($workToday);
 
         $activities = $data->toArray();
-
+//dd($activities);
         // сортируем активности пользователей по логину и дате
         $groupActivities = $this
             ->keyLoggerService
@@ -78,7 +78,7 @@ class KeyLoggerController extends Controller
         $groupActivitiesSorted = $this
             ->keyLoggerService
             ->sortAggregationStatisticById($groupActivities);
-        dd($groupActivitiesSorted);
+//        dd($groupActivitiesSorted);
         unset($groupActivities);
 
         $statistic = $this

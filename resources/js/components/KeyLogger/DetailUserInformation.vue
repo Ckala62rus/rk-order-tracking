@@ -56,9 +56,10 @@
 
         <div
             v-loading="detailFormLoad"
-            element-loading-text="Loading...!!"
+            element-loading-text="Loading..."
             element-loading-spinner="el-icon-loading"
             element-loading-background="rgba(0, 0, 0, 0.5)"
+            element-loading-custom-class="test"
         >
             <v-server-table
                 :url="url"
@@ -401,6 +402,11 @@ export default {
                 });
         }
     },
+
+    mounted() {
+        // this.$loading({
+        // })
+    }
 }
 </script>
 
@@ -409,6 +415,10 @@ export default {
 .rdp_statistic_mg {
     margin-top: -20px;
     margin-bottom: 10px;
+}
+
+.test{
+    font-size: 20px;
 }
 
 </style>

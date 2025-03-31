@@ -185,16 +185,13 @@ export default {
             this.url = this.query;
             await this.loadData();
         },
-        resetFilter() {
+        async resetFilter() {
             this.filter.date_start =
                 this.filter.date_end =
                     this.filter.login = null;
-
-            if (this.url === this.urlBase) {
-                this.$refs['key-logger'].refresh();
-            } else {
-                this.url = this.urlBase;
-            }
+            this.query = this.urlBase;
+            this.url = this.query;
+            await this.loadData();
         },
         getStatistic() {
             axios.get('/key-logger' ).then((response) => {
@@ -242,30 +239,46 @@ export default {
         async loadData() {
             await axios.get(this.url).then((response) => {
                 const data = Object.entries(response.data.data)
-
+                console.log(data)
                 this.workTime =  response.data.workTime
                 let result = [];
+                //
+                // data.forEach(elem => {
+                //     let login = elem[0]
+                //     let userData = elem[1]
+                //
+                //     userData.forEach(dataInfo => {
+                //         let userPerformData = {}
+                //
+                //         userPerformData.id = dataInfo.id
+                //         userPerformData.login = dataInfo.login
+                //         userPerformData.department = dataInfo.department
+                //         userPerformData.fio = dataInfo.fio
+                //         userPerformData.organization = dataInfo.organization
+                //         userPerformData.first_time = dataInfo.first_time
+                //         userPerformData.last_time = dataInfo.last_active_time
+                //
+                //         result.push(userPerformData)
+                //     })
+                // })
 
                 data.forEach(elem => {
                     let login = elem[0]
                     let userData = elem[1]
+                    let userPerformData = {}
 
-                    userData.forEach(dataInfo => {
-                        let userPerformData = {}
+                    userPerformData.id = userData.id
+                    userPerformData.login = userData.login
+                    userPerformData.department = userData.department
+                    userPerformData.fio = userData.fio
+                    userPerformData.organization = userData.organization
+                    userPerformData.first_time = userData.first_time
+                    userPerformData.last_time = userData.last_active_time
 
-                        userPerformData.id = dataInfo.id
-                        userPerformData.login = dataInfo.login
-                        userPerformData.department = dataInfo.department
-                        userPerformData.fio = dataInfo.fio
-                        userPerformData.organization = dataInfo.organization
-                        userPerformData.first_time = dataInfo.first_time
-                        userPerformData.last_time = dataInfo.last_active_time
-
-                        result.push(userPerformData)
-                    })
+                    result.push(userPerformData)
                 })
 
-                // console.log(result)
+                // // console.log(result)
                 this.tableData = result
             })
         },

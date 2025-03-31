@@ -64,7 +64,7 @@ class KeyLoggerService
      */
     public function getAllStatisticWithAggregation(array $filter): Builder
     {
-        return $this->getQueryForStatistic($filter, false);
+        return $this->getQueryForAggregateStatistic($filter, false);
     }
 
     /**
@@ -133,6 +133,72 @@ class KeyLoggerService
             }]);
         }
 
+        $query->orderByDesc('id');
+        return $query;
+    }
+
+    /**
+     * Return Builder for query statistic
+     * @param array $filter
+     * @param bool $loadRelations
+     * @return Builder
+     */
+    public function getQueryForAggregateStatistic(array $filter, bool $loadRelations = false): Builder
+    {
+        $query = $this->keyLoggerRepository->query();
+
+//        $query->select([
+//            'id',
+//            'login',
+//            'downtime',
+//        ]);
+
+        if (isset($filter['date_start']) && !isset($filter['date_end'])){
+            $query->where('first_time', '>=', Carbon::parse($filter['date_start'])->format('Y-m-d') . 'T00:00:00');
+            $query->where('first_time', '<=', Carbon::parse($filter['date_start'])->format('Y-m-d') . 'T23:59:59');
+        }
+
+        if (isset($filter['date_start']) && isset($filter['date_end'])){
+            $query->where(function ($query) use ($filter){
+                $start = Carbon::parse($filter['date_start'])->format('Y-m-d');
+                $end = Carbon::parse($filter['date_end'])->format('Y-m-d');
+
+                $query->whereRaw(DB::raw("first_time between convert(datetime, '" . $start . "T00:00:00', 126) and convert(datetime, '" . $end . "T23:59:59', 126)"));
+            });
+        }
+
+        if (!isset($filter['date_start']) && !isset($filter['date_end'])){
+            $query->where('first_time', '>=', Carbon::now()->format('Y-m-d') . 'T00:00:00');
+            $query->where('first_time', '<=', Carbon::now()->format('Y-m-d') . 'T23:59:59');
+        }
+
+        if(isset($filter['login'])){
+            $user = $this->keyLoggerService->getUserById($filter['login']);
+            $query->where('login', 'LIKE', '%'.$user->login.'%');
+        }
+
+        if ($loadRelations) {
+            $query->with(['details' => function($q){
+                $q->select(
+                    DB::raw('max(session_id) as session_id'),
+                    DB::raw('active_window'),
+                    DB::raw('max(date) as date'),
+                );
+                $q->groupBy('active_window');
+            }]);
+
+            $query->with(['activeWindowsSeconds' => function($q){
+                $q->select(
+                    DB::raw('session_id'),
+                    DB::raw('window'),
+                    DB::raw('SUM(seconds) as seconds'),
+                );
+                $q->groupBy('session_id', 'window');
+                $q->orderByDesc('seconds');
+            }]);
+        }
+
+//        $query->groupBy('login');
         $query->orderByDesc('id');
         return $query;
     }
@@ -225,7 +291,7 @@ class KeyLoggerService
 
         foreach ($activities as $activity) {
             // если нет таколо ключа(логина), то добавляем модель в $groupActive
-            $dateCreateEntity = \Illuminate\Support\Carbon::parse($activity["first_time"])->format("Y-m-d");
+            $dateCreateEntity = Carbon::parse($activity["first_time"])->format("Y-m-d");
             $groupActivities[$activity["login"]][$dateCreateEntity][] = $activity;
         }
 
@@ -268,14 +334,20 @@ class KeyLoggerService
 
         // извлекаем первый и последний элементы и заносим в новый массив
         foreach ($groupActivitiesSorted as $login => $date) {
-            foreach ($date as $groupActivity) {
-                $data = collect($groupActivity);
 
-                if ($data->isNotEmpty()) {
-                    $statistic[$login][] = $this
-                        ->prepareAggregationStatistic($data, $userLogins);
-                }
+            $userModel = $this->getModel($login);
+            if ($userModel) {
+                $statistic[$login] = $userModel;
             }
+
+//            foreach ($date as $groupActivity) {
+//                $data = collect($groupActivity);
+//
+//                if ($data->isNotEmpty()) {
+//                    $statistic[$login][] = $this
+//                        ->prepareAggregationStatistic($data, $userLogins);
+//                }
+//            }
         }
         return $statistic;
     }
@@ -284,26 +356,29 @@ class KeyLoggerService
      * Prepare statistic array
      * @param \Illuminate\Support\Collection $data
      * @param array $userLogins
-     * @return array
+     * @return \Illuminate\Support\Collection
      */
-    protected function prepareAggregationStatistic(\Illuminate\Support\Collection $data, array $userLogins): array
+//    protected function prepareAggregationStatistic(\Illuminate\Support\Collection $data, array $userLogins): array
+    protected function prepareAggregationStatistic(\Illuminate\Support\Collection $data, array $userLogins): \Illuminate\Support\Collection
     {
-        $first = $data->last();
-        $last = $data->first();
+        return $data->pluck('id');
 
-        if (!array_key_exists($first["login"], $userLogins)) {
-            $userModel = $this->getModel($first["login"]);
-            $userLogins[$first["login"]] = $userModel ?? null;
-        }
+//        $first = $data->last();
+//        $last = $data->first();
 
-        return [
-            "id" => $first["id"],
-            "login" => $first["login"],
-            "fio" => $userLogins[$first["login"]] ? $userLogins[$first["login"]]->fio : "Отсутствует в 1С",
-            "first_time" => $first["first_time"],
-            "last_active_time" => $last["last_active_time"],
-            "department" => $userLogins[$first["login"]] ? $userLogins[$first["login"]]->department : "Отсутствует в 1С",
-            "organization" => $userLogins[$first["login"]] ? $userLogins[$first["login"]]->organization : "Отсутствует в 1С",
-        ];
+//        if (!array_key_exists($first["login"], $userLogins)) {
+//            $userModel = $this->getModel($first["login"]);
+//            $userLogins[$first["login"]] = $userModel ?? null;
+//        }
+
+//        return [
+//            "id" => $first["id"],
+//            "login" => $first["login"],
+//            "fio" => $userLogins[$first["login"]] ? $userLogins[$first["login"]]->fio : "Отсутствует в 1С",
+//            "first_time" => $first["first_time"],
+//            "last_active_time" => $last["last_active_time"],
+//            "department" => $userLogins[$first["login"]] ? $userLogins[$first["login"]]->department : "Отсутствует в 1С",
+//            "organization" => $userLogins[$first["login"]] ? $userLogins[$first["login"]]->organization : "Отсутствует в 1С",
+//        ];
     }
 }
