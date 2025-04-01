@@ -42,7 +42,7 @@ export default {
 
     data() {
         return {
-            editableTabsValue: '1',
+            editableTabsValue: '2',
             editableTabs: [
                 { title: 'Общая форма', name: '1', content: 1 },
                 { title: 'Сжатая форма', name: '2', content: 2 },

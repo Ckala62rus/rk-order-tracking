@@ -93,18 +93,21 @@
             <div class="container">
                 <div class="card card-custom rdp_statistic_mg" style="margin-top: 10px">
                     <div class="card-header">
-                        <h3 class="card-title">
-                            Hello world!
-<!--                            {{userName}}-->
-                        </h3>
+                        <h3 class="card-title" v-if="userInfo">{{userInfo.fio}}</h3>
                     </div>
-<!--                    <div class="card-body">-->
-<!--                        <v-client-table-->
-<!--                            :data="detailDataWindows"-->
-<!--                            :columns="columnsDetailWindows"-->
-<!--                            :options="optionsDetailWindows"-->
-<!--                        />-->
-<!--                    </div>-->
+                    <div class="card-body">
+                        <pulse-loader
+                            :loading="aggregateFormModalLoad"
+                            :color="'#5dc596'"
+                            :size="'15px'"
+                        ></pulse-loader>
+                        <v-client-table
+                            v-show="!aggregateFormModalLoad"
+                            :data="dataDetailDataWindows"
+                            :columns="columnsDetailDataWindows"
+                            :options="optionsDetailDataWindows"
+                        />
+                    </div>
                 </div>
             </div>
         </modal>
@@ -128,6 +131,29 @@ export default {
 
     data() {
         return {
+            currentAggregateFormModalLoadRow: null,
+            dataDetailDataWindows: [],
+            columnsDetailDataWindows: [
+                'session_id',
+                'window',
+                'seconds',
+            ],
+            optionsDetailDataWindows: {
+                // see the options API
+                perPageValues: [10,25,30,35,50,100],
+                skin: "VueTables__table " +
+                    "table " +
+                    "table-striped " +
+                    "table-bordered " +
+                    "table-hover " +
+                    "vue__table__row " +
+                    "vue__table__row__header",
+                filterable: false,
+                texts: {
+                    limit: 'Вывод записей',
+                    count: "Показано с {from} по {to} из {count} записей|{count} записей|Одна запись",
+                },
+            },
             columns: [
                 // 'id',
                 // 'login',
@@ -173,7 +199,14 @@ export default {
         ...mapGetters({
             users: gettersTypes.users,
             aggregateFormLoad: gettersTypes.aggregateFormLoad,
+            aggregateFormModalLoad: gettersTypes.aggregateFormModalLoad,
         }),
+
+        userInfo() {
+            if (this.currentAggregateFormModalLoadRow) {
+                return this.currentAggregateFormModalLoadRow
+            }
+        },
     },
 
     methods: {
@@ -225,9 +258,13 @@ export default {
                 console.log(response.data.data);
             })
         },
-        async showDetailAggregateInformation(row){
 
-            // console.log(row)
+        async showDetailAggregateInformation(row){
+            this.currentAggregateFormModalLoadRow = null
+            this.currentAggregateFormModalLoadRow = row
+            // this.dataDetailDataWindows = null
+
+            this.$store.dispatch(actionTypes.aggregateFormModalLoad, true)
 
             const params = new URLSearchParams({});
             params.append('login', row.id)  // params => key, value
@@ -242,15 +279,16 @@ export default {
                 params.append('date_end', this.filter.date_end)
             }
 
-            console.log(params.toString());
+            this.$modal.show('detail-aggregation_information');
 
             await axios
                 .get(url + params.toString())
                 .then((response) => {
-                    console.log(response);
+                    // console.log(response.data.data);
+                    this.dataDetailDataWindows = response.data.data
                 })
 
-            // this.$modal.show('detail-aggregation_information');
+            this.$store.dispatch(actionTypes.aggregateFormModalLoad, false)
         },
 
         async loadData() {
@@ -258,7 +296,6 @@ export default {
 
             await axios.get(this.url).then(async (response) => {
                 const data = Object.entries(response.data.data)
-                // console.log(response.data.workTime)
                 this.workTime =  response.data.workTime
                 let result = [];
 
@@ -278,7 +315,6 @@ export default {
                     result.push(userPerformData)
                 })
 
-                // // console.log(result)
                 this.tableData = result
                 await this.$store.dispatch(actionTypes.aggregateFormLoad, false)
             }).finally(async () => {
