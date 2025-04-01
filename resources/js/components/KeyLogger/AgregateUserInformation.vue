@@ -225,10 +225,30 @@ export default {
                 console.log(response.data.data);
             })
         },
-        showDetailAggregateInformation(row){
-            console.log(row)
-            let date_start = this.filter.date_start
-            let date_end = this.filter.date_end
+        async showDetailAggregateInformation(row){
+
+            // console.log(row)
+
+            const params = new URLSearchParams({});
+            params.append('login', row.id)  // params => key, value
+
+            let url = '/key-logger-detail-group-by-login?'
+
+            if (this.filter.date_start != null) {
+                params.append('date_start', this.filter.date_start)
+            }
+
+            if (this.filter.date_end != null) {
+                params.append('date_end', this.filter.date_end)
+            }
+
+            console.log(params.toString());
+
+            await axios
+                .get(url + params.toString())
+                .then((response) => {
+                    console.log(response);
+                })
 
             // this.$modal.show('detail-aggregation_information');
         },

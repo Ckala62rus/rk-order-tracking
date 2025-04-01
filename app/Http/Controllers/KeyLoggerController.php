@@ -51,6 +51,23 @@ class KeyLoggerController extends Controller
         ]);
     }
 
+    public function getDetailInformationByLogin(Request $request)
+    {
+        $filter = $request->all();
+
+        $data = $this
+            ->keyLoggerService
+            ->getAllStatisticWithAggregation($filter)->get();
+
+        $result = $this
+            ->keyLoggerService
+            ->getWindowActivitiesForAggregateStatistic($data);
+
+        return response()->json([
+            'data' => $result,
+        ]);
+    }
+
     public function detailGroupInformation(Request $request)
     {
         $filter = $request->all();
@@ -58,12 +75,6 @@ class KeyLoggerController extends Controller
         $data = $this
             ->keyLoggerService
             ->getAllStatisticWithAggregation($filter)->get();
-//dd($data->toArray());
-
-        // расчёт общего времени работы
-//        $workToday = $this
-//            ->keyLoggerService
-//            ->getWorkTimeToday($filter);
 
         // сортируем стату по логинам
         $res = $this
@@ -75,14 +86,8 @@ class KeyLoggerController extends Controller
             ->keyLoggerService
             ->calculateWorkTimeEachUser($res);
 
-//        dd($workTime);
-
-//        $workTime = $this
-//            ->keyLoggerService
-//            ->calculateDateWorkTime($workToday);
-
         $activities = $data->toArray();
-//dd($activities);
+
         // сортируем активности пользователей по логину и дате
         $groupActivities = $this
             ->keyLoggerService
@@ -91,13 +96,13 @@ class KeyLoggerController extends Controller
         $groupActivitiesSorted = $this
             ->keyLoggerService
             ->sortAggregationStatisticById($groupActivities);
-//        dd($groupActivitiesSorted);
+
         unset($groupActivities);
 
         $statistic = $this
             ->keyLoggerService
             ->retrieveFirstAndLastActivityElements($groupActivitiesSorted);
-//        dd($statistic);
+
         unset($groupActivitiesSorted);
 
         return response()->json([

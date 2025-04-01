@@ -64,7 +64,24 @@ class KeyLoggerService
      */
     public function getAllStatisticWithAggregation(array $filter): Builder
     {
-        return $this->getQueryForAggregateStatistic($filter, false);
+        return $this->getQueryForAggregateStatistic($filter, true);
+    }
+
+    /**
+     * Get all user activities as array
+     * @param Collection $data
+     * @return array
+     */
+    public function getWindowActivitiesForAggregateStatistic(Collection $data): array
+    {
+        $allActivities = [];
+        foreach ($data as $activities) {
+            foreach ($activities->activeWindowsSeconds as $activity) {
+                $allActivities[] = $activity->toArray();
+            }
+        }
+
+        return $allActivities;
     }
 
     /**
@@ -147,12 +164,6 @@ class KeyLoggerService
     {
         $query = $this->keyLoggerRepository->query();
 
-//        $query->select([
-//            'id',
-//            'login',
-//            'downtime',
-//        ]);
-
         if (isset($filter['date_start']) && !isset($filter['date_end'])){
             $query->where('first_time', '>=', Carbon::parse($filter['date_start'])->format('Y-m-d') . 'T00:00:00');
             $query->where('first_time', '<=', Carbon::parse($filter['date_start'])->format('Y-m-d') . 'T23:59:59');
@@ -178,14 +189,14 @@ class KeyLoggerService
         }
 
         if ($loadRelations) {
-            $query->with(['details' => function($q){
-                $q->select(
-                    DB::raw('max(session_id) as session_id'),
-                    DB::raw('active_window'),
-                    DB::raw('max(date) as date'),
-                );
-                $q->groupBy('active_window');
-            }]);
+//            $query->with(['details' => function($q){
+//                $q->select(
+//                    DB::raw('max(session_id) as session_id'),
+//                    DB::raw('active_window'),
+//                    DB::raw('max(date) as date'),
+//                );
+//                $q->groupBy('active_window');
+//            }]);
 
             $query->with(['activeWindowsSeconds' => function($q){
                 $q->select(
