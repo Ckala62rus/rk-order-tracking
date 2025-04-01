@@ -72,6 +72,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('key-logger', KeyLoggerController::class);
     Route::get('key-logger-dashboard', [KeyLoggerController::class, 'templateDashboard']);
     Route::get('key-logger-detail-group', [KeyLoggerController::class, 'detailGroupInformation']);
+    Route::get('key-logger-detail-group-by-login', [KeyLoggerController::class, 'getDetailInformationByLogin']);
 
     /* LoginKeyLogger */
     Route::get('key-logger-logins', [\App\Http\Controllers\LoginKeyLoggerController::class, 'index']);
