@@ -211,7 +211,9 @@ export default {
 
     methods: {
         getWorktime(row) {
-            let login = `RK\\${row.login}`
+            let login = `RK\\${row.login}`.toLowerCase()
+            console.log(row)
+            console.log(login)
             if ( this.workTime[login] ) {
                 return this.workTime[login]
             }
@@ -262,9 +264,8 @@ export default {
         async showDetailAggregateInformation(row){
             this.currentAggregateFormModalLoadRow = null
             this.currentAggregateFormModalLoadRow = row
-            // this.dataDetailDataWindows = null
 
-            this.$store.dispatch(actionTypes.aggregateFormModalLoad, true)
+            await this.$store.dispatch(actionTypes.aggregateFormModalLoad, true)
 
             const params = new URLSearchParams({});
             params.append('login', row.id)  // params => key, value
@@ -288,7 +289,7 @@ export default {
                     this.dataDetailDataWindows = response.data.data
                 })
 
-            this.$store.dispatch(actionTypes.aggregateFormModalLoad, false)
+            await this.$store.dispatch(actionTypes.aggregateFormModalLoad, false)
         },
 
         async loadData() {

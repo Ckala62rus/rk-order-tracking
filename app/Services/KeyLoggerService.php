@@ -289,7 +289,7 @@ class KeyLoggerService
         $out = [];
 
         foreach ($data as $login => $activities) {
-            $out[$login] = $this->calculateWorkTime($activities);
+            $out[mb_strtolower($login)] = $this->calculateWorkTime($activities);
         }
 
 //        dd($out);

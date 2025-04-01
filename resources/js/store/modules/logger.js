@@ -50,18 +50,21 @@ const actions = {
         })
     },
     [actionTypes.detailFormLoad](state, flag) {
-        return new Promise(async () => {
+        return new Promise((resolve) => {
             state.commit(mutationTypes.detailFormLoad, flag)
+            resolve()
         })
     },
     [actionTypes.aggregateFormLoad](state, flag) {
-        return new Promise(async () => {
+        return new Promise((resolve) => {
             state.commit(mutationTypes.aggregateFormLoad, flag)
+            resolve()
         })
     },
     [actionTypes.aggregateFormModalLoad](state, flag) {
-        return new Promise(async () => {
+        return new Promise((resolve) => {
             state.commit(mutationTypes.aggregateFormModalLoad, flag)
+            resolve()
         })
     },
 }
