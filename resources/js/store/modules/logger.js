@@ -3,6 +3,7 @@ const state = {
     detailFormLoad: false,
     aggregateFormLoad: false,
     aggregateFormModalLoad: false,
+    exportExcelAggregateForm: false,
 }
 
 export const mutationTypes = {
@@ -10,6 +11,7 @@ export const mutationTypes = {
     detailFormLoad: '[logger] detailFormLoad',
     aggregateFormLoad: '[logger] aggregateFormLoad',
     aggregateFormModalLoad: '[logger] aggregateFormModalLoad',
+    exportExcelAggregateForm: '[logger] exportExcelAggregateForm',
 }
 
 export const actionTypes = {
@@ -17,6 +19,7 @@ export const actionTypes = {
     detailFormLoad: '[logger] detailFormLoad',
     aggregateFormLoad: '[logger] aggregateFormLoad',
     aggregateFormModalLoad: '[logger] aggregateFormModalLoad',
+    exportExcelAggregateForm: '[logger] exportExcelAggregateForm',
 }
 
 export const gettersTypes = {
@@ -24,6 +27,7 @@ export const gettersTypes = {
     detailFormLoad: '[logger] detailFormLoad',
     aggregateFormLoad: '[logger] aggregateFormLoad',
     aggregateFormModalLoad: '[logger] aggregateFormModalLoad',
+    exportExcelAggregateForm: '[logger] exportExcelAggregateForm',
 }
 
 const getters = {
@@ -31,6 +35,7 @@ const getters = {
     [gettersTypes.detailFormLoad]: (state) => state.detailFormLoad,
     [gettersTypes.aggregateFormLoad]: (state) => state.aggregateFormLoad,
     [gettersTypes.aggregateFormModalLoad]: (state) => state.aggregateFormModalLoad,
+    [gettersTypes.exportExcelAggregateForm]: (state) => state.exportExcelAggregateForm,
 }
 
 const mutations = {
@@ -38,6 +43,7 @@ const mutations = {
     [mutationTypes.detailFormLoad]: (state, flag) => state.detailFormLoad = flag,
     [mutationTypes.aggregateFormLoad]: (state, flag) => state.aggregateFormLoad = flag,
     [mutationTypes.aggregateFormModalLoad]: (state, flag) => state.aggregateFormModalLoad = flag,
+    [mutationTypes.exportExcelAggregateForm]: (state, flag) => state.exportExcelAggregateForm = flag,
 }
 
 const actions = {
@@ -64,6 +70,12 @@ const actions = {
     [actionTypes.aggregateFormModalLoad](state, flag) {
         return new Promise((resolve) => {
             state.commit(mutationTypes.aggregateFormModalLoad, flag)
+            resolve()
+        })
+    },
+    [actionTypes.exportExcelAggregateForm](state, flag) {
+        return new Promise((resolve) => {
+            state.commit(mutationTypes.exportExcelAggregateForm, flag)
             resolve()
         })
     },
