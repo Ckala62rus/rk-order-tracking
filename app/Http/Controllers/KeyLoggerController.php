@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\LoginsAggregateStatisticExport;
 use App\Exports\LoginsExport;
 use App\Http\Resources\KeyLogger\KeyLoggerIndexResource;
 use App\Services\KeyLoggerService;
@@ -114,6 +115,11 @@ class KeyLoggerController extends Controller
     public function export(Request $request)
     {
         return Excel::download(new LoginsExport($request, $this->keyLoggerService), 'logins.xlsx');
+    }
+
+    public function exportAggregate(Request $request)
+    {
+        return Excel::download(new LoginsAggregateStatisticExport($request, $this->keyLoggerService), 'logins.xlsx');
     }
 
     public function create()

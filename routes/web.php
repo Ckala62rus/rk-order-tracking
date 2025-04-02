@@ -79,6 +79,7 @@ Route::middleware(['auth'])->group(function () {
 
     /* Export Excel */
     Route::get('export', [\App\Http\Controllers\KeyLoggerController::class, 'export']);
+    Route::get('export2', [\App\Http\Controllers\KeyLoggerController::class, 'exportAggregate']);
 });
 
 Route::post("api/rdp/detail", [\App\Http\Controllers\Lk\RdpController::class, 'getDetailByUser']);

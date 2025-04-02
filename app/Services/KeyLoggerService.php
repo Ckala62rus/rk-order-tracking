@@ -189,15 +189,6 @@ class KeyLoggerService
         }
 
         if ($loadRelations) {
-//            $query->with(['details' => function($q){
-//                $q->select(
-//                    DB::raw('max(session_id) as session_id'),
-//                    DB::raw('active_window'),
-//                    DB::raw('max(date) as date'),
-//                );
-//                $q->groupBy('active_window');
-//            }]);
-
             $query->with(['activeWindowsSeconds' => function($q){
                 $q->select(
                     DB::raw('session_id'),

@@ -212,8 +212,6 @@ export default {
     methods: {
         getWorktime(row) {
             let login = `RK\\${row.login}`.toLowerCase()
-            console.log(row)
-            console.log(login)
             if ( this.workTime[login] ) {
                 return this.workTime[login]
             }
@@ -328,7 +326,7 @@ export default {
 
             axios({
                 method:'GET',
-                url: '/export',
+                url: '/export2',
                 responseType: 'blob',
                 params: {
                     date_start: params.date_start,
