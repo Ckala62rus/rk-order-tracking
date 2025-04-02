@@ -76,7 +76,7 @@ class KeyLoggerController extends Controller
         $data = $this
             ->keyLoggerService
             ->getAllStatisticWithAggregation($filter)->get();
-
+//dd($data->toArray());
         // сортируем стату по логинам
         $res = $this
             ->keyLoggerService

@@ -36,7 +36,9 @@
                                         </template>
                                     </div>
                                     <div class="col-lg-3 pt-6">
-                                        <button type="submit" class="btn btn-primary mr-2">Найти</button>
+                                        <button type="submit" class="btn btn-primary mr-2"
+                                        >Найти
+                                        </button>
                                         <button type="reset" class="btn btn-secondary" @click="resetFilter">Сброс</button>
                                     </div>
                                 </div>
@@ -50,7 +52,7 @@
         </form>
 
         <div v-show="aggregateFormLoad">
-            <pulse-loader :loading="aggregateFormLoad" :color="'#5dc596'" :size="'15px'"></pulse-loader>
+            <pulse-loader :loading="aggregateFormLoad" :color="'white'" :size="'1px'"></pulse-loader>
         </div>
 
         <div
@@ -96,6 +98,14 @@
                         <h3 class="card-title" v-if="userInfo">{{userInfo.fio}}</h3>
                     </div>
                     <div class="card-body">
+                        <div class="text-right">
+                            <el-button
+                                type="success"
+                                :loading="exportExcelAggregateForm"
+                                :size="'mini'"
+                                @click="toExcelByLogin(userInfo)"
+                            >{{exportExcel}}</el-button>
+                        </div>
                         <pulse-loader
                             :loading="aggregateFormModalLoad"
                             :color="'#5dc596'"
@@ -119,6 +129,7 @@
 <script>
 
 import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
+import FadeLoader from 'vue-spinner/src/FadeLoader.vue'
 import {mapGetters} from "vuex"
 import {actionTypes, gettersTypes} from "../../store/modules/logger";
 
@@ -126,7 +137,8 @@ export default {
     name: "RkAggregateUserInformation",
 
     components: {
-        PulseLoader
+        PulseLoader,
+        FadeLoader
     },
 
     data() {
@@ -200,12 +212,20 @@ export default {
             users: gettersTypes.users,
             aggregateFormLoad: gettersTypes.aggregateFormLoad,
             aggregateFormModalLoad: gettersTypes.aggregateFormModalLoad,
+            exportExcelAggregateForm: gettersTypes.exportExcelAggregateForm,
         }),
 
         userInfo() {
             if (this.currentAggregateFormModalLoadRow) {
                 return this.currentAggregateFormModalLoadRow
             }
+        },
+
+        exportExcel () {
+            if (this.exportExcelAggregateForm) {
+                return "Выгружаю"
+            }
+            return "Выгрузить Excel"
         },
     },
 
@@ -318,6 +338,44 @@ export default {
                 await this.$store.dispatch(actionTypes.aggregateFormLoad, false)
             }).finally(async () => {
                 await this.$store.dispatch(actionTypes.aggregateFormLoad, false)
+            })
+        },
+
+        async toExcelByLogin(user) {
+
+            let date = new Date()
+
+            let hour = date.getHours()
+            let minutes = date.getMinutes()
+            let seconds = date.getSeconds()
+
+            let filename = `${user.fio}-${date.toLocaleDateString() + '-' + hour + ':' + minutes + ':' + seconds}.xlsx`
+
+            await this.$store.dispatch(actionTypes.exportExcelAggregateForm, true)
+
+            let params = this.filter;
+
+            await axios({
+                method:'GET',
+                url: '/export2',
+                responseType: 'blob',
+                params: {
+                    date_start: params.date_start,
+                    date_end: params.date_end,
+                    login: user.id,
+                }
+            })
+            .then((response) => {
+                if (response.status === 200){
+                    const url = window.URL.createObjectURL(new Blob([response.data]));
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.setAttribute('download', filename); //or any other extension
+                    document.body.appendChild(link);
+                    link.click();
+                }
+            }).finally(async () => {
+                await this.$store.dispatch(actionTypes.exportExcelAggregateForm, false)
             })
         },
 

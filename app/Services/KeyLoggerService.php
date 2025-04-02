@@ -151,6 +151,7 @@ class KeyLoggerService
         }
 
         $query->orderByDesc('id');
+//        $query->dd();
         return $query;
     }
 
@@ -202,6 +203,7 @@ class KeyLoggerService
 
 //        $query->groupBy('login');
         $query->orderByDesc('id');
+//        $query->dd();
         return $query;
     }
 
