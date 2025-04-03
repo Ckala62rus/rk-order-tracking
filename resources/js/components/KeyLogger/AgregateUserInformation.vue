@@ -98,7 +98,7 @@
                         <h3 class="card-title" v-if="userInfo">{{userInfo.fio}}</h3>
                     </div>
                     <div class="card-body">
-                        <div class="text-right">
+                        <div class="text-right mb-5">
                             <el-button
                                 type="success"
                                 :loading="exportExcelAggregateForm"
