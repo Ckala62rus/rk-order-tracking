@@ -41,6 +41,8 @@ import 'element-ui/lib/theme-chalk/index.css';
 import locale from 'element-ui/lib/locale/lang/en'
 Vue.use(ElementUI, {locale});
 
+import store from './store/index'
+
 import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
 Vue.component('pulse-loader', require('vue-spinner/src/PulseLoader.vue'));
 
@@ -89,4 +91,5 @@ Vue.component('key-logger', require('./components/KeyLogger/index').default);
 
 const app = new Vue({
     el: '#app',
+    store
 });
