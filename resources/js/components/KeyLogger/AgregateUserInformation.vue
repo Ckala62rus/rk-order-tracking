@@ -303,7 +303,6 @@ export default {
             await axios
                 .get(url + params.toString())
                 .then((response) => {
-                    // console.log(response.data.data);
                     this.dataDetailDataWindows = response.data.data
                 })
 
@@ -394,7 +393,6 @@ export default {
             })
                 .then((response) => {
                     if (response.status === 200){
-                        // console.log(response.headers['accept-ranges'])
                         const url = window.URL.createObjectURL(new Blob([response.data]));
                         const link = document.createElement('a');
                         link.href = url;
