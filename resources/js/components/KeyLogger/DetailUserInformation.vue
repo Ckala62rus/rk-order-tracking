@@ -175,10 +175,8 @@ export default {
             url: '/key-logger?',
             query: '',
             urlBase: '/key-logger?',
-            // users: {},
             columns: [
                 'id',
-                // 'login',
                 'fio',
                 'department',
                 'organization',
@@ -194,7 +192,6 @@ export default {
                 },
                 headings: {
                     'id': 'id',
-                    // 'login': 'Логин',
                     'fio': 'ФИО',
                     'department': 'Департамент',
                     'organization': 'Организация',
@@ -335,7 +332,6 @@ export default {
         },
         getStatistic() {
             axios.get('/key-logger' ).then((response) => {
-                // this.users = response.data.data;
                 console.log(response.data.data);
             })
         },
@@ -389,7 +385,6 @@ export default {
             })
                 .then((response) => {
                     if (response.status === 200){
-                        // console.log(response.headers['accept-ranges'])
                         const url = window.URL.createObjectURL(new Blob([response.data]));
                         const link = document.createElement('a');
                         link.href = url;
